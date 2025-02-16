@@ -36,7 +36,6 @@ body {
   display: none;           /* hidden by default */
 }
 
-
 /* LANGUAGE SWITCHER (top-right) */
 .language-switcher {
   position: absolute;
@@ -59,7 +58,7 @@ body {
   padding-left: 20px;
   padding-right: 20px;
   padding-bottom: 20px;
-  padding-top:60px
+  padding-top: 60px; /* <-- semicolon added here */
   overflow-y: auto;
   position: relative;
 }
@@ -252,17 +251,7 @@ button:hover {
   color: #333;
 }
 
-/* ON-SCREEN KEYBOARD */
-.keyboard {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-  background: #e0e0e0;
-  display: none;
-  z-index: 9999;
-  padding: 10px;
-}
+/* KEYBOARD ROWS */
 .keyboard-row {
   display: flex;
   justify-content: center;
