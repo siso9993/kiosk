@@ -128,10 +128,7 @@
       box-sizing: border-box;
       border: 1px solid #ccc;
       border-radius: 4px;
-    }
-    /* Make inputs open on-screen keyboard on click */
-    input {
-      cursor: pointer; /* visually indicates it's interactive on a kiosk */
+      cursor: pointer; /* indicate it's clickable on kiosk */
     }
 
     /* BUTTONS */
@@ -161,14 +158,14 @@
 
     /* QR CODE BOX */
     .qr-code {
-      width: 160px;
-      height: 160px;
+      width: 140px;
+      height: 140px;
       background-color: #ddd;
-      margin: 20px auto;
+      margin: 0 auto;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 16px;
+      font-size: 14px;
       color: #555;
       border: 1px solid #ccc;
       border-radius: 8px;
@@ -283,7 +280,7 @@
 </head>
 
 <body>
-  <div class="kiosk-container">
+  <div class="kiosk-container" id="kioskContainer">
     <!-- HEADER -->
     <div class="header">
       <div class="language-switcher">
@@ -344,7 +341,6 @@
             objednávky.
           </p>
           <label>Telefónne číslo:</label>
-          <!-- onClick opens keyboard -->
           <input
             type="tel"
             id="phoneInput"
@@ -524,21 +520,53 @@
         <!-- REGISTRÁCIA -->
         <div id="registerScreen" class="screen">
           <h1>Registrácia a 50% zľava</h1>
-          <div class="lottie-container">
-            <lottie-player
-              src="assets/lottie/registracia.json"
-              background="transparent"
-              speed="1"
-              loop
-              autoplay
-            ></lottie-player>
+
+          <!-- THREE QR CODES: Apple, Android, Website -->
+          <div style="display: flex; justify-content: space-evenly; flex-wrap: wrap; gap: 20px;">
+            <!-- Apple -->
+            <div style="text-align: center;">
+              <div
+                class="qr-code"
+                style="background: url('assets/qr-apple.png') center/cover no-repeat;"
+              >
+                <!-- fallback text if no image -->
+                <span style="color:#777; font-size:12px;">Apple QR</span>
+              </div>
+              <p style="margin-top:8px;">
+                <img src="assets/logo.png" alt="EASY-WASH" style="width:24px;" /><br />
+                EASY-WASH (Apple)
+              </p>
+            </div>
+
+            <!-- Android -->
+            <div style="text-align: center;">
+              <div
+                class="qr-code"
+                style="background: url('assets/qr-android.png') center/cover no-repeat;"
+              >
+                <span style="color:#777; font-size:12px;">Android QR</span>
+              </div>
+              <p style="margin-top:8px;">
+                <img src="assets/logo.png" alt="EASY-WASH" style="width:24px;" /><br />
+                EASY-WASH (Android)
+              </p>
+            </div>
+
+            <!-- Website -->
+            <div style="text-align: center;">
+              <div
+                class="qr-code"
+                style="background: url('assets/qr-web.png') center/cover no-repeat;"
+              >
+                <span style="color:#777; font-size:12px;">Web QR</span>
+              </div>
+              <p style="margin-top:8px;">
+                <img src="assets/logo.png" alt="EASY-WASH" style="width:24px;" /><br />
+                www.easy-wash.sk
+              </p>
+            </div>
           </div>
-          <p>
-            Ak ešte nemáte aplikáciu, naskenujte uvedený QR kód pre stiahnutie a
-            registráciu.
-          </p>
-          <div class="qr-code">QR kód</div>
-          <p>Aplikácia: MyLaundryApp<br />Web: www.mylaundry.com</p>
+
           <button onclick="navigateTo('appRegisteredScreen')">
             <i class="fa-solid fa-check btn-icon"></i>
             Už mám aplikáciu / som registrovaný
@@ -861,6 +889,18 @@
 
       // Show the right-panel pickup screen on load
       showPickupRightPanel();
+
+      // GLOBAL CLICK LISTENER: if click is outside an input or the keyboard, hide keyboard
+      const kiosk = document.getElementById("kioskContainer");
+      kiosk.addEventListener("click", (e) => {
+        // if NOT clicking on an input or the keyboard itself...
+        if (
+          !e.target.closest("input") && // not an <input>
+          !e.target.closest("#keyboard") // not inside the keyboard
+        ) {
+          closeKeyboard();
+        }
+      });
     });
 
     /***********************************************
