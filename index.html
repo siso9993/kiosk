@@ -5,11 +5,11 @@
   <title>KIOSK UI Prototype – Moderné rozhranie s Lottie animáciami</title>
   <!-- Google Fonts -->
   <link href="https://fonts.googleapis.com/css?family=Roboto:400,500,700&display=swap" rel="stylesheet">
-  <!-- Font Awesome Icons -->
-  <link rel="stylesheet" 
-        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" 
-        integrity="sha512-papO8R+T7U2iYfU7JZJ5jUGNSXgknsQ7z/Y4+04r6R8Pfohx6/kpEQHj5BQYtJ6/2BvM+a+nY+7Fvcv3I6fE2g==" 
-        crossorigin="anonymous" 
+  <!-- Font Awesome (Updated CDN Link + Integrity) -->
+  <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
+        integrity="sha512-9nu6Sdz9EUK9AIcs62hP01geIKUloK+ZqYMn1tzfN2cSr4+zI/sinFjkX5NYvCksIf21zoAY21vt7K9gRILUgA=="
+        crossorigin="anonymous"
         referrerpolicy="no-referrer" />
   <!-- Lottie (na prehrávanie .json animácií) -->
   <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
@@ -23,7 +23,6 @@
       display: flex;
       justify-content: center;
       align-items: center;
-      
     }
     /* Hlavný kontajner – simulovaný kiosk displej (720×1280 px, pomer 9:16) */
     .kiosk-container {
@@ -266,8 +265,9 @@
           <h1>Overenie telefónu</h1>
           
           <div class="lottie-container lottie-sm">
+            <!-- FIXED URL: was "https:/kiosk/assets4.lottiefiles.com/packages/lf20_pprxh53t.json" -->
             <lottie-player
-              src="https:/kiosk/assets4.lottiefiles.com/packages/lf20_pprxh53t.json"
+              src="https://assets4.lottiefiles.com/packages/lf20_pprxh53t.json"
               background="transparent"
               speed="1"
               loop
@@ -404,9 +404,10 @@
         <div id="registerScreen" class="screen">
           <h1>Registrácia a 50% zľava</h1>
 
+          <!-- FIXED URL: was "https:/kiosk/assets2.lottiefiles.com/packages/lf20_ygiulu.json" -->
           <div class="lottie-container">
             <lottie-player
-              src="https:/kiosk/assets2.lottiefiles.com/packages/lf20_ygiulu.json"
+              src="https://assets2.lottiefiles.com/packages/lf20_ygiulu.json"
               background="transparent"
               speed="1"
               loop
@@ -431,9 +432,10 @@
         <div id="appRegisteredScreen" class="screen">
           <h1>Registrácia úspešná</h1>
 
+          <!-- FIXED URL: was "https:/kiosk/assets2.lottiefiles.com/private_files/lf30_ocoaao4v.json" -->
           <div class="lottie-container lottie-sm">
             <lottie-player
-              src="https:/kiosk/assets2.lottiefiles.com/private_files/lf30_ocoaao4v.json"
+              src="https://assets2.lottiefiles.com/private_files/lf30_ocoaao4v.json"
               background="transparent"
               speed="1"
               loop
@@ -454,7 +456,7 @@
         <div id="scanOrderScreen" class="screen">
           <h1>Zadať/naskenovať objednávkový kód</h1>
 
-          <!-- zmena na zadavanie-kodu.json -->
+          <!-- zadavanie-kodu.json -->
           <div class="lottie-container lottie-sm">
             <lottie-player
               src="kiosk/assets/lottie/zadavanie-kodu.json"
@@ -484,7 +486,7 @@
         <div id="orderPickupPaymentScreen" class="screen">
           <h1>Vyzdvihnutie objednávky</h1>
 
-          <!-- namiesto notifikácie – teraz objednavka-kompletna.json (podľa predošlého zadania) -->
+          <!-- namiesto notifikácie – teraz objednavka-kompletna.json -->
           <div class="lottie-container lottie-sm">
             <lottie-player
               src="kiosk/assets/lottie/objednavka-kompletna.json"
@@ -548,9 +550,10 @@
         <div id="invoiceScreen" class="screen">
           <h1>Faktúra</h1>
 
+          <!-- FIXED URL: was "https:/kiosk/assets3.lottiefiles.com/packages/lf20_vybwn7df.json" -->
           <div class="lottie-container lottie-sm">
             <lottie-player
-              src="https:/kiosk/assets3.lottiefiles.com/packages/lf20_vybwn7df.json"
+              src="https://assets3.lottiefiles.com/packages/lf20_vybwn7df.json"
               background="transparent"
               speed="1"
               loop
@@ -575,9 +578,10 @@
         <div id="lockerOpenScreen" class="screen">
           <h1>Skrinka otvorená</h1>
 
+          <!-- FIXED URL: was "https:/kiosk/assets2.lottiefiles.com/packages/lf20_0utjlb.json" -->
           <div class="lottie-container lottie-sm">
             <lottie-player
-              src="https:/kiosk/assets2.lottiefiles.com/packages/lf20_0utjlb.json"
+              src="https://assets2.lottiefiles.com/packages/lf20_0utjlb.json"
               background="transparent"
               speed="1"
               loop
