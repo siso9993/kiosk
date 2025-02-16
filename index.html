@@ -15,7 +15,7 @@
     integrity="sha512-9nu6Sdz9EUK9AIcs62hP01geIKUloK+ZqYMn1tzfN2cSr4+zI/sinFjkX5NYvCksIf21zoAY21vt7K9gRILUgA=="
     crossorigin="anonymous"
     referrerpolicy="no-referrer"
-/>
+  />
   <!-- Lottie (na prehrávanie .json animácií) -->
   <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
 
@@ -33,6 +33,7 @@
 
     /* KIOSK CONTAINER */
     .kiosk-container {
+      position: relative; /* for modal/keyboard absolute positioning inside kiosk */
       width: 720px;
       height: 900px;
       background: linear-gradient(135deg, #f7f9fc, #e3e7f0);
@@ -41,7 +42,6 @@
       display: flex;
       flex-direction: row;
       overflow: hidden;
-      position: relative; /* for header/footer absolute positioning */
     }
 
     /* PANELS */
@@ -128,6 +128,10 @@
       box-sizing: border-box;
       border: 1px solid #ccc;
       border-radius: 4px;
+    }
+    /* Make inputs open on-screen keyboard on click */
+    input {
+      cursor: pointer; /* visually indicates it's interactive on a kiosk */
     }
 
     /* BUTTONS */
@@ -217,6 +221,64 @@
       width: 150px;
       height: 150px;
     }
+
+    /* MESSAGE MODAL (replaces browser alerts) */
+    .modal {
+      position: absolute; /* inside kiosk-container */
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.5);
+      display: none; /* hidden by default */
+      align-items: center;
+      justify-content: center;
+      z-index: 9999; /* on top of everything */
+    }
+    .modal-content {
+      background: #fff;
+      padding: 20px;
+      border-radius: 8px;
+      text-align: center;
+      width: 80%;
+      max-width: 500px;
+      margin: 0 auto;
+    }
+    .modal-content p {
+      margin-bottom: 20px;
+      font-size: 18px;
+      color: #333;
+    }
+
+    /* ON-SCREEN KEYBOARD */
+    .keyboard {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      background: #e0e0e0;
+      display: none; /* hidden by default */
+      z-index: 9999;
+      padding: 10px;
+    }
+    .keyboard-row {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 5px;
+    }
+    .keyboard-row button {
+      margin: 0 3px;
+      padding: 10px 12px;
+      font-size: 16px;
+      border: none;
+      border-radius: 4px;
+      background: #ccc;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .keyboard-row button:hover {
+      background: #bbb;
+    }
   </style>
 </head>
 
@@ -282,7 +344,13 @@
             objednávky.
           </p>
           <label>Telefónne číslo:</label>
-          <input type="tel" id="phoneInput" placeholder="0900 000 000" />
+          <!-- onClick opens keyboard -->
+          <input
+            type="tel"
+            id="phoneInput"
+            placeholder="0900 000 000"
+            onclick="openKeyboardForInput('phoneInput')"
+          />
           <button onclick="sendSMSCode()">
             <i class="fa-solid fa-sms btn-icon"></i>
             Odoslať SMS kód
@@ -297,7 +365,6 @@
         <div id="smsVerificationScreen" class="screen">
           <h1>Overenie telefónu</h1>
           <div class="lottie-container lottie-sm">
-            <!-- If you have a local file for this, place it in assets/lottie and change the path -->
             <lottie-player
               src="assets/lottie/overenie-telefonu.json"
               background="transparent"
@@ -311,7 +378,12 @@
             <em>(Kód je vždy: 0000)</em>
           </p>
           <label>SMS kód:</label>
-          <input type="text" id="smsCodeInput" placeholder="0000" />
+          <input
+            type="text"
+            id="smsCodeInput"
+            placeholder="0000"
+            onclick="openKeyboardForInput('smsCodeInput')"
+          />
           <button onclick="verifySMSCode()">
             <i class="fa-solid fa-check-circle btn-icon"></i>
             Overiť kód
@@ -330,9 +402,7 @@
             <i class="fa-solid fa-tshirt btn-icon"></i>
             Pranie + Sušenie + Zloženie
           </button>
-          <button
-            onclick="selectService('Pranie + Sušenie + Žehlenie + Zloženie')"
-          >
+          <button onclick="selectService('Pranie + Sušenie + Žehlenie + Zloženie')">
             <i class="fa-solid fa-iron btn-icon"></i>
             Pranie + Sušenie + Žehlenie + Zloženie
           </button>
@@ -518,7 +588,12 @@
             Prípadne použite funkciu simulácie naskenovania QR kódu.
           </p>
           <label>Objednávkový kód:</label>
-          <input type="text" id="orderCodeInput" placeholder="Zadajte kód" />
+          <input
+            type="text"
+            id="orderCodeInput"
+            placeholder="Zadajte kód"
+            onclick="openKeyboardForInput('orderCodeInput')"
+          />
           <button onclick="simulateQRScan()">
             <i class="fa-solid fa-camera btn-icon"></i>
             Simulovať naskenovanie
@@ -543,7 +618,12 @@
           </div>
           <p>Zadajte alebo naskenujte objednávkový kód pre vyzdvihnutie.</p>
           <label>Zadajte kód:</label>
-          <input type="text" id="pickupCodeInput" placeholder="Zadajte kód" />
+          <input
+            type="text"
+            id="pickupCodeInput"
+            placeholder="Zadajte kód"
+            onclick="openKeyboardForInput('pickupCodeInput')"
+          />
           <button onclick="navigateTo('paymentScreen')">
             <i class="fa-solid fa-truck btn-icon"></i>
             Pokračovať
@@ -603,7 +683,12 @@
             Po úspešnej platbe zadajte Váš email, na ktorý Vám odošleme faktúru.
           </p>
           <label>Email:</label>
-          <input type="email" id="invoiceEmailInput" placeholder="vasemail@example.com" />
+          <input
+            type="email"
+            id="invoiceEmailInput"
+            placeholder="vasemail@example.com"
+            onclick="openKeyboardForInput('invoiceEmailInput')"
+          />
           <button onclick="sendInvoice()">
             <i class="fa-solid fa-paper-plane btn-icon"></i>
             Odoslať faktúru
@@ -671,13 +756,81 @@
       <a href="#">Obchodné podmienky</a> |
       <a href="#">GDPR</a>
     </div>
+
+    <!-- KIOSK MESSAGE MODAL -->
+    <div id="messageModal" class="modal">
+      <div class="modal-content">
+        <p id="modalMessage"></p>
+        <button onclick="closeModalMessage()">OK</button>
+      </div>
+    </div>
+
+    <!-- ON-SCREEN KEYBOARD -->
+    <div id="keyboard" class="keyboard">
+      <div class="keyboard-row">
+        <button onclick="typeKey('1')">1</button>
+        <button onclick="typeKey('2')">2</button>
+        <button onclick="typeKey('3')">3</button>
+        <button onclick="typeKey('4')">4</button>
+        <button onclick="typeKey('5')">5</button>
+        <button onclick="typeKey('6')">6</button>
+        <button onclick="typeKey('7')">7</button>
+        <button onclick="typeKey('8')">8</button>
+        <button onclick="typeKey('9')">9</button>
+        <button onclick="typeKey('0')">0</button>
+      </div>
+      <div class="keyboard-row">
+        <button onclick="typeKey('Q')">Q</button>
+        <button onclick="typeKey('W')">W</button>
+        <button onclick="typeKey('E')">E</button>
+        <button onclick="typeKey('R')">R</button>
+        <button onclick="typeKey('T')">T</button>
+        <button onclick="typeKey('Y')">Y</button>
+        <button onclick="typeKey('U')">U</button>
+        <button onclick="typeKey('I')">I</button>
+        <button onclick="typeKey('O')">O</button>
+        <button onclick="typeKey('P')">P</button>
+      </div>
+      <div class="keyboard-row">
+        <button onclick="typeKey('A')">A</button>
+        <button onclick="typeKey('S')">S</button>
+        <button onclick="typeKey('D')">D</button>
+        <button onclick="typeKey('F')">F</button>
+        <button onclick="typeKey('G')">G</button>
+        <button onclick="typeKey('H')">H</button>
+        <button onclick="typeKey('J')">J</button>
+        <button onclick="typeKey('K')">K</button>
+        <button onclick="typeKey('L')">L</button>
+      </div>
+      <div class="keyboard-row">
+        <button onclick="typeKey('Z')">Z</button>
+        <button onclick="typeKey('X')">X</button>
+        <button onclick="typeKey('C')">C</button>
+        <button onclick="typeKey('V')">V</button>
+        <button onclick="typeKey('B')">B</button>
+        <button onclick="typeKey('N')">N</button>
+        <button onclick="typeKey('M')">M</button>
+      </div>
+      <div class="keyboard-row">
+        <button onclick="keyboardBackspace()">⌫</button>
+        <button onclick="closeKeyboard()">Close</button>
+      </div>
+    </div>
   </div>
 
   <script>
-    // Globálne premenné
+    /***********************************************
+     * GLOBAL VARIABLES & INITIAL ANIMATION SETUP
+     ***********************************************/
     let generatedOrderCode = "";
     let generatedQRCode = "";
     let smsCode = "";
+
+    // For the message modal
+    let messageModalCallback = null;
+
+    // For the on-screen keyboard
+    let activeInputId = null;
 
     // HOME SCREEN ANIMÁCIE
     const homeAnimations = [
@@ -706,18 +859,65 @@
         homeLottiePlayer.play();
       });
 
-      // Pravý panel (Home Screen)
+      // Show the right-panel pickup screen on load
       showPickupRightPanel();
     });
 
-    // Jazykový prepínač
-    function setLanguage(lang) {
-      alert(
-        "Prepínam jazyk na: " + (lang === "sk" ? "Slovenčina" : "English")
-      );
+    /***********************************************
+     * MODAL MESSAGES (replaces alert)
+     ***********************************************/
+    function showMessage(msg, callback) {
+      const modal = document.getElementById("messageModal");
+      const modalText = document.getElementById("modalMessage");
+      modalText.innerText = msg;
+      messageModalCallback = callback || null;
+      modal.style.display = "flex";
     }
 
-    // NAVIGÁCIA (ĽAVÝ PANEL)
+    function closeModalMessage() {
+      const modal = document.getElementById("messageModal");
+      modal.style.display = "none";
+      if (messageModalCallback) {
+        // If there's a callback, call it after closing
+        messageModalCallback();
+        messageModalCallback = null;
+      }
+    }
+
+    /***********************************************
+     * ON-SCREEN KEYBOARD
+     ***********************************************/
+    function openKeyboardForInput(inputId) {
+      activeInputId = inputId;
+      document.getElementById("keyboard").style.display = "block";
+    }
+
+    function typeKey(key) {
+      if (!activeInputId) return;
+      const inputEl = document.getElementById(activeInputId);
+      if (key === "Backspace") {
+        inputEl.value = inputEl.value.slice(0, -1);
+      } else {
+        inputEl.value += key;
+      }
+    }
+
+    function keyboardBackspace() {
+      typeKey("Backspace");
+    }
+
+    function closeKeyboard() {
+      document.getElementById("keyboard").style.display = "none";
+      activeInputId = null;
+    }
+
+    /***********************************************
+     * NAVIGATION & PANELS
+     ***********************************************/
+    function setLanguage(lang) {
+      showMessage("Prepínam jazyk na: " + (lang === "sk" ? "Slovenčina" : "English"));
+    }
+
     function navigateTo(screenId) {
       const screens = document.querySelectorAll("#screensContainer .screen");
       screens.forEach((screen) => screen.classList.remove("active"));
@@ -741,7 +941,7 @@
       navigateTo("home-screen");
     }
 
-    // FUNKCIE PRAVÝ PANEL
+    // RIGHT PANEL
     function showPickupRightPanel() {
       document.getElementById("pickupScreen").classList.add("active");
       document.getElementById("returnHomeScreen").classList.remove("active");
@@ -751,42 +951,43 @@
       document.getElementById("returnHomeScreen").classList.add("active");
     }
 
-    // VYZDVIHNUTIE OBJEDNÁVKY
     function startPickupProcess() {
       navigateTo("orderPickupPaymentScreen");
       showReturnHomeRightPanel();
     }
 
-    // SMS SIMULÁCIA
+    /***********************************************
+     * KIOSK LOGIC
+     ***********************************************/
     function sendSMSCode() {
       const phone = document.getElementById("phoneInput").value.trim();
       if (!phone) {
-        alert("Zadajte telefónne číslo!");
+        showMessage("Zadajte telefónne číslo!");
         return;
       }
-      alert("SMS kód bol odoslaný na číslo " + phone);
-      smsCode = "0000";
-      navigateTo("smsVerificationScreen");
+      showMessage("SMS kód bol odoslaný na číslo " + phone, () => {
+        smsCode = "0000";
+        navigateTo("smsVerificationScreen");
+      });
     }
+
     function verifySMSCode() {
-      const inputCode = document
-        .getElementById("smsCodeInput")
-        .value.trim();
+      const inputCode = document.getElementById("smsCodeInput").value.trim();
       if (inputCode === smsCode) {
-        alert("Telefónne číslo bolo úspešne overené.");
-        navigateTo("serviceSelectionScreen");
+        showMessage("Telefónne číslo bolo úspešne overené.", () => {
+          navigateTo("serviceSelectionScreen");
+        });
       } else {
-        alert("Nesprávny kód. Skúste to znova.");
+        showMessage("Nesprávny kód. Skúste to znova.");
       }
     }
 
-    // VÝBER SLUŽBY
     function selectService(service) {
-      alert("Vybrali ste službu: " + service);
-      navigateTo("weightMeasurementScreen");
+      showMessage("Vybrali ste službu: " + service, () => {
+        navigateTo("weightMeasurementScreen");
+      });
     }
 
-    // SIMULÁCIA MERANIA
     function simulateWeightMeasurement() {
       const progressBar = document.getElementById("weightProgress");
       progressBar.style.width = "0%";
@@ -795,53 +996,44 @@
       }, 100);
       setTimeout(() => {
         const weight = (Math.random() * 5 + 1).toFixed(2);
-        alert("Zmeraná hmotnosť: " + weight + " kg");
-        navigateTo("orderLockScreen");
+        showMessage("Zmeraná hmotnosť: " + weight + " kg", () => {
+          navigateTo("orderLockScreen");
+        });
       }, 2100);
     }
 
-    // GENEROVANIE OBJEDNÁVKOVÉHO KÓDU
     function generateOrderCode() {
-      generatedOrderCode = Math.floor(
-        100000 + Math.random() * 900000
-      ).toString();
+      generatedOrderCode = Math.floor(100000 + Math.random() * 900000).toString();
       generatedQRCode = "QR" + generatedOrderCode;
       document.getElementById("generatingCode").classList.remove("blink");
-      document.getElementById("orderCodeDisplay").innerText =
-        generatedOrderCode;
-      document.getElementById("qrCodeDisplay").innerText =
-        generatedQRCode;
+      document.getElementById("orderCodeDisplay").innerText = generatedOrderCode;
+      document.getElementById("qrCodeDisplay").innerText = generatedQRCode;
       navigateTo("orderReadyScreen");
     }
 
-    // SIMULÁCIA QR SCAN
     function simulateQRScan() {
       if (!generatedOrderCode) {
-        generatedOrderCode = Math.floor(
-          100000 + Math.random() * 900000
-        ).toString();
+        generatedOrderCode = Math.floor(100000 + Math.random() * 900000).toString();
         generatedQRCode = "QR" + generatedOrderCode;
       }
-      alert("Naskenovaný objednávkový kód: " + generatedOrderCode);
-      navigateTo("orderLockScreen");
+      showMessage("Naskenovaný objednávkový kód: " + generatedOrderCode, () => {
+        navigateTo("orderLockScreen");
+      });
     }
 
-    // SIMULÁCIA PLATBY
     function simulatePayment(method) {
-      alert("Platba cez " + method + " bola úspešná.");
+      showMessage("Platba cez " + method + " bola úspešná.");
     }
 
-    // SIMULÁCIA ODOSLANIA FAKTÚRY
     function sendInvoice() {
-      const email = document
-        .getElementById("invoiceEmailInput")
-        .value.trim();
+      const email = document.getElementById("invoiceEmailInput").value.trim();
       if (!email) {
-        alert("Zadajte platný email!");
+        showMessage("Zadajte platný email!");
         return;
       }
-      alert("Faktúra bola odoslaná na " + email);
-      navigateTo("lockerOpenScreen");
+      showMessage("Faktúra bola odoslaná na " + email, () => {
+        navigateTo("lockerOpenScreen");
+      });
     }
   </script>
 </body>
