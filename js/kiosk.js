@@ -37,10 +37,11 @@ const homeAnimationLabels = [
 let currentHomeAnimIndex = 0;
 
 window.addEventListener("DOMContentLoaded", () => {
+  // Set up rotating icons on Home Screen
   const homeLottiePlayer = document.getElementById("homeLottiePlayer");
   const tooltipEl = document.getElementById("homeAnimationTooltip");
 
-  // Load first animation
+  // Load the first animation
   homeLottiePlayer.load(homeAnimations[currentHomeAnimIndex]);
   tooltipEl.innerText = homeAnimationLabels[currentHomeAnimIndex];
 
@@ -55,12 +56,13 @@ window.addEventListener("DOMContentLoaded", () => {
     tooltipEl.innerText = homeAnimationLabels[currentHomeAnimIndex];
   });
 
-  // Show the right-panel pickup screen on load
+  // By default, show the "pickup" screen in the right panel
   showPickupRightPanel();
 
   // Hide keyboard if clicking outside an input or the keyboard
   const kiosk = document.getElementById("kioskContainer");
   kiosk.addEventListener("click", (e) => {
+    // If click is NOT inside an <input> and NOT inside the #keyboard
     if (!e.target.closest("input") && !e.target.closest("#keyboard")) {
       closeKeyboard();
     }
@@ -91,7 +93,9 @@ function closeModalMessage() {
  * ON-SCREEN KEYBOARD
  ***********************************************/
 function openKeyboardForInput(inputId) {
+  // Record which input is currently active
   activeInputId = inputId;
+  // Show the keyboard
   document.getElementById("keyboard").style.display = "block";
 }
 
@@ -110,6 +114,7 @@ function keyboardBackspace() {
 }
 
 function closeKeyboard() {
+  // Hide the keyboard
   document.getElementById("keyboard").style.display = "none";
   activeInputId = null;
 }
@@ -130,16 +135,18 @@ function navigateTo(screenId) {
     target.classList.add("active");
   }
 
-  // If not on home-screen, show "returnHomeScreen" on the right panel
+  // If we go back to home-screen, show "pickup" in right panel
   if (screenId === "home-screen") {
     showPickupRightPanel();
   } else {
     showReturnHomeRightPanel();
   }
 }
+
 function navigateBack() {
   navigateTo("home-screen");
 }
+
 function navigateHome() {
   navigateTo("home-screen");
 }
@@ -149,6 +156,7 @@ function showPickupRightPanel() {
   document.getElementById("pickupScreen").classList.add("active");
   document.getElementById("returnHomeScreen").classList.remove("active");
 }
+
 function showReturnHomeRightPanel() {
   document.getElementById("pickupScreen").classList.remove("active");
   document.getElementById("returnHomeScreen").classList.add("active");
@@ -169,7 +177,7 @@ function sendSMSCode() {
     return;
   }
   showMessage("SMS kód bol odoslaný na číslo " + phone, () => {
-    smsCode = "0000";
+    smsCode = "0000"; // example code
     navigateTo("smsVerificationScreen");
   });
 }
@@ -198,6 +206,7 @@ function startWeightMeasurement() {
     progressBar.style.width = "100%";
   }, 100);
   setTimeout(() => {
+    // Just an example
     const weight = (Math.random() * 5 + 1).toFixed(2);
     showMessage("Zmeraná hmotnosť: " + weight + " kg", () => {
       navigateTo("orderLockScreen");
@@ -224,10 +233,10 @@ function goToPaymentScreen() {
   navigateTo("paymentScreen");
 }
 
-// Payment
 function startCardPayment() {
   showMessage("Platba kartou prebieha...");
 }
+
 function startContactlessPayment() {
   showMessage("Bezkontaktná platba prebieha...");
 }
