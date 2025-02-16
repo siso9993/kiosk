@@ -234,12 +234,24 @@ function goToPaymentScreen() {
   navigateTo("paymentScreen");
 }
 
+/* Aktualizované funkcie pre platbu:
+   Po stlačení jednej z možností (kartou alebo bezkontaktné) sa simulovaná platba
+   zobrazí a po krátkom oneskorení sa automaticky prejde na ďalší krok (Invoice Screen).
+*/
 function startCardPayment() {
-  showMessage("Platba kartou prebieha...");
+  showMessage("Platba kartou prebieha...", () => {
+    setTimeout(() => {
+      navigateTo("invoiceScreen");
+    }, 2000);
+  });
 }
 
 function startContactlessPayment() {
-  showMessage("Bezkontaktná platba prebieha...");
+  showMessage("Bezkontaktná platba prebieha...", () => {
+    setTimeout(() => {
+      navigateTo("invoiceScreen");
+    }, 2000);
+  });
 }
 
 function sendInvoice() {
