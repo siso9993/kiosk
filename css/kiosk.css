@@ -58,7 +58,7 @@ body {
   padding-left: 20px;
   padding-right: 20px;
   padding-bottom: 20px;
-  padding-top: 60px; /* <-- semicolon added here */
+  padding-top: 30px; /
   overflow-y: auto;
   position: relative;
 }
