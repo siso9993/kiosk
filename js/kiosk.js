@@ -208,8 +208,8 @@ function startWeightMeasurement() {
   setTimeout(() => {
     const weight = (Math.random() * 5 + 1).toFixed(2);
     showMessage("Zmeraná hmotnosť: " + weight + " kg", () => {
-      // Prechod na obrazovku pre vloženie do skrinky
       navigateTo("lockerInsertionScreen");
+      simulateLockerInsertion();
     });
   }, 2100);
 }
@@ -225,8 +225,8 @@ function generateOrderCode() {
 
 function scanQRCode() {
   showMessage("Naskenovanie prebieha...", () => {
-    // Prechod na obrazovku pre vloženie prádla do skrinky
     navigateTo("lockerInsertionScreen");
+    simulateLockerInsertion();
   });
 }
 
@@ -251,4 +251,15 @@ function sendInvoice() {
   showMessage("Faktúra bola odoslaná na " + email, () => {
     navigateTo("lockerOpenScreen");
   });
+}
+
+/***********************************************
+ * SIMULÁCIA VLOŽENIA DO SKRINKY
+ ***********************************************/
+function simulateLockerInsertion() {
+  // Simulácia, že používateľ vložil prádlo do skrinky a zatvoril ju.
+  // Po 3 sekundách sa automaticky vygeneruje objednávkový kód.
+  setTimeout(() => {
+    generateOrderCode();
+  }, 3000);
 }
