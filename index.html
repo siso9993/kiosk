@@ -455,8 +455,17 @@
       <div id="pickupScreen" class="screen active">
         <h1>Vyzdvihnutie</h1>
         <div style="font-size: 48px; text-align: center; margin: 20px 0;">
-          <i class="fa-solid fa-truck"></i>
+          
         </div>
+<div class="lottie-container lottie-sm">
+            <lottie-player
+              src="assets/lottie/objednavka-kompletna.json"
+              background="transparent"
+              speed="1"
+              loop
+              autoplay
+            ></lottie-player>
+          </div>
         <p>Ak chcete objednávku vyzdvihnúť okamžite, stlačte tlačidlo:</p>
         <button onclick="startPickupProcess()">
           <i class="fa-solid fa-truck btn-icon"></i>
@@ -472,7 +481,7 @@
       <div id="returnHomeScreen" class="screen">
         <h1 style="font-size: 20px; text-align: center;">Navigácia</h1>
         <div style="font-size: 32px; text-align: center; margin: 20px 0;">
-          <i class="fa-solid fa-house"></i>
+          
         </div>
         <p style="text-align: center;">Pre návrat na hlavnú obrazovku:</p>
         <button onclick="navigateHome()">
