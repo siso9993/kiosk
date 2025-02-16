@@ -2,12 +2,14 @@
 <html lang="sk">
 <head>
   <meta charset="UTF-8" />
-  <title>KIOSK UI Prototype – Moderné rozhranie s Lottie animáciami</title>
+  <title>KIOSK UI Prototype</title>
+
   <!-- Google Fonts -->
   <link
     href="https://fonts.googleapis.com/css?family=Roboto:400,500,700&display=swap"
     rel="stylesheet"
   />
+  
   <!-- Font Awesome (CDN) -->
   <link
     rel="stylesheet"
@@ -16,290 +18,24 @@
     crossorigin="anonymous"
     referrerpolicy="no-referrer"
   />
-  <!-- Lottie (na prehrávanie .json animácií) -->
+
+  <!-- Lottie (for .json animations) -->
   <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
 
-  <style>
-    /* BODY: top padding so kiosk isn't too close to the top */
-    body {
-      margin: 0;
-      background-color: #222;
-      font-family: 'Roboto', sans-serif;
-      display: flex;
-      justify-content: center;
-      align-items: flex-start; /* align kiosk to top, not center */
-      padding-top: 40px;       /* add space from top of browser window */
-    }
-
-    /* KIOSK CONTAINER */
-    .kiosk-container {
-      position: relative; /* for language switcher & keyboard absolute positioning */
-      width: 720px;
-      height: 900px;
-      background: linear-gradient(135deg, #f7f9fc, #e3e7f0);
-      box-shadow: 0 0 15px rgba(0, 0, 0, 0.6);
-      border-radius: 12px;
-      display: flex;
-      flex-direction: row;
-      overflow: hidden;
-    }
-
-    /* LANGUAGE SWITCHER: top-right corner */
-    .language-switcher {
-      position: absolute;
-      top: 15px;
-      right: 15px; /* back in the top-right corner */
-      display: flex;
-      gap: 20px;
-      z-index: 999;
-    }
-    .lang-option {
-      font-size: 32px; /* bigger icons */
-      cursor: pointer;
-      user-select: none;
-      padding: 5px; /* more padding */
-    }
-
-    /* PANELS */
-    .left-panel,
-    .right-panel {
-      padding: 20px;
-      overflow-y: auto;
-      position: relative;
-    }
-    .left-panel {
-      width: 70%;
-      background-color: #fff;
-      border-right: 1px solid #ccc;
-      display: flex;
-      flex-direction: column;
-    }
-    .right-panel {
-      width: 30%;
-      background-color: #f5f7fa;
-      position: relative;
-    }
-
-    /* FOOTER-LINKS: bottom of the LEFT panel */
-    .footer-links {
-      margin-top: auto; /* push it to the bottom */
-      padding: 20px;
-      text-align: center;
-      font-size: 14px;
-      color: #555;
-    }
-    .footer-links a {
-      color: #007bff;
-      text-decoration: none;
-      margin: 0 5px;
-    }
-    .footer-links a:hover {
-      text-decoration: underline;
-    }
-
-    /* BASIC TEXT */
-    h1 {
-      font-size: 24px;
-      margin: 15px 0;
-      color: #333;
-    }
-    p,
-    label,
-    li {
-      font-size: 16px;
-      line-height: 1.5;
-      margin: 10px 0;
-      color: #555;
-    }
-
-    /* INPUTS */
-    input[type='text'],
-    input[type='tel'],
-    input[type='email'] {
-      width: 100%;
-      padding: 12px;
-      margin: 8px 0 20px 0;
-      font-size: 16px;
-      box-sizing: border-box;
-      border: 1px solid #ccc;
-      border-radius: 4px;
-      cursor: pointer; /* kiosk style */
-    }
-
-    /* BUTTONS */
-    button {
-      width: 100%;
-      padding: 12px 16px;
-      margin: 8px 0;
-      font-size: 16px;
-      background: linear-gradient(135deg, #007bff, #0056b3);
-      color: #fff;
-      border: none;
-      border-radius: 6px;
-      cursor: pointer;
-      transition: background 0.3s, transform 0.2s;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-    }
-    button:hover {
-      background: linear-gradient(135deg, #0056b3, #003f7f);
-      transform: translateY(-2px);
-    }
-    .btn-icon {
-      font-size: 18px;
-    }
-
-    /* PRICE TAG for services */
-    .price-tag {
-      color: #d9534f;
-      font-weight: bold;
-      margin-left: 10px;
-      font-size: 1.1em;
-    }
-
-    /* QR CODE BOX */
-    .qr-code {
-      width: 140px;
-      height: 140px;
-      background-color: #ddd;
-      margin: 0 auto;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 14px;
-      color: #555;
-      border: 1px solid #ccc;
-      border-radius: 8px;
-    }
-
-    /* SCREEN TRANSITIONS (LEFT PANEL) */
-    .screen {
-      display: none;
-      opacity: 0;
-      transform: translateY(20px);
-    }
-    .active {
-      display: block;
-      animation: fadeInUp 0.5s forwards;
-    }
-    @keyframes fadeInUp {
-      from {
-        opacity: 0;
-        transform: translateY(20px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-
-    .blink {
-      animation: blinkAnimation 1s infinite;
-    }
-    @keyframes blinkAnimation {
-      0% {
-        opacity: 1;
-      }
-      50% {
-        opacity: 0.2;
-      }
-      100% {
-        opacity: 1;
-      }
-    }
-
-    /* LOTTIE PLAYER CONTAINERS */
-    .lottie-container {
-      width: 250px;
-      height: 250px;
-      margin: 0 auto 10px auto;
-      text-align: center;
-    }
-    .lottie-sm {
-      width: 150px;
-      height: 150px;
-    }
-    .animation-description {
-      text-align: center;
-      font-size: 14px;
-      color: #333;
-      margin-top: 8px;
-      font-weight: 500;
-    }
-
-    /* MODAL (replaces alerts) */
-    .modal {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(0, 0, 0, 0.5);
-      display: none; /* hidden by default */
-      align-items: center;
-      justify-content: center;
-      z-index: 9999;
-    }
-    .modal-content {
-      background: #fff;
-      padding: 20px;
-      border-radius: 8px;
-      text-align: center;
-      width: 80%;
-      max-width: 500px;
-      margin: 0 auto;
-    }
-    .modal-content p {
-      margin-bottom: 20px;
-      font-size: 18px;
-      color: #333;
-    }
-
-    /* ON-SCREEN KEYBOARD */
-    .keyboard {
-      position: absolute;
-      bottom: 0;
-      left: 0;
-      width: 100%;
-      background: #e0e0e0;
-      display: none; /* hidden by default */
-      z-index: 9999;
-      padding: 10px;
-    }
-    .keyboard-row {
-      display: flex;
-      justify-content: center;
-      margin-bottom: 5px;
-    }
-    .keyboard-row button {
-      margin: 0 3px;
-      padding: 10px 12px;
-      font-size: 16px;
-      border: none;
-      border-radius: 4px;
-      background: #ccc;
-      cursor: pointer;
-      transition: background 0.2s;
-    }
-    .keyboard-row button:hover {
-      background: #bbb;
-    }
-
-    /* LOGO IN THE RIGHT PANEL (bottom) */
-    .right-panel-logo {
-      margin-top: 20px;
-      text-align: center;
-    }
-    .right-panel-logo img {
-      width: 80px;
-    }
-  </style>
+  <!-- Kiosk CSS (external) -->
+  <link rel="stylesheet" href="css/kiosk.css" />
 </head>
 
 <body>
+  <!-- Kiosk Container -->
   <div class="kiosk-container" id="kioskContainer">
+
+    <!-- Language Switcher (top-right corner) -->
+    <div class="language-switcher">
+      <span class="lang-option" onclick="setLanguage('sk')">🇸🇰</span>
+      <span class="lang-option" onclick="setLanguage('en')">🇬🇧</span>
+    </div>
+
     <!-- LEFT PANEL -->
     <div class="left-panel">
       <!-- SCREENS CONTAINER -->
@@ -309,6 +45,7 @@
         <div id="home-screen" class="screen active">
           <h1>Vitajte v KIOSK</h1>
           <div class="lottie-container">
+            <!-- Rotating icons controlled by kiosk.js -->
             <lottie-player
               id="homeLottiePlayer"
               background="transparent"
@@ -339,7 +76,7 @@
           </button>
         </div>
 
-        <!-- NOVÁ OBJEDNÁVKA -->
+        <!-- NEW ORDER SCREEN -->
         <div id="newOrderScreen" class="screen">
           <h1>Nová objednávka</h1>
           <div class="lottie-container lottie-sm">
@@ -351,10 +88,7 @@
               autoplay
             ></lottie-player>
           </div>
-          <p>
-            Zadajte svoje telefónne číslo. SMS kód použijeme na notifikácie o stave
-            objednávky.
-          </p>
+          <p>Zadajte svoje telefónne číslo. SMS kód použijeme na notifikácie.</p>
           <label>Telefónne číslo:</label>
           <input
             type="tel"
@@ -372,7 +106,7 @@
           </button>
         </div>
 
-        <!-- OVERENIE SMS KÓDU -->
+        <!-- SMS VERIFICATION SCREEN -->
         <div id="smsVerificationScreen" class="screen">
           <h1>Overenie telefónu</h1>
           <div class="lottie-container lottie-sm">
@@ -384,10 +118,7 @@
               autoplay
             ></lottie-player>
           </div>
-          <p>
-            Zadajte 4-miestny kód, ktorý ste obdržali v SMS.<br />
-            <em>(Kód je vždy: 0000)</em>
-          </p>
+          <p>Zadajte 4-miestny kód z SMS. (Kód je 0000)</p>
           <label>SMS kód:</label>
           <input
             type="text"
@@ -405,12 +136,10 @@
           </button>
         </div>
 
-        <!-- VÝBER SLUŽBY -->
+        <!-- SERVICE SELECTION SCREEN -->
         <div id="serviceSelectionScreen" class="screen">
           <h1>Výber služby</h1>
           <p>Vyberte službu, ktorú si želáte:</p>
-
-          <!-- Pranie + Sušenie + Zloženie (2,99 €/kg) -->
           <button onclick="selectService('Pranie + Sušenie + Zloženie')">
             <i class="fa-solid fa-tshirt btn-icon"></i>
             <div>
@@ -418,8 +147,6 @@
               <span class="price-tag">2,99 €/kg</span>
             </div>
           </button>
-
-          <!-- Pranie + Sušenie + Žehlenie + Zloženie (4,5 €/kg) -->
           <button onclick="selectService('Pranie + Sušenie + Žehlenie + Zloženie')">
             <i class="fa-solid fa-iron btn-icon"></i>
             <div>
@@ -427,14 +154,13 @@
               <span class="price-tag">4,5 €/kg</span>
             </div>
           </button>
-
           <button onclick="navigateBack()">
             <i class="fa-solid fa-arrow-left btn-icon"></i>
             Späť
           </button>
         </div>
 
-        <!-- MERANIE HMOTNOSTI -->
+        <!-- WEIGHT MEASUREMENT SCREEN -->
         <div id="weightMeasurementScreen" class="screen">
           <h1>Meranie hmotnosti</h1>
           <div class="lottie-container lottie-sm">
@@ -450,9 +176,7 @@
           <ul>
             <li>Vysuňte zásuvku s tray váhou v locker boxe.</li>
             <li>Umiestnite prádlo na váhu.</li>
-            <li>
-              Systém automaticky zmeria hmotnosť a odošle údaje do admin systému.
-            </li>
+            <li>Systém automaticky zmeria hmotnosť a odošle údaje do admin systému.</li>
           </ul>
           <div id="scaleGraphic" style="font-size: 32px; text-align: center;">
             ⚖️
@@ -473,7 +197,6 @@
               style="height: 100%; width: 0%; background: #007bff;"
             ></div>
           </div>
-          <!-- No "simulate" text, just "Spustiť meranie" -->
           <button onclick="startWeightMeasurement()">
             <i class="fa-solid fa-weight-scale btn-icon"></i>
             Spustiť meranie
@@ -484,7 +207,7 @@
           </button>
         </div>
 
-        <!-- UZAMKNUTIE OBJEDNÁVKY -->
+        <!-- ORDER LOCK SCREEN -->
         <div id="orderLockScreen" class="screen">
           <h1>Uzamknutie objednávky</h1>
           <div class="lottie-container lottie-sm">
@@ -497,9 +220,8 @@
             ></lottie-player>
           </div>
           <p>
-            Prádlo bolo vložené do správnej skrinky.<br />
-            Systém teraz uzamkne objednávku a generuje jedinečný objednávkový kód
-            a QR kód.
+            Prádlo bolo vložené do správnej skrinky. Systém teraz uzamkne objednávku
+            a generuje kód.
           </p>
           <div id="generatingCode" class="blink">
             <p>Generujem kód...</p>
@@ -514,7 +236,7 @@
           </button>
         </div>
 
-        <!-- OBJEDNÁVKA PRIPRAVENÁ -->
+        <!-- ORDER READY SCREEN -->
         <div id="orderReadyScreen" class="screen">
           <h1>Objednávka pripravená</h1>
           <div class="lottie-container lottie-sm">
@@ -535,8 +257,8 @@
             <span id="qrCodeDisplay"></span>
           </p>
           <p>
-            Objednávka bola spracovaná.<br />
-            Použite tento kód alebo naskenujte QR kód pri vyzdvihnutí.
+            Objednávka bola spracovaná. Použite tento kód alebo naskenujte QR kód
+            pri vyzdvihnutí.
           </p>
           <button onclick="navigateHome()">
             <i class="fa-solid fa-house btn-icon"></i>
@@ -544,13 +266,11 @@
           </button>
         </div>
 
-        <!-- REGISTRÁCIA -->
+        <!-- REGISTER SCREEN -->
         <div id="registerScreen" class="screen">
           <h1>Registrácia a 50% zľava</h1>
-
-          <!-- THREE QR CODES: Apple, Android, Website -->
           <div style="display: flex; justify-content: space-evenly; flex-wrap: wrap; gap: 20px;">
-            <!-- Apple -->
+            <!-- Apple QR -->
             <div style="text-align: center;">
               <div
                 class="qr-code"
@@ -564,7 +284,7 @@
               </p>
             </div>
 
-            <!-- Android -->
+            <!-- Android QR -->
             <div style="text-align: center;">
               <div
                 class="qr-code"
@@ -578,7 +298,7 @@
               </p>
             </div>
 
-            <!-- Website -->
+            <!-- Website QR -->
             <div style="text-align: center;">
               <div
                 class="qr-code"
@@ -592,9 +312,6 @@
               </p>
             </div>
           </div>
-
-          <!-- Buttons -->
-          <!-- Clicking "Už mám aplikáciu..." -> goes to #scanOrderScreen -->
           <button onclick="navigateTo('scanOrderScreen')">
             <i class="fa-solid fa-check btn-icon"></i>
             Už mám aplikáciu / som registrovaný
@@ -603,8 +320,6 @@
             <i class="fa-solid fa-arrow-left btn-icon"></i>
             Späť
           </button>
-
-          <!-- Additional animation below the two buttons -->
           <div class="lottie-container lottie-sm">
             <lottie-player
               src="assets/lottie/registracia.json"
@@ -616,7 +331,7 @@
           </div>
         </div>
 
-        <!-- REGISTRÁCIA – POTVRDENIE -->
+        <!-- REGISTERED SCREEN -->
         <div id="appRegisteredScreen" class="screen">
           <h1>Registrácia úspešná</h1>
           <div class="lottie-container lottie-sm">
@@ -629,8 +344,8 @@
             ></lottie-player>
           </div>
           <p>
-            Vaše telefónne číslo bolo overené.<br />
-            Teraz si objednávku môžete zadať cez našu aplikáciu alebo web.
+            Vaše telefónne číslo bolo overené. Teraz si objednávku môžete zadať
+            cez aplikáciu alebo web.
           </p>
           <button onclick="navigateHome()">
             <i class="fa-solid fa-house btn-icon"></i>
@@ -638,7 +353,7 @@
           </button>
         </div>
 
-        <!-- ZADANIE/NASKENOVANIE OBJEDNÁVKOVÉHO KÓDU -->
+        <!-- SCAN SCREEN -->
         <div id="scanOrderScreen" class="screen">
           <h1>Zadať/naskenovať objednávkový kód</h1>
           <div class="lottie-container lottie-sm">
@@ -651,7 +366,7 @@
             ></lottie-player>
           </div>
           <p>
-            Zadajte kód, ktorý ste obdržali z aplikácie alebo webu.<br />
+            Zadajte kód, ktorý ste obdržali z aplikácie alebo webu.
             Prípadne použite funkciu naskenovania QR kódu.
           </p>
           <label>Objednávkový kód:</label>
@@ -661,7 +376,6 @@
             placeholder="Zadajte kód"
             onclick="openKeyboardForInput('orderCodeInput')"
           />
-          <!-- Removed "Simulovať" button; just normal "Naskenovať QR kód" -->
           <button onclick="scanQRCode()">
             <i class="fa-solid fa-camera btn-icon"></i>
             Naskenovať QR kód
@@ -672,10 +386,9 @@
           </button>
         </div>
 
-        <!-- VYZDVIHNUTIE OBJEDNÁVKY (TWO SIDE-BY-SIDE ANIMATIONS) -->
+        <!-- ORDER PICKUP PAYMENT SCREEN (two side-by-side animations) -->
         <div id="orderPickupPaymentScreen" class="screen">
           <h1>Vyzdvihnutie objednávky</h1>
-
           <div style="display: flex; gap: 20px; justify-content: center; margin-bottom: 20px;">
             <!-- scan-qr.json -->
             <div class="lottie-container lottie-sm">
@@ -698,7 +411,6 @@
               ></lottie-player>
             </div>
           </div>
-
           <p>Zadajte alebo naskenujte objednávkový kód pre vyzdvihnutie.</p>
           <label>Zadajte kód:</label>
           <input
@@ -717,7 +429,7 @@
           </button>
         </div>
 
-        <!-- PLATOBNÁ OBRAZOVKA -->
+        <!-- PAYMENT SCREEN -->
         <div id="paymentScreen" class="screen">
           <h1>Platba</h1>
           <div class="lottie-container lottie-sm">
@@ -750,7 +462,7 @@
           </button>
         </div>
 
-        <!-- FAKTÚRA -->
+        <!-- INVOICE SCREEN -->
         <div id="invoiceScreen" class="screen">
           <h1>Faktúra</h1>
           <div class="lottie-container lottie-sm">
@@ -762,9 +474,7 @@
               autoplay
             ></lottie-player>
           </div>
-          <p>
-            Po úspešnej platbe zadajte Váš email, na ktorý Vám odošleme faktúru.
-          </p>
+          <p>Zadajte Váš email, na ktorý Vám odošleme faktúru.</p>
           <label>Email:</label>
           <input
             type="email"
@@ -782,7 +492,7 @@
           </button>
         </div>
 
-        <!-- SKRINKA OTVORENÁ -->
+        <!-- LOCKER OPEN SCREEN -->
         <div id="lockerOpenScreen" class="screen">
           <h1>Skrinka otvorená</h1>
           <div class="lottie-container lottie-sm">
@@ -794,28 +504,20 @@
               autoplay
             ></lottie-player>
           </div>
-          <p>
-            Vaša objednávka je pripravená.<br />
-            Prevziahnite prádlo a nezabudnite skrinku správne uzavrieť.
-          </p>
+          <p>Vaša objednávka je pripravená. Prevziahnite prádlo a zatvorte skrinku.</p>
           <button onclick="navigateHome()">
             <i class="fa-solid fa-house btn-icon"></i>
             Domov
           </button>
         </div>
+
       </div>
 
-      <!-- FOOTER LINKS at the bottom of LEFT PANEL -->
-      <div class="footer-links">
-        <a href="#">Obchodné podmienky</a> |
-        <a href="#">GDPR</a> |
-        <a href="#">Cenník</a>
-      </div>
     </div>
 
     <!-- RIGHT PANEL -->
     <div class="right-panel">
-      <!-- 1) VYZDVIHNUTIE (zobrazí sa len na Home Screen) -->
+      <!-- 1) VYZDVIHNUTIE (Home Screen) -->
       <div id="pickupScreen" class="screen active">
         <h1>Vyzdvihnutie</h1>
         <div style="font-size: 48px; text-align: center; margin: 20px 0;">
@@ -826,14 +528,12 @@
           <i class="fa-solid fa-truck btn-icon"></i>
           Vyzdvihnúť objednávku
         </button>
-
-        <!-- Logo at the bottom -->
         <div class="right-panel-logo">
           <img src="assets/logo.png" alt="EASY-WASH" />
         </div>
       </div>
 
-      <!-- 2) TLAČIDLO DOMOV (všetky iné obrazovky) -->
+      <!-- 2) TLAČIDLO DOMOV (Navigation) -->
       <div id="returnHomeScreen" class="screen">
         <h1 style="font-size: 20px; text-align: center;">Navigácia</h1>
         <div style="font-size: 32px; text-align: center; margin: 20px 0;">
@@ -844,8 +544,6 @@
           <i class="fa-solid fa-house btn-icon"></i>
           Domov
         </button>
-
-        <!-- Logo at the bottom -->
         <div class="right-panel-logo">
           <img src="assets/logo.png" alt="EASY-WASH" />
         </div>
@@ -853,254 +551,21 @@
     </div>
   </div>
 
-  <script>
-    /***********************************************
-     * GLOBAL & INITIAL ANIMATION SETUP
-     ***********************************************/
-    let generatedOrderCode = "";
-    let generatedQRCode = "";
-    let smsCode = "";
+  <!-- MESSAGE MODAL -->
+  <div id="messageModal" class="modal">
+    <div class="modal-content">
+      <p id="modalMessage"></p>
+      <button onclick="closeModalMessage()">OK</button>
+    </div>
+  </div>
 
-    // For the message modal
-    let messageModalCallback = null;
+  <!-- KEYBOARD CONTAINER (loaded from partials/keyboard.html) -->
+  <div id="keyboardContainer"></div>
 
-    // For the on-screen keyboard
-    let activeInputId = null;
-
-    // HOME SCREEN ANIMÁCIE (rotating icons)
-    const homeAnimations = [
-      "assets/lottie/zadanie-objednavky.json",
-      "assets/lottie/vlozeniie-do-skrinky.json",
-      "assets/lottie/cakanie-na-pradlo.json",
-      "assets/lottie/pickup.json",
-      "assets/lottie/pracovna.json",
-      "assets/lottie/notofikacia-pre-vyzdvihnutie.json",
-      "assets/lottie/platba.json",
-      "assets/lottie/objednavka-kompletna.json"
-    ];
-    // Descriptions for each rotating icon
-    const homeAnimationLabels = [
-      "Zadanie objednávky",
-      "Vloženie do skrinky",
-      "Čakanie na prádlo",
-      "Vyzdvihnutie (Pickup)",
-      "Pracovňa – spracovanie prádla",
-      "Notifikácia pre vyzdvihnutie",
-      "Platba",
-      "Objednávka kompletná"
-    ];
-    let currentHomeAnimIndex = 0;
-
-    window.addEventListener("DOMContentLoaded", () => {
-      const homeLottiePlayer = document.getElementById("homeLottiePlayer");
-      const tooltipEl = document.getElementById("homeAnimationTooltip");
-
-      // Load the first animation
-      homeLottiePlayer.load(homeAnimations[currentHomeAnimIndex]);
-      tooltipEl.innerText = homeAnimationLabels[currentHomeAnimIndex];
-
-      // On each animation complete, move to the next animation + update label
-      homeLottiePlayer.addEventListener("complete", () => {
-        currentHomeAnimIndex++;
-        if (currentHomeAnimIndex >= homeAnimations.length) {
-          currentHomeAnimIndex = 0; // loop back
-        }
-        homeLottiePlayer.load(homeAnimations[currentHomeAnimIndex]);
-        homeLottiePlayer.play();
-        tooltipEl.innerText = homeAnimationLabels[currentHomeAnimIndex];
-      });
-
-      // Show the right-panel pickup screen on load
-      showPickupRightPanel();
-
-      // Hide keyboard if clicking outside an input or the keyboard
-      const kiosk = document.getElementById("kioskContainer");
-      kiosk.addEventListener("click", (e) => {
-        if (!e.target.closest("input") && !e.target.closest("#keyboard")) {
-          closeKeyboard();
-        }
-      });
-    });
-
-    /***********************************************
-     * MODAL MESSAGES (replaces alert)
-     ***********************************************/
-    function showMessage(msg, callback) {
-      const modal = document.getElementById("messageModal");
-      const modalText = document.getElementById("modalMessage");
-      modalText.innerText = msg;
-      messageModalCallback = callback || null;
-      modal.style.display = "flex";
-    }
-
-    function closeModalMessage() {
-      const modal = document.getElementById("messageModal");
-      modal.style.display = "none";
-      if (messageModalCallback) {
-        messageModalCallback();
-        messageModalCallback = null;
-      }
-    }
-
-    /***********************************************
-     * ON-SCREEN KEYBOARD
-     ***********************************************/
-    function openKeyboardForInput(inputId) {
-      activeInputId = inputId;
-      document.getElementById("keyboard").style.display = "block";
-    }
-
-    function typeKey(key) {
-      if (!activeInputId) return;
-      const inputEl = document.getElementById(activeInputId);
-      if (key === "Backspace") {
-        inputEl.value = inputEl.value.slice(0, -1);
-      } else {
-        inputEl.value += key;
-      }
-    }
-
-    function keyboardBackspace() {
-      typeKey("Backspace");
-    }
-
-    function closeKeyboard() {
-      document.getElementById("keyboard").style.display = "none";
-      activeInputId = null;
-    }
-
-    /***********************************************
-     * NAVIGATION & PANELS
-     ***********************************************/
-    function setLanguage(lang) {
-      showMessage("Prepínam jazyk na: " + (lang === "sk" ? "Slovenčina" : "English"));
-    }
-
-    function navigateTo(screenId) {
-      const screens = document.querySelectorAll("#screensContainer .screen");
-      screens.forEach((screen) => screen.classList.remove("active"));
-
-      const target = document.getElementById(screenId);
-      if (target) {
-        target.classList.add("active");
-      }
-
-      // If not on home-screen, show "returnHomeScreen" on the right panel
-      if (screenId === "home-screen") {
-        showPickupRightPanel();
-      } else {
-        showReturnHomeRightPanel();
-      }
-    }
-    function navigateBack() {
-      navigateTo("home-screen");
-    }
-    function navigateHome() {
-      navigateTo("home-screen");
-    }
-
-    // RIGHT PANEL
-    function showPickupRightPanel() {
-      document.getElementById("pickupScreen").classList.add("active");
-      document.getElementById("returnHomeScreen").classList.remove("active");
-    }
-    function showReturnHomeRightPanel() {
-      document.getElementById("pickupScreen").classList.remove("active");
-      document.getElementById("returnHomeScreen").classList.add("active");
-    }
-
-    function startPickupProcess() {
-      navigateTo("orderPickupPaymentScreen");
-      showReturnHomeRightPanel();
-    }
-
-    /***********************************************
-     * KIOSK LOGIC
-     ***********************************************/
-    function sendSMSCode() {
-      const phone = document.getElementById("phoneInput").value.trim();
-      if (!phone) {
-        showMessage("Zadajte telefónne číslo!");
-        return;
-      }
-      showMessage("SMS kód bol odoslaný na číslo " + phone, () => {
-        smsCode = "0000";
-        navigateTo("smsVerificationScreen");
-      });
-    }
-
-    function verifySMSCode() {
-      const inputCode = document.getElementById("smsCodeInput").value.trim();
-      if (inputCode === smsCode) {
-        showMessage("Telefónne číslo bolo úspešne overené.", () => {
-          navigateTo("serviceSelectionScreen");
-        });
-      } else {
-        showMessage("Nesprávny kód. Skúste to znova.");
-      }
-    }
-
-    function selectService(service) {
-      showMessage("Vybrali ste službu: " + service, () => {
-        navigateTo("weightMeasurementScreen");
-      });
-    }
-
-    // Start weight measurement (no "simulate" text)
-    function startWeightMeasurement() {
-      const progressBar = document.getElementById("weightProgress");
-      progressBar.style.width = "0%";
-      setTimeout(() => {
-        progressBar.style.width = "100%";
-      }, 100);
-      setTimeout(() => {
-        // For demonstration, we pick a random weight
-        const weight = (Math.random() * 5 + 1).toFixed(2);
-        showMessage("Zmeraná hmotnosť: " + weight + " kg", () => {
-          navigateTo("orderLockScreen");
-        });
-      }, 2100);
-    }
-
-    function generateOrderCode() {
-      generatedOrderCode = Math.floor(100000 + Math.random() * 900000).toString();
-      generatedQRCode = "QR" + generatedOrderCode;
-      document.getElementById("generatingCode").classList.remove("blink");
-      document.getElementById("orderCodeDisplay").innerText = generatedOrderCode;
-      document.getElementById("qrCodeDisplay").innerText = generatedQRCode;
-      navigateTo("orderReadyScreen");
-    }
-
-    // Naskenovať QR kód (no "simulate" text)
-    function scanQRCode() {
-      showMessage("Naskenovanie prebieha...", () => {
-        // For demonstration, just move forward
-        navigateTo("orderLockScreen");
-      });
-    }
-
-    function goToPaymentScreen() {
-      navigateTo("paymentScreen");
-    }
-
-    // Payment
-    function startCardPayment() {
-      showMessage("Platba kartou prebieha...");
-    }
-    function startContactlessPayment() {
-      showMessage("Bezkontaktná platba prebieha...");
-    }
-
-    function sendInvoice() {
-      const email = document.getElementById("invoiceEmailInput").value.trim();
-      if (!email) {
-        showMessage("Zadajte platný email!");
-        return;
-      }
-      showMessage("Faktúra bola odoslaná na " + email, () => {
-        navigateTo("lockerOpenScreen");
-      });
-    }
-  </script>
+  <!-- SCRIPTS -->
+  <!-- kiosk-keyboard.js -> loads partials/keyboard.html into #keyboardContainer -->
+  <script src="js/kiosk-keyboard.js"></script>
+  <!-- kiosk.js -> main kiosk logic (navigation, popups, rotating icons, etc.) -->
+  <script src="js/kiosk.js"></script>
 </body>
 </html>
