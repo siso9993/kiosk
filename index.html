@@ -11,13 +11,7 @@
   />
   
   <!-- Font Awesome (CDN) -->
-  <link
-    rel="stylesheet"
-    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
-    integrity="sha512-9nu6Sdz9EUK9AIcs62hP01geIKUloK+ZqYMn1tzfN2cSr4+zI/sinFjkX5NYvCksIf21zoAY21vt7K9gRILUgA=="
-    crossorigin="anonymous"
-    referrerpolicy="no-referrer"
-  />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" />
 
   <!-- Lottie (for .json animations) -->
   <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
@@ -55,13 +49,11 @@
             ></lottie-player>
           </div>
           <p id="homeAnimationTooltip" class="animation-description"></p>
-
           <p>
             Naša služba zabezpečí rýchle a spoľahlivé pranie, sušenie, žehlenie a
             zloženie vášho prádla. Odovzdajte prádlo do nášho lockerboxu a my sa
             postaráme o zvyšok.
           </p>
-
           <button onclick="navigateTo('newOrderScreen')">
             <i class="fa-solid fa-plus-circle btn-icon"></i>
             Nová objednávka bez aplikácie
@@ -100,10 +92,6 @@
             <i class="fa-solid fa-sms btn-icon"></i>
             Odoslať SMS kód
           </button>
-          <button onclick="navigateBack()">
-            <i class="fa-solid fa-arrow-left btn-icon"></i>
-            Späť
-          </button>
         </div>
 
         <!-- SMS VERIFICATION SCREEN -->
@@ -130,10 +118,6 @@
             <i class="fa-solid fa-check-circle btn-icon"></i>
             Overiť kód
           </button>
-          <button onclick="navigateBack()">
-            <i class="fa-solid fa-arrow-left btn-icon"></i>
-            Späť
-          </button>
         </div>
 
         <!-- SERVICE SELECTION SCREEN -->
@@ -153,10 +137,6 @@
               Pranie + Sušenie + Žehlenie + Zloženie
               <span class="price-tag">4,5 €/kg</span>
             </div>
-          </button>
-          <button onclick="navigateBack()">
-            <i class="fa-solid fa-arrow-left btn-icon"></i>
-            Späť
           </button>
         </div>
 
@@ -183,13 +163,7 @@
           </div>
           <div
             class="progress-container"
-            style="
-              background: #ccc;
-              border-radius: 4px;
-              overflow: hidden;
-              height: 10px;
-              margin: 10px 0;
-            "
+            style="background: #ccc; border-radius: 4px; overflow: hidden; height: 10px; margin: 10px 0;"
           >
             <div
               class="progress-bar"
@@ -201,15 +175,11 @@
             <i class="fa-solid fa-weight-scale btn-icon"></i>
             Spustiť meranie
           </button>
-          <button onclick="navigateBack()">
-            <i class="fa-solid fa-arrow-left btn-icon"></i>
-            Späť
-          </button>
         </div>
 
-        <!-- ORDER LOCK SCREEN -->
-        <div id="orderLockScreen" class="screen">
-          <h1>Uzamknutie objednávky</h1>
+        <!-- VLOŽENIE DO SKRINKY SCREEN -->
+        <div id="lockerInsertionScreen" class="screen">
+          <h1>Vloženie do skrinky</h1>
           <div class="lottie-container lottie-sm">
             <lottie-player
               src="assets/lottie/vlozeniie-do-skrinky.json"
@@ -220,25 +190,14 @@
             ></lottie-player>
           </div>
           <p>
-            Prádlo bolo vložené do správnej skrinky. Systém teraz uzamkne objednávku
-            a generuje kód.
+            Vložte svoje prádlo do otvorenej skrinky. Po vložení a zatvorení skrinky
+            sa objednávka automaticky dokončí.
           </p>
-          <div id="generatingCode" class="blink">
-            <p>Generujem kód...</p>
-          </div>
-          <button onclick="generateOrderCode()">
-            <i class="fa-solid fa-lock btn-icon"></i>
-            Dokončiť objednávku
-          </button>
-          <button onclick="navigateBack()">
-            <i class="fa-solid fa-arrow-left btn-icon"></i>
-            Späť
-          </button>
         </div>
 
-        <!-- ORDER READY SCREEN -->
-        <div id="orderReadyScreen" class="screen">
-          <h1>Objednávka pripravená</h1>
+        <!-- ORDER COMPLETION SCREEN -->
+        <div id="orderCompletionScreen" class="screen">
+          <h1>Vytlačenie QR lístka a potvrdenie Dokončenia objednávky</h1>
           <div class="lottie-container lottie-sm">
             <lottie-player
               src="assets/lottie/objednavka-kompletna.json"
@@ -257,8 +216,7 @@
             <span id="qrCodeDisplay"></span>
           </p>
           <p>
-            Objednávka bola spracovaná. Použite tento kód alebo naskenujte QR kód
-            pri vyzdvihnutí.
+            Objednávka bola úspešne dokončená. Použite tento kód alebo naskenujte QR kód pri vyzdvihnutí.
           </p>
           <button onclick="navigateHome()">
             <i class="fa-solid fa-house btn-icon"></i>
@@ -316,22 +274,9 @@
             <i class="fa-solid fa-check btn-icon"></i>
             Už mám aplikáciu / som registrovaný
           </button>
-          <button onclick="navigateBack()">
-            <i class="fa-solid fa-arrow-left btn-icon"></i>
-            Späť
-          </button>
-          <div class="lottie-container lottie-sm">
-            <lottie-player
-              src="assets/lottie/registracia.json"
-              background="transparent"
-              speed="1"
-              loop
-              autoplay
-            ></lottie-player>
-          </div>
         </div>
 
-        <!-- REGISTERED SCREEN -->
+        <!-- APP REGISTERED SCREEN -->
         <div id="appRegisteredScreen" class="screen">
           <h1>Registrácia úspešná</h1>
           <div class="lottie-container lottie-sm">
@@ -344,8 +289,7 @@
             ></lottie-player>
           </div>
           <p>
-            Vaše telefónne číslo bolo overené. Teraz si objednávku môžete zadať
-            cez aplikáciu alebo web.
+            Vaše telefónne číslo bolo overené. Teraz si objednávku môžete zadať cez aplikáciu alebo web.
           </p>
           <button onclick="navigateHome()">
             <i class="fa-solid fa-house btn-icon"></i>
@@ -353,7 +297,7 @@
           </button>
         </div>
 
-        <!-- SCAN SCREEN -->
+        <!-- SCAN ORDER SCREEN -->
         <div id="scanOrderScreen" class="screen">
           <h1>Zadať/naskenovať objednávkový kód</h1>
           <div class="lottie-container lottie-sm">
@@ -380,13 +324,9 @@
             <i class="fa-solid fa-camera btn-icon"></i>
             Naskenovať QR kód
           </button>
-          <button onclick="navigateBack()">
-            <i class="fa-solid fa-arrow-left btn-icon"></i>
-            Späť
-          </button>
         </div>
 
-        <!-- ORDER PICKUP PAYMENT SCREEN (two side-by-side animations) -->
+        <!-- ORDER PICKUP PAYMENT SCREEN -->
         <div id="orderPickupPaymentScreen" class="screen">
           <h1>Vyzdvihnutie objednávky</h1>
           <div style="display: flex; gap: 20px; justify-content: center; margin-bottom: 20px;">
@@ -423,10 +363,6 @@
             <i class="fa-solid fa-truck btn-icon"></i>
             Pokračovať
           </button>
-          <button onclick="navigateBack()">
-            <i class="fa-solid fa-arrow-left btn-icon"></i>
-            Späť
-          </button>
         </div>
 
         <!-- PAYMENT SCREEN -->
@@ -456,10 +392,6 @@
             <i class="fa-solid fa-file-invoice btn-icon"></i>
             Potvrdiť platbu
           </button>
-          <button onclick="navigateBack()">
-            <i class="fa-solid fa-arrow-left btn-icon"></i>
-            Späť
-          </button>
         </div>
 
         <!-- INVOICE SCREEN -->
@@ -486,10 +418,6 @@
             <i class="fa-solid fa-paper-plane btn-icon"></i>
             Odoslať faktúru
           </button>
-          <button onclick="navigateBack()">
-            <i class="fa-solid fa-arrow-left btn-icon"></i>
-            Späť
-          </button>
         </div>
 
         <!-- LOCKER OPEN SCREEN -->
@@ -513,7 +441,7 @@
 
       </div>
       
-      <!-- FOOTER LINKS (Restored) at the bottom of LEFT PANEL -->
+      <!-- FOOTER LINKS -->
       <div class="footer-links">
         <a href="#">Obchodné podmienky</a> |
         <a href="#">GDPR</a> |
@@ -523,7 +451,7 @@
 
     <!-- RIGHT PANEL -->
     <div class="right-panel">
-      <!-- 1) VYZDVIHNUTIE (Home Screen) -->
+      <!-- Pickup Home Screen -->
       <div id="pickupScreen" class="screen active">
         <h1>Vyzdvihnutie</h1>
         <div style="font-size: 48px; text-align: center; margin: 20px 0;">
@@ -534,14 +462,13 @@
           <i class="fa-solid fa-truck btn-icon"></i>
           Vyzdvihnúť objednávku
         </button>
-
-        <!-- Logo at the bottom -->
+        <!-- Logo -->
         <div class="right-panel-logo">
           <img src="assets/logo.png" alt="EASY-WASH" />
         </div>
       </div>
 
-      <!-- 2) TLAČIDLO DOMOV (Navigation) -->
+      <!-- Navigation Home Button -->
       <div id="returnHomeScreen" class="screen">
         <h1 style="font-size: 20px; text-align: center;">Navigácia</h1>
         <div style="font-size: 32px; text-align: center; margin: 20px 0;">
@@ -552,8 +479,7 @@
           <i class="fa-solid fa-house btn-icon"></i>
           Domov
         </button>
-
-        <!-- Logo at the bottom -->
+        <!-- Logo -->
         <div class="right-panel-logo">
           <img src="assets/logo.png" alt="EASY-WASH" />
         </div>
@@ -561,7 +487,7 @@
     </div>
   </div>
 
-  <!-- MESSAGE MODAL (for kiosk pop-up messages) -->
+  <!-- MESSAGE MODAL (kiosk pop-up messages) -->
   <div id="messageModal" class="modal">
     <div class="modal-content">
       <p id="modalMessage"></p>
@@ -573,9 +499,7 @@
   <div id="keyboardContainer"></div>
 
   <!-- JS SCRIPTS -->
-  <!-- 1) kiosk-keyboard.js -> loads partials/keyboard.html into #keyboardContainer -->
   <script src="js/kiosk-keyboard.js"></script>
-  <!-- 2) kiosk.js -> main kiosk logic (navigation, popups, rotating icons, etc.) -->
   <script src="js/kiosk.js"></script>
 </body>
 </html>
