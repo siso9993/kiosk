@@ -33,7 +33,7 @@
 
     /* KIOSK CONTAINER */
     .kiosk-container {
-      position: relative; /* for modal/keyboard absolute positioning inside kiosk */
+      position: relative; /* for language switcher & keyboard absolute positioning */
       width: 720px;
       height: 900px;
       background: linear-gradient(135deg, #f7f9fc, #e3e7f0);
@@ -42,6 +42,22 @@
       display: flex;
       flex-direction: row;
       overflow: hidden;
+    }
+
+    /* LANGUAGE SWITCHER: top-left to avoid right-panel overlap */
+    .language-switcher {
+      position: absolute;
+      top: 15px;
+      left: 15px;
+      display: flex;
+      gap: 20px;
+      z-index: 999; /* above content */
+    }
+    .lang-option {
+      font-size: 32px; /* bigger icons */
+      cursor: pointer;
+      user-select: none;
+      padding: 5px; /* more padding */
     }
 
     /* PANELS */
@@ -61,40 +77,23 @@
     .right-panel {
       width: 30%;
       background-color: #f5f7fa;
-      position: relative; /* so the language switcher can be absolute */
+      position: relative;
     }
 
-    /* LANGUAGE SWITCHER (top-right in the right panel) */
-    .language-switcher {
-      position: absolute;
-      top: 10px;
-      right: 10px;
-      display: flex;
-      gap: 20px;
-      z-index: 10;
-    }
-    .lang-option {
-      font-size: 32px; /* bigger icons */
-      cursor: pointer;
-      user-select: none;
-      padding: 5px; /* more padding */
-    }
-
-    /* FOOTER */
-    .footer {
-      position: absolute;
-      bottom: 30px; /* push it up from bottom a bit */
-      width: 100%;
+    /* FOOTER-LINKS: bottom of the LEFT panel */
+    .footer-links {
+      margin-top: auto; /* push it to the bottom */
+      padding: 20px;
       text-align: center;
       font-size: 14px;
       color: #555;
     }
-    .footer a {
+    .footer-links a {
       color: #007bff;
       text-decoration: none;
       margin: 0 5px;
     }
-    .footer a:hover {
+    .footer-links a:hover {
       text-decoration: underline;
     }
 
@@ -124,7 +123,7 @@
       box-sizing: border-box;
       border: 1px solid #ccc;
       border-radius: 4px;
-      cursor: pointer; /* indicate it's clickable on kiosk */
+      cursor: pointer; /* kiosk style */
     }
 
     /* BUTTONS */
@@ -222,8 +221,6 @@
       width: 150px;
       height: 150px;
     }
-
-    /* HOME SCREEN ANIMATION TOOLTIP */
     .animation-description {
       text-align: center;
       font-size: 14px;
@@ -232,9 +229,9 @@
       font-weight: 500;
     }
 
-    /* MESSAGE MODAL (replaces browser alerts) */
+    /* MODAL (replaces alerts) */
     .modal {
-      position: absolute; /* inside kiosk-container */
+      position: absolute;
       top: 0;
       left: 0;
       width: 100%;
@@ -243,7 +240,7 @@
       display: none; /* hidden by default */
       align-items: center;
       justify-content: center;
-      z-index: 9999; /* on top of everything */
+      z-index: 9999;
     }
     .modal-content {
       background: #fff;
@@ -296,16 +293,18 @@
       text-align: center;
     }
     .right-panel-logo img {
-      width: 80px; /* adjust as needed */
+      width: 80px;
     }
   </style>
 </head>
 
 <body>
   <div class="kiosk-container" id="kioskContainer">
-    <!-- LEFT PANEL (screens) -->
+    <!-- LEFT PANEL -->
     <div class="left-panel">
+      <!-- SCREENS CONTAINER -->
       <div id="screensContainer">
+        
         <!-- HOME SCREEN -->
         <div id="home-screen" class="screen active">
           <h1>Vitajte v KIOSK</h1>
@@ -318,7 +317,6 @@
               autoplay
             ></lottie-player>
           </div>
-          <!-- Here is the label for the rotating icons -->
           <p id="homeAnimationTooltip" class="animation-description"></p>
 
           <p>
@@ -671,52 +669,51 @@
           </button>
         </div>
 
-        <!-- VYZDVIHNUTIE OBJEDNÁVKY (PLATBA) -->
-<div id="orderPickupPaymentScreen" class="screen">
-  <h1>Vyzdvihnutie objednávky</h1>
-  
-  <!-- Two side-by-side animations -->
-  <div style="display: flex; gap: 20px; justify-content: center; margin-bottom: 20px;">
-    <!-- First animation: scan-qr.json -->
-    <div class="lottie-container lottie-sm">
-      <lottie-player
-        src="assets/lottie/scan-qr.json"
-        background="transparent"
-        speed="1"
-        loop
-        autoplay
-      ></lottie-player>
-    </div>
-    <!-- Second animation: zadavanie-kodu.json -->
-    <div class="lottie-container lottie-sm">
-      <lottie-player
-        src="assets/lottie/zadavanie-kodu.json"
-        background="transparent"
-        speed="1"
-        loop
-        autoplay
-      ></lottie-player>
-    </div>
-  </div>
-  
-  <p>Zadajte alebo naskenujte objednávkový kód pre vyzdvihnutie.</p>
-  <label>Zadajte kód:</label>
-  <input
-    type="text"
-    id="pickupCodeInput"
-    placeholder="Zadajte kód"
-    onclick="openKeyboardForInput('pickupCodeInput')"
-  />
-  <button onclick="navigateTo('paymentScreen')">
-    <i class="fa-solid fa-truck btn-icon"></i>
-    Pokračovať
-  </button>
-  <button onclick="navigateBack()">
-    <i class="fa-solid fa-arrow-left btn-icon"></i>
-    Späť
-  </button>
-</div>
+        <!-- VYZDVIHNUTIE OBJEDNÁVKY (SIDE-BY-SIDE ANIMATIONS) -->
+        <div id="orderPickupPaymentScreen" class="screen">
+          <h1>Vyzdvihnutie objednávky</h1>
 
+          <!-- TWO animations side by side -->
+          <div style="display: flex; gap: 20px; justify-content: center; margin-bottom: 20px;">
+            <!-- scan-qr.json -->
+            <div class="lottie-container lottie-sm">
+              <lottie-player
+                src="assets/lottie/scan-qr.json"
+                background="transparent"
+                speed="1"
+                loop
+                autoplay
+              ></lottie-player>
+            </div>
+            <!-- zadavanie-kodu.json -->
+            <div class="lottie-container lottie-sm">
+              <lottie-player
+                src="assets/lottie/zadavanie-kodu.json"
+                background="transparent"
+                speed="1"
+                loop
+                autoplay
+              ></lottie-player>
+            </div>
+          </div>
+
+          <p>Zadajte alebo naskenujte objednávkový kód pre vyzdvihnutie.</p>
+          <label>Zadajte kód:</label>
+          <input
+            type="text"
+            id="pickupCodeInput"
+            placeholder="Zadajte kód"
+            onclick="openKeyboardForInput('pickupCodeInput')"
+          />
+          <button onclick="navigateTo('paymentScreen')">
+            <i class="fa-solid fa-truck btn-icon"></i>
+            Pokračovať
+          </button>
+          <button onclick="navigateBack()">
+            <i class="fa-solid fa-arrow-left btn-icon"></i>
+            Späť
+          </button>
+        </div>
 
         <!-- PLATOBNÁ OBRAZOVKA -->
         <div id="paymentScreen" class="screen">
@@ -805,16 +802,17 @@
           </button>
         </div>
       </div>
+
+      <!-- FOOTER LINKS at the bottom of LEFT PANEL -->
+      <div class="footer-links">
+        <a href="#">Obchodné podmienky</a> |
+        <a href="#">GDPR</a> |
+        <a href="#">Cenník</a>
+      </div>
     </div>
 
     <!-- RIGHT PANEL -->
     <div class="right-panel">
-      <!-- Language Switcher in top-right corner -->
-      <div class="language-switcher">
-        <span class="lang-option" onclick="setLanguage('sk')">🇸🇰</span>
-        <span class="lang-option" onclick="setLanguage('en')">🇬🇧</span>
-      </div>
-
       <!-- 1) VYZDVIHNUTIE (zobrazí sa len na Home Screen) -->
       <div id="pickupScreen" class="screen active">
         <h1>Vyzdvihnutie</h1>
@@ -851,78 +849,11 @@
         </div>
       </div>
     </div>
-
-    <!-- FOOTER -->
-    <div class="footer">
-      <a href="#">Obchodné podmienky</a> |
-      <a href="#">GDPR</a> |
-      <a href="#">Cenník</a>
-    </div>
-
-    <!-- KIOSK MESSAGE MODAL -->
-    <div id="messageModal" class="modal">
-      <div class="modal-content">
-        <p id="modalMessage"></p>
-        <button onclick="closeModalMessage()">OK</button>
-      </div>
-    </div>
-
-    <!-- ON-SCREEN KEYBOARD -->
-    <div id="keyboard" class="keyboard">
-      <div class="keyboard-row">
-        <button onclick="typeKey('1')">1</button>
-        <button onclick="typeKey('2')">2</button>
-        <button onclick="typeKey('3')">3</button>
-        <button onclick="typeKey('4')">4</button>
-        <button onclick="typeKey('5')">5</button>
-        <button onclick="typeKey('6')">6</button>
-        <button onclick="typeKey('7')">7</button>
-        <button onclick="typeKey('8')">8</button>
-        <button onclick="typeKey('9')">9</button>
-        <button onclick="typeKey('0')">0</button>
-      </div>
-      <div class="keyboard-row">
-        <button onclick="typeKey('Q')">Q</button>
-        <button onclick="typeKey('W')">W</button>
-        <button onclick="typeKey('E')">E</button>
-        <button onclick="typeKey('R')">R</button>
-        <button onclick="typeKey('T')">T</button>
-        <button onclick="typeKey('Y')">Y</button>
-        <button onclick="typeKey('U')">U</button>
-        <button onclick="typeKey('I')">I</button>
-        <button onclick="typeKey('O')">O</button>
-        <button onclick="typeKey('P')">P</button>
-      </div>
-      <div class="keyboard-row">
-        <button onclick="typeKey('A')">A</button>
-        <button onclick="typeKey('S')">S</button>
-        <button onclick="typeKey('D')">D</button>
-        <button onclick="typeKey('F')">F</button>
-        <button onclick="typeKey('G')">G</button>
-        <button onclick="typeKey('H')">H</button>
-        <button onclick="typeKey('J')">J</button>
-        <button onclick="typeKey('K')">K</button>
-        <button onclick="typeKey('L')">L</button>
-      </div>
-      <div class="keyboard-row">
-        <button onclick="typeKey('Z')">Z</button>
-        <button onclick="typeKey('X')">X</button>
-        <button onclick="typeKey('C')">C</button>
-        <button onclick="typeKey('V')">V</button>
-        <button onclick="typeKey('B')">B</button>
-        <button onclick="typeKey('N')">N</button>
-        <button onclick="typeKey('M')">M</button>
-      </div>
-      <div class="keyboard-row">
-        <button onclick="keyboardBackspace()">⌫</button>
-        <button onclick="closeKeyboard()">Close</button>
-      </div>
-    </div>
   </div>
 
   <script>
     /***********************************************
-     * GLOBAL VARIABLES & INITIAL ANIMATION SETUP
+     * GLOBAL & INITIAL ANIMATION SETUP
      ***********************************************/
     let generatedOrderCode = "";
     let generatedQRCode = "";
@@ -934,7 +865,7 @@
     // For the on-screen keyboard
     let activeInputId = null;
 
-    // HOME SCREEN ANIMÁCIE
+    // HOME SCREEN ANIMÁCIE (rotating icons)
     const homeAnimations = [
       "assets/lottie/zadanie-objednavky.json",
       "assets/lottie/vlozeniie-do-skrinky.json",
@@ -945,8 +876,7 @@
       "assets/lottie/platba.json",
       "assets/lottie/objednavka-kompletna.json"
     ];
-
-    // Corresponding text for each animation above
+    // Descriptions for each rotating icon
     const homeAnimationLabels = [
       "Zadanie objednávky",
       "Vloženie do skrinky",
@@ -957,7 +887,6 @@
       "Platba",
       "Objednávka kompletná"
     ];
-
     let currentHomeAnimIndex = 0;
 
     window.addEventListener("DOMContentLoaded", () => {
@@ -982,14 +911,10 @@
       // Show the right-panel pickup screen on load
       showPickupRightPanel();
 
-      // GLOBAL CLICK LISTENER: if click is outside an input or the keyboard, hide keyboard
+      // Hide keyboard if clicking outside an input or the keyboard
       const kiosk = document.getElementById("kioskContainer");
       kiosk.addEventListener("click", (e) => {
-        // if NOT clicking on an input or the keyboard itself...
-        if (
-          !e.target.closest("input") && // not an <input>
-          !e.target.closest("#keyboard") // not inside the keyboard
-        ) {
+        if (!e.target.closest("input") && !e.target.closest("#keyboard")) {
           closeKeyboard();
         }
       });
@@ -1010,7 +935,6 @@
       const modal = document.getElementById("messageModal");
       modal.style.display = "none";
       if (messageModalCallback) {
-        // If there's a callback, call it after closing
         messageModalCallback();
         messageModalCallback = null;
       }
@@ -1059,7 +983,7 @@
         target.classList.add("active");
       }
 
-      // Ak nie sme na home-screen, zobrazíme returnHome
+      // If not on home-screen, show "returnHomeScreen" on the right panel
       if (screenId === "home-screen") {
         showPickupRightPanel();
       } else {
