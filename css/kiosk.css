@@ -1,0 +1,276 @@
+/* kiosk.css */
+
+/* BODY: top padding so kiosk isn't too close to the top */
+body {
+  margin: 0;
+  background-color: #222;
+  font-family: 'Roboto', sans-serif;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start; /* align kiosk to top, not center */
+  padding-top: 40px;       /* add space from top of browser window */
+}
+
+/* KIOSK CONTAINER */
+.kiosk-container {
+  position: relative; /* for language switcher & keyboard absolute positioning */
+  width: 720px;
+  height: 900px;
+  background: linear-gradient(135deg, #f7f9fc, #e3e7f0);
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.6);
+  border-radius: 12px;
+  display: flex;
+  flex-direction: row;
+  overflow: hidden;
+}
+
+/* LANGUAGE SWITCHER (top-right) */
+.language-switcher {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  display: flex;
+  gap: 20px;
+  z-index: 999;
+}
+.lang-option {
+  font-size: 32px;
+  cursor: pointer;
+  user-select: none;
+  padding: 5px;
+}
+
+/* PANELS */
+.left-panel,
+.right-panel {
+  padding: 20px;
+  overflow-y: auto;
+  position: relative;
+}
+.left-panel {
+  width: 70%;
+  background-color: #fff;
+  border-right: 1px solid #ccc;
+  display: flex;
+  flex-direction: column;
+}
+.right-panel {
+  width: 30%;
+  background-color: #f5f7fa;
+}
+
+/* FOOTER-LINKS (bottom of LEFT panel) */
+.footer-links {
+  margin-top: auto; /* push it to the bottom */
+  padding: 20px;
+  text-align: center;
+  font-size: 14px;
+  color: #555;
+}
+.footer-links a {
+  color: #007bff;
+  text-decoration: none;
+  margin: 0 5px;
+}
+.footer-links a:hover {
+  text-decoration: underline;
+}
+
+/* BASIC TEXT */
+h1 {
+  font-size: 24px;
+  margin: 15px 0;
+  color: #333;
+}
+p,
+label,
+li {
+  font-size: 16px;
+  line-height: 1.5;
+  margin: 10px 0;
+  color: #555;
+}
+
+/* INPUTS */
+input[type='text'],
+input[type='tel'],
+input[type='email'] {
+  width: 100%;
+  padding: 12px;
+  margin: 8px 0 20px 0;
+  font-size: 16px;
+  box-sizing: border-box;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  cursor: pointer; /* kiosk style */
+}
+
+/* BUTTONS */
+button {
+  width: 100%;
+  padding: 12px 16px;
+  margin: 8px 0;
+  font-size: 16px;
+  background: linear-gradient(135deg, #007bff, #0056b3);
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.3s, transform 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+button:hover {
+  background: linear-gradient(135deg, #0056b3, #003f7f);
+  transform: translateY(-2px);
+}
+.btn-icon {
+  font-size: 18px;
+}
+
+/* PRICE TAG for services */
+.price-tag {
+  color: #d9534f;
+  font-weight: bold;
+  margin-left: 10px;
+  font-size: 1.1em;
+}
+
+/* QR CODE BOX */
+.qr-code {
+  width: 140px;
+  height: 140px;
+  background-color: #ddd;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  color: #555;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+}
+
+/* SCREENS */
+.screen {
+  display: none;
+  opacity: 0;
+  transform: translateY(20px);
+}
+.active {
+  display: block;
+  animation: fadeInUp 0.5s forwards;
+}
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.blink {
+  animation: blinkAnimation 1s infinite;
+}
+@keyframes blinkAnimation {
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.2;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+/* LOTTIE PLAYER CONTAINERS */
+.lottie-container {
+  width: 250px;
+  height: 250px;
+  margin: 0 auto 10px auto;
+  text-align: center;
+}
+.lottie-sm {
+  width: 150px;
+  height: 150px;
+}
+.animation-description {
+  text-align: center;
+  font-size: 14px;
+  color: #333;
+  margin-top: 8px;
+  font-weight: 500;
+}
+
+/* MODAL (replaces alerts) */
+.modal {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+}
+.modal-content {
+  background: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  text-align: center;
+  width: 80%;
+  max-width: 500px;
+  margin: 0 auto;
+}
+.modal-content p {
+  margin-bottom: 20px;
+  font-size: 18px;
+  color: #333;
+}
+
+/* ON-SCREEN KEYBOARD */
+.keyboard {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background: #e0e0e0;
+  display: none;
+  z-index: 9999;
+  padding: 10px;
+}
+.keyboard-row {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 5px;
+}
+.keyboard-row button {
+  margin: 0 3px;
+  padding: 10px 12px;
+  font-size: 16px;
+  border: none;
+  border-radius: 4px;
+  background: #ccc;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.keyboard-row button:hover {
+  background: #bbb;
+}
+
+/* RIGHT PANEL LOGO */
+.right-panel-logo {
+  margin-top: 20px;
+  text-align: center;
+}
+.right-panel-logo img {
+  width: 80px;
+}
