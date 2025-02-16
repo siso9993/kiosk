@@ -7,10 +7,15 @@ let generatedOrderCode = "";
 let generatedQRCode = "";
 let smsCode = "";
 
-// For the message modal
+// Pre admin režimy
+let adminLockerCount = 5;           // Simulovaný počet dostupných skriniek
+let adminCurrentLockerIndex = 0;    // Index aktuálne vybratej skrinky
+let adminSelectedLockers = [];      // Pole vybraných skriniek
+
+// Pre modal správu
 let messageModalCallback = null;
 
-// For the on-screen keyboard
+// Pre on-screen klávesnicu
 let activeInputId = null;
 
 // HOME SCREEN ANIMÁCIE (rotating icons)
@@ -37,15 +42,15 @@ const homeAnimationLabels = [
 let currentHomeAnimIndex = 0;
 
 window.addEventListener("DOMContentLoaded", () => {
-  // Set up rotating icons on Home Screen
+  // Nastavenie rotujúcich ikon na Home Screen
   const homeLottiePlayer = document.getElementById("homeLottiePlayer");
   const tooltipEl = document.getElementById("homeAnimationTooltip");
 
-  // Load the first animation
+  // Načíta sa prvá animácia
   homeLottiePlayer.load(homeAnimations[currentHomeAnimIndex]);
   tooltipEl.innerText = homeAnimationLabels[currentHomeAnimIndex];
 
-  // Rotate animations on complete
+  // Po dokončení animácie prepneme na ďalšiu
   homeLottiePlayer.addEventListener("complete", () => {
     currentHomeAnimIndex++;
     if (currentHomeAnimIndex >= homeAnimations.length) {
@@ -56,13 +61,12 @@ window.addEventListener("DOMContentLoaded", () => {
     tooltipEl.innerText = homeAnimationLabels[currentHomeAnimIndex];
   });
 
-  // By default, show the "pickup" screen in the right panel
+  // Štandardne zobrazíme "pickup" obrazovku v pravom paneli
   showPickupRightPanel();
 
-  // Hide keyboard if clicking outside an input or the keyboard
+  // Skrytie klávesnice, ak klikneme mimo input alebo klávesnice
   const kiosk = document.getElementById("kioskContainer");
   kiosk.addEventListener("click", (e) => {
-    // If click is NOT inside an <input> and NOT inside the #keyboard
     if (!e.target.closest("input") && !e.target.closest("#keyboard")) {
       closeKeyboard();
     }
@@ -70,7 +74,7 @@ window.addEventListener("DOMContentLoaded", () => {
 });
 
 /***********************************************
- * MODAL MESSAGES (replaces alert)
+ * MODAL SPRÁVY (nahrádza alert)
  ***********************************************/
 function showMessage(msg, callback) {
   const modal = document.getElementById("messageModal");
@@ -90,12 +94,10 @@ function closeModalMessage() {
 }
 
 /***********************************************
- * ON-SCREEN KEYBOARD
+ * ON-SCREEN KLÁVESNICA
  ***********************************************/
 function openKeyboardForInput(inputId) {
-  // Record which input is currently active
   activeInputId = inputId;
-  // Show the keyboard
   document.getElementById("keyboard").style.display = "block";
 }
 
@@ -114,13 +116,12 @@ function keyboardBackspace() {
 }
 
 function closeKeyboard() {
-  // Hide the keyboard
   document.getElementById("keyboard").style.display = "none";
   activeInputId = null;
 }
 
 /***********************************************
- * NAVIGATION & PANELS
+ * NAVIGÁCIA & PANELY
  ***********************************************/
 function setLanguage(lang) {
   showMessage("Prepínam jazyk na: " + (lang === "sk" ? "Slovenčina" : "English"));
@@ -151,7 +152,7 @@ function navigateHome() {
   navigateTo("home-screen");
 }
 
-// RIGHT PANEL
+// PRAVÝ PANEL
 function showPickupRightPanel() {
   document.getElementById("pickupScreen").classList.add("active");
   document.getElementById("returnHomeScreen").classList.remove("active");
@@ -168,7 +169,7 @@ function startPickupProcess() {
 }
 
 /***********************************************
- * KIOSK LOGIC
+ * KIOSK LOGIKA
  ***********************************************/
 function sendSMSCode() {
   const phone = document.getElementById("phoneInput").value.trim();
@@ -217,7 +218,6 @@ function startWeightMeasurement() {
 function generateOrderCode() {
   generatedOrderCode = Math.floor(100000 + Math.random() * 900000).toString();
   generatedQRCode = "QR" + generatedOrderCode;
-  // Aktualizácia zobrazenia objednávkového kódu a QR kódu
   document.getElementById("orderCodeDisplay").innerText = generatedOrderCode;
   document.getElementById("qrCodeDisplay").innerText = generatedQRCode;
   navigateTo("orderCompletionScreen");
@@ -230,11 +230,19 @@ function scanQRCode() {
   });
 }
 
+/* Aktualizovaná funkcia goToPaymentScreen:
+   Ak je zadaný kód "admin1993", spustí sa admin režim.
+*/
 function goToPaymentScreen() {
+  const pickupCode = document.getElementById("pickupCodeInput").value.trim();
+  if (pickupCode === "admin1993") {
+    navigateTo("adminLoginScreen");
+    return;
+  }
   navigateTo("paymentScreen");
 }
 
-/* Aktualizované funkcie pre platbu:
+/* Funkcie pre platbu:
    Po stlačení jednej z možností (kartou alebo bezkontaktné) sa simulovaná platba
    zobrazí a po krátkom oneskorení sa automaticky prejde na ďalší krok (Invoice Screen).
 */
@@ -269,9 +277,104 @@ function sendInvoice() {
  * SIMULÁCIA VLOŽENIA DO SKRINKY
  ***********************************************/
 function simulateLockerInsertion() {
-  // Simulácia, že používateľ vložil prádlo do skrinky a zatvoril ju.
-  // Po 3 sekundách sa automaticky vygeneruje objednávkový kód.
+  // Simulácia vloženia prádla a následné vygenerovanie objednávkového kódu.
   setTimeout(() => {
     generateOrderCode();
   }, 3000);
+}
+
+/***********************************************
+ * ADMIN FUNKCIE
+ ***********************************************/
+
+/* Admin prihlasovanie:
+   Overuje či zadaný admin kód a heslo sú správne.
+   Pre príklad používame: kód "admin1993" a heslo "adminpass".
+*/
+function adminLogin() {
+  const code = document.getElementById("adminCodeInput").value.trim();
+  const password = document.getElementById("adminPasswordInput").value.trim();
+  if (code === "admin1993" && password === "adminpass") {
+    showMessage("Admin prihlásenie úspešné.", () => {
+      navigateTo("adminMenuScreen");
+    });
+  } else {
+    showMessage("Nesprávne admin údaje. Skúste to znova.");
+  }
+}
+
+/* Režim výberu skriniek:
+   1. Po stlačení "Vybrať prvú skrinku" sa otvorí prvá skrinka a vytlačí sa QR kód.
+   2. Po stlačení "Vybrať ďalšiu skrinku" sa vyberie ďalšia skrinka.
+   3. Po vybratí všetkých skriniek sa zobrazí možnosť "Hotovo, všetky skrinky vybraté".
+*/
+function selectFirstLocker() {
+  adminLockerCount = 5; // alebo načítanie aktuálneho počtu skriniek
+  adminCurrentLockerIndex = 1;
+  adminSelectedLockers = [adminCurrentLockerIndex];
+  document.getElementById("selectedLockerInfo").innerText =
+    "Skrinka č. " +
+    adminCurrentLockerIndex +
+    " vybratá a otvorená. Vytlačený QR kód: " +
+    (generatedQRCode || "QR" + generatedOrderCode);
+  document.getElementById("nextLockerButton").style.display = "inline-block";
+  // Ak už bol vybraný počet skriniek, zobrazíme tlačidlo Hotovo
+  if (adminCurrentLockerIndex >= adminLockerCount) {
+    document.getElementById("finishLockersButton").style.display = "inline-block";
+    document.getElementById("nextLockerButton").style.display = "none";
+  }
+}
+
+function selectNextLocker() {
+  if (adminCurrentLockerIndex < adminLockerCount) {
+    adminCurrentLockerIndex++;
+    adminSelectedLockers.push(adminCurrentLockerIndex);
+    let infoElem = document.getElementById("selectedLockerInfo");
+    infoElem.innerText += "\nSkrinka č. " +
+      adminCurrentLockerIndex +
+      " vybratá a otvorená. Vytlačený QR kód: " +
+      (generatedQRCode || "QR" + generatedOrderCode);
+    if (adminCurrentLockerIndex >= adminLockerCount) {
+      document.getElementById("finishLockersButton").style.display = "inline-block";
+      document.getElementById("nextLockerButton").style.display = "none";
+    }
+  }
+}
+
+function finishLockerSelection() {
+  showMessage("Všetky skrinky boli vybraté. SMS a notifikácia boli odoslané zákazníkovi.", () => {
+    navigateHome();
+  });
+}
+
+/* Režim doplnenia skriniek:
+   1. Zamestnanec naskenuje alebo zadá QR kód prvej objednávky.
+   2. Skrinka sa otvorí a zobrazí sa informácia o otvorení.
+   3. Zamestnanec môže vložiť ďalšiu objednávku alebo ukončiť vkladanie.
+*/
+function openLockerForRestocking() {
+  const qrCodeInput = document.getElementById("restockQRCodeInput").value.trim();
+  if (!qrCodeInput) {
+    showMessage("Zadajte QR kód objednávky!");
+    return;
+  }
+  document.getElementById("restockLockerInfo").innerText =
+    "Skrinka otvorená pre objednávku s QR kódom: " + qrCodeInput;
+  document.getElementById("insertNextOrderButton").style.display = "inline-block";
+  document.getElementById("finishRestockingButton").style.display = "inline-block";
+}
+
+function insertNextOrder() {
+  // Reset pre vloženie ďalšej objednávky
+  document.getElementById("restockQRCodeInput").value = "";
+  document.getElementById("restockLockerInfo").innerText = "";
+  document.getElementById("insertNextOrderButton").style.display = "none";
+  document.getElementById("finishRestockingButton").style.display = "none";
+  showMessage("Pripravený pre ďalšiu objednávku.");
+}
+
+function finishRestocking() {
+  showMessage("Vkladanie objednávok bolo ukončené. SMS a notifikácia boli odoslané zákazníkovi.", () => {
+    navigateHome();
+  });
 }
