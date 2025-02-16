@@ -18,6 +18,22 @@
 
   <!-- Kiosk main CSS -->
   <link rel="stylesheet" href="css/kiosk.css" />
+  
+  <!-- Dodatočné štýly pre service selection tlačidlá -->
+  <style>
+    /* Zarovnanie ikoniek a textu vo službách */
+    .service-icons {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      margin-right: 10px;
+    }
+    .service-text {
+      display: inline-flex;
+      align-items: center;
+    }
+  </style>
+  
 </head>
 
 <body>
@@ -124,22 +140,30 @@
         <div id="serviceSelectionScreen" class="screen">
           <h1>Výber služby</h1>
           <p>Vyberte službu, ktorú si želáte:</p>
-          <!-- Prvá služba s pridaným žehlením – zobrazuje oba ikony -->
+          <!-- Prvá služba: Pranie + Sušenie + Žehlenie + Zloženie -->
           <button onclick="selectService('Pranie + Sušenie + Žehlenie + Zloženie')">
-            <img src="assets/washing-icon.svg" alt="Washing" class="btn-icon" style="width:24px; height:24px; margin-right:5px;">
-            <img src="assets/ironing-icon.svg" alt="Ironing" class="btn-icon" style="width:24px; height:24px;">
-            <div>
+            <span class="service-icons">
+              <img src="assets/washing-icon.svg" alt="Pranie" class="btn-icon" style="width:24px; height:24px;">
+              <img src="assets/drying-icon.svg" alt="Sušenie" class="btn-icon" style="width:24px; height:24px;">
+              <img src="assets/ironing-icon.svg" alt="Žehlenie" class="btn-icon" style="width:24px; height:24px;">
+              <img src="assets/folding-icon.svg" alt="Zloženie" class="btn-icon" style="width:24px; height:24px;">
+            </span>
+            <span class="service-text">
               Pranie + Sušenie + Žehlenie + Zloženie
               <span class="price-tag">4,5 €/kg</span>
-            </div>
+            </span>
           </button>
-          <!-- Druhá služba bez žehlenia – zobrazuje len ikonu prania -->
+          <!-- Druhá služba: Pranie + Sušenie + Zloženie -->
           <button onclick="selectService('Pranie + Sušenie + Zloženie')">
-            <img src="assets/washing-icon.svg" alt="Washing" class="btn-icon" style="width:24px; height:24px;">
-            <div>
+            <span class="service-icons">
+              <img src="assets/washing-icon.svg" alt="Pranie" class="btn-icon" style="width:24px; height:24px;">
+              <img src="assets/drying-icon.svg" alt="Sušenie" class="btn-icon" style="width:24px; height:24px;">
+              <img src="assets/folding-icon.svg" alt="Zloženie" class="btn-icon" style="width:24px; height:24px;">
+            </span>
+            <span class="service-text">
               Pranie + Sušenie + Zloženie
               <span class="price-tag">2,99 €/kg</span>
-            </div>
+            </span>
           </button>
         </div>
 
@@ -363,7 +387,6 @@
             onclick="openKeyboardForInput('pickupCodeInput')"
           />
           <button onclick="goToPaymentScreen()">
-            <!-- Použitie vlastnej ikonky pick-up.svg -->
             <img src="assets/pick-up.svg" alt="Pick-up" class="btn-icon" style="width:24px; height:24px;">
             Pokračovať
           </button>
@@ -468,7 +491,6 @@
         </div>
         <p>Ak chcete objednávku vyzdvihnúť okamžite, stlačte tlačidlo:</p>
         <button onclick="startPickupProcess()">
-          <!-- Použitie pick-up.svg ikonky -->
           <img src="assets/pick-up.svg" alt="Pick-up" class="btn-icon" style="width:24px; height:24px;">
           Vyzdvihnúť objednávku
         </button>
