@@ -672,34 +672,51 @@
         </div>
 
         <!-- VYZDVIHNUTIE OBJEDNÁVKY (PLATBA) -->
-        <div id="orderPickupPaymentScreen" class="screen">
-          <h1>Vyzdvihnutie objednávky</h1>
-          <div class="lottie-container lottie-sm">
-            <lottie-player
-              src="assets/lottie/objednavka-kompletna.json"
-              background="transparent"
-              speed="1"
-              loop
-              autoplay
-            ></lottie-player>
-          </div>
-          <p>Zadajte alebo naskenujte objednávkový kód pre vyzdvihnutie.</p>
-          <label>Zadajte kód:</label>
-          <input
-            type="text"
-            id="pickupCodeInput"
-            placeholder="Zadajte kód"
-            onclick="openKeyboardForInput('pickupCodeInput')"
-          />
-          <button onclick="navigateTo('paymentScreen')">
-            <i class="fa-solid fa-truck btn-icon"></i>
-            Pokračovať
-          </button>
-          <button onclick="navigateBack()">
-            <i class="fa-solid fa-arrow-left btn-icon"></i>
-            Späť
-          </button>
-        </div>
+<div id="orderPickupPaymentScreen" class="screen">
+  <h1>Vyzdvihnutie objednávky</h1>
+  
+  <!-- Two side-by-side animations -->
+  <div style="display: flex; gap: 20px; justify-content: center; margin-bottom: 20px;">
+    <!-- First animation: scan-qr.json -->
+    <div class="lottie-container lottie-sm">
+      <lottie-player
+        src="assets/lottie/scan-qr.json"
+        background="transparent"
+        speed="1"
+        loop
+        autoplay
+      ></lottie-player>
+    </div>
+    <!-- Second animation: zadavanie-kodu.json -->
+    <div class="lottie-container lottie-sm">
+      <lottie-player
+        src="assets/lottie/zadavanie-kodu.json"
+        background="transparent"
+        speed="1"
+        loop
+        autoplay
+      ></lottie-player>
+    </div>
+  </div>
+  
+  <p>Zadajte alebo naskenujte objednávkový kód pre vyzdvihnutie.</p>
+  <label>Zadajte kód:</label>
+  <input
+    type="text"
+    id="pickupCodeInput"
+    placeholder="Zadajte kód"
+    onclick="openKeyboardForInput('pickupCodeInput')"
+  />
+  <button onclick="navigateTo('paymentScreen')">
+    <i class="fa-solid fa-truck btn-icon"></i>
+    Pokračovať
+  </button>
+  <button onclick="navigateBack()">
+    <i class="fa-solid fa-arrow-left btn-icon"></i>
+    Späť
+  </button>
+</div>
+
 
         <!-- PLATOBNÁ OBRAZOVKA -->
         <div id="paymentScreen" class="screen">
