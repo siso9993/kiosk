@@ -124,18 +124,21 @@
         <div id="serviceSelectionScreen" class="screen">
           <h1>Výber služby</h1>
           <p>Vyberte službu, ktorú si želáte:</p>
-          <button onclick="selectService('Pranie + Sušenie + Zloženie')">
-            <i class="fa-solid fa-tshirt btn-icon"></i>
-            <div>
-              Pranie + Sušenie + Zloženie
-              <span class="price-tag">2,99 €/kg</span>
-            </div>
-          </button>
+          <!-- Prvá služba s pridaným žehlením – zobrazuje oba ikony -->
           <button onclick="selectService('Pranie + Sušenie + Žehlenie + Zloženie')">
-            <i class="fa-solid fa-iron btn-icon"></i>
+            <img src="assets/washing-icon.svg" alt="Washing" class="btn-icon" style="width:24px; height:24px; margin-right:5px;">
+            <img src="assets/ironing-icon.svg" alt="Ironing" class="btn-icon" style="width:24px; height:24px;">
             <div>
               Pranie + Sušenie + Žehlenie + Zloženie
               <span class="price-tag">4,5 €/kg</span>
+            </div>
+          </button>
+          <!-- Druhá služba bez žehlenia – zobrazuje len ikonu prania -->
+          <button onclick="selectService('Pranie + Sušenie + Zloženie')">
+            <img src="assets/washing-icon.svg" alt="Washing" class="btn-icon" style="width:24px; height:24px;">
+            <div>
+              Pranie + Sušenie + Zloženie
+              <span class="price-tag">2,99 €/kg</span>
             </div>
           </button>
         </div>
@@ -360,7 +363,8 @@
             onclick="openKeyboardForInput('pickupCodeInput')"
           />
           <button onclick="goToPaymentScreen()">
-            <i class="fa-solid fa-truck btn-icon"></i>
+            <!-- Použitie vlastnej ikonky pick-up.svg -->
+            <img src="assets/pick-up.svg" alt="Pick-up" class="btn-icon" style="width:24px; height:24px;">
             Pokračovať
           </button>
         </div>
@@ -387,10 +391,6 @@
           <button onclick="startContactlessPayment()">
             <i class="fa-solid fa-mobile-screen btn-icon"></i>
             Zaplatiť bezkontaktne
-          </button>
-          <button onclick="navigateTo('invoiceScreen')">
-            <i class="fa-solid fa-file-invoice btn-icon"></i>
-            Potvrdiť platbu
           </button>
         </div>
 
@@ -468,7 +468,8 @@
         </div>
         <p>Ak chcete objednávku vyzdvihnúť okamžite, stlačte tlačidlo:</p>
         <button onclick="startPickupProcess()">
-          <i class="fa-solid fa-truck btn-icon"></i>
+          <!-- Použitie pick-up.svg ikonky -->
+          <img src="assets/pick-up.svg" alt="Pick-up" class="btn-icon" style="width:24px; height:24px;">
           Vyzdvihnúť objednávku
         </button>
         <!-- Logo -->
