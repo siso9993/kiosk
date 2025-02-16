@@ -11,18 +11,31 @@ body {
   padding-top: 40px;       /* add space from top of browser window */
 }
 
-/* KIOSK CONTAINER */
+/* Kiosk Container */
 .kiosk-container {
-  position: relative; /* for language switcher & keyboard absolute positioning */
+  position: relative;      /* crucial: so .keyboard can position inside */
   width: 720px;
   height: 900px;
   background: linear-gradient(135deg, #f7f9fc, #e3e7f0);
-  box-shadow: 0 0 15px rgba(0, 0, 0, 0.6);
+  box-shadow: 0 0 15px rgba(0,0,0,0.6);
   border-radius: 12px;
   display: flex;
   flex-direction: row;
-  overflow: hidden;
+  overflow: hidden;        /* hide anything that goes outside 720x900 */
 }
+
+/* On-Screen Keyboard */
+.keyboard {
+  position: absolute;      /* absolute within kiosk-container */
+  bottom: 0;               /* pinned to bottom of kiosk container */
+  left: 0;
+  width: 100%;             /* span entire kiosk width (720px) */
+  background: #e0e0e0;
+  z-index: 9999;
+  padding: 10px;
+  display: none;           /* hidden by default */
+}
+
 
 /* LANGUAGE SWITCHER (top-right) */
 .language-switcher {
@@ -30,11 +43,11 @@ body {
   top: 0px;
   right: 15px;
   display: flex;
-  gap: 10px;
+  gap: 5px;
   z-index: 999;
 }
 .lang-option {
-  font-size: 32px;
+  font-size: 20px;
   cursor: pointer;
   user-select: none;
   padding: 5px;
@@ -43,7 +56,9 @@ body {
 /* PANELS */
 .left-panel,
 .right-panel {
-  padding: 20px;
+  padding-left: 20px;
+  padding-right: 20px;
+  padding-bottom: 20px;
   padding-top:60px
   overflow-y: auto;
   position: relative;
