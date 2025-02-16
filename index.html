@@ -515,20 +515,16 @@
           </div>
 
           <!-- ADMIN LOGIN SCREEN -->
-          <div id="adminLoginScreen" class="screen">
-            <h1>Admin prihlásenie</h1>
-            <p>Zadajte admin kód a heslo:</p>
-            <label>Admin kód:</label>
-            <input type="text" id="adminCodeInput" placeholder="Admin kód" />
-            <label>Heslo:</label>
-            <input
-              type="password"
-              id="adminPasswordInput"
-              placeholder="Heslo"
-            />
-            <button onclick="adminLogin()">Prihlásiť sa</button>
-            <button onclick="navigateHome()">Späť</button>
-          </div>
+<div id="adminLoginScreen" class="screen">
+  <h1>Admin prihlásenie</h1>
+  <p>Zadajte admin kód a heslo:</p>
+  <label>Admin kód:</label>
+  <input type="text" id="adminCodeInput" placeholder="Admin kód" onclick="openKeyboardForInput('adminCodeInput')" />
+  <label>Heslo:</label>
+  <input type="password" id="adminPasswordInput" placeholder="Heslo" onclick="openKeyboardForInput('adminPasswordInput')" />
+  <button onclick="adminLogin()">Prihlásiť sa</button>
+  <button onclick="navigateHome()">Späť</button>
+</div>
 
           <!-- ADMIN MENU SCREEN -->
           <div id="adminMenuScreen" class="screen">
