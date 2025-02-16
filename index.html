@@ -44,14 +44,14 @@
       overflow: hidden;
     }
 
-    /* LANGUAGE SWITCHER: top-left to avoid right-panel overlap */
+    /* LANGUAGE SWITCHER: top-right corner */
     .language-switcher {
       position: absolute;
       top: 15px;
-      left: 15px;
+      right: 15px; /* back in the top-right corner */
       display: flex;
       gap: 20px;
-      z-index: 999; /* above content */
+      z-index: 999;
     }
     .lang-option {
       font-size: 32px; /* bigger icons */
@@ -473,7 +473,8 @@
               style="height: 100%; width: 0%; background: #007bff;"
             ></div>
           </div>
-          <button onclick="simulateWeightMeasurement()">
+          <!-- No "simulate" text, just "Spustiť meranie" -->
+          <button onclick="startWeightMeasurement()">
             <i class="fa-solid fa-weight-scale btn-icon"></i>
             Spustiť meranie
           </button>
@@ -593,7 +594,8 @@
           </div>
 
           <!-- Buttons -->
-          <button onclick="navigateTo('appRegisteredScreen')">
+          <!-- Clicking "Už mám aplikáciu..." -> goes to #scanOrderScreen -->
+          <button onclick="navigateTo('scanOrderScreen')">
             <i class="fa-solid fa-check btn-icon"></i>
             Už mám aplikáciu / som registrovaný
           </button>
@@ -650,7 +652,7 @@
           </div>
           <p>
             Zadajte kód, ktorý ste obdržali z aplikácie alebo webu.<br />
-            Prípadne použite funkciu simulácie naskenovania QR kódu.
+            Prípadne použite funkciu naskenovania QR kódu.
           </p>
           <label>Objednávkový kód:</label>
           <input
@@ -659,9 +661,10 @@
             placeholder="Zadajte kód"
             onclick="openKeyboardForInput('orderCodeInput')"
           />
-          <button onclick="simulateQRScan()">
+          <!-- Removed "Simulovať" button; just normal "Naskenovať QR kód" -->
+          <button onclick="scanQRCode()">
             <i class="fa-solid fa-camera btn-icon"></i>
-            Simulovať naskenovanie
+            Naskenovať QR kód
           </button>
           <button onclick="navigateBack()">
             <i class="fa-solid fa-arrow-left btn-icon"></i>
@@ -669,11 +672,10 @@
           </button>
         </div>
 
-        <!-- VYZDVIHNUTIE OBJEDNÁVKY (SIDE-BY-SIDE ANIMATIONS) -->
+        <!-- VYZDVIHNUTIE OBJEDNÁVKY (TWO SIDE-BY-SIDE ANIMATIONS) -->
         <div id="orderPickupPaymentScreen" class="screen">
           <h1>Vyzdvihnutie objednávky</h1>
 
-          <!-- TWO animations side by side -->
           <div style="display: flex; gap: 20px; justify-content: center; margin-bottom: 20px;">
             <!-- scan-qr.json -->
             <div class="lottie-container lottie-sm">
@@ -705,7 +707,7 @@
             placeholder="Zadajte kód"
             onclick="openKeyboardForInput('pickupCodeInput')"
           />
-          <button onclick="navigateTo('paymentScreen')">
+          <button onclick="goToPaymentScreen()">
             <i class="fa-solid fa-truck btn-icon"></i>
             Pokračovať
           </button>
@@ -730,13 +732,13 @@
           <p>Táto objednávka ešte nie je uhradená.</p>
           <p>Suma k úhrade: <strong>10,00€</strong></p>
           <p>Vyberte spôsob platby:</p>
-          <button onclick="simulatePayment('Visa/MasterCard')">
+          <button onclick="startCardPayment()">
             <i class="fa-solid fa-credit-card btn-icon"></i>
-            Visa/MasterCard
+            Zaplatiť kartou
           </button>
-          <button onclick="simulatePayment('Bezkontaktné platby')">
+          <button onclick="startContactlessPayment()">
             <i class="fa-solid fa-mobile-screen btn-icon"></i>
-            Bezkontaktné platby
+            Zaplatiť bezkontaktne
           </button>
           <button onclick="navigateTo('invoiceScreen')">
             <i class="fa-solid fa-file-invoice btn-icon"></i>
@@ -1044,13 +1046,15 @@
       });
     }
 
-    function simulateWeightMeasurement() {
+    // Start weight measurement (no "simulate" text)
+    function startWeightMeasurement() {
       const progressBar = document.getElementById("weightProgress");
       progressBar.style.width = "0%";
       setTimeout(() => {
         progressBar.style.width = "100%";
       }, 100);
       setTimeout(() => {
+        // For demonstration, we pick a random weight
         const weight = (Math.random() * 5 + 1).toFixed(2);
         showMessage("Zmeraná hmotnosť: " + weight + " kg", () => {
           navigateTo("orderLockScreen");
@@ -1067,18 +1071,24 @@
       navigateTo("orderReadyScreen");
     }
 
-    function simulateQRScan() {
-      if (!generatedOrderCode) {
-        generatedOrderCode = Math.floor(100000 + Math.random() * 900000).toString();
-        generatedQRCode = "QR" + generatedOrderCode;
-      }
-      showMessage("Naskenovaný objednávkový kód: " + generatedOrderCode, () => {
+    // Naskenovať QR kód (no "simulate" text)
+    function scanQRCode() {
+      showMessage("Naskenovanie prebieha...", () => {
+        // For demonstration, just move forward
         navigateTo("orderLockScreen");
       });
     }
 
-    function simulatePayment(method) {
-      showMessage("Platba cez " + method + " bola úspešná.");
+    function goToPaymentScreen() {
+      navigateTo("paymentScreen");
+    }
+
+    // Payment
+    function startCardPayment() {
+      showMessage("Platba kartou prebieha...");
+    }
+    function startContactlessPayment() {
+      showMessage("Bezkontaktná platba prebieha...");
     }
 
     function sendInvoice() {
