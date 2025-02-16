@@ -61,27 +61,23 @@
     .right-panel {
       width: 30%;
       background-color: #f5f7fa;
+      position: relative; /* so the language switcher can be absolute */
     }
 
-    /* HEADER */
-    .header {
+    /* LANGUAGE SWITCHER (top-right in the right panel) */
+    .language-switcher {
       position: absolute;
-      top: 30px; /* push it down a bit more from top */
+      top: 10px;
       right: 10px;
+      display: flex;
+      gap: 20px;
       z-index: 10;
     }
-    .language-switcher {
-      display: flex;
-      gap: 10px;
-    }
     .lang-option {
-      font-size: 24px;
+      font-size: 32px; /* bigger icons */
       cursor: pointer;
       user-select: none;
-      transition: transform 0.2s;
-    }
-    .lang-option:hover {
-      transform: scale(1.2);
+      padding: 5px; /* more padding */
     }
 
     /* FOOTER */
@@ -156,6 +152,14 @@
       font-size: 18px;
     }
 
+    /* PRICE TAG for services */
+    .price-tag {
+      color: #d9534f;
+      font-weight: bold;
+      margin-left: 10px;
+      font-size: 1.1em;
+    }
+
     /* QR CODE BOX */
     .qr-code {
       width: 140px;
@@ -219,6 +223,15 @@
       height: 150px;
     }
 
+    /* HOME SCREEN ANIMATION TOOLTIP */
+    .animation-description {
+      text-align: center;
+      font-size: 14px;
+      color: #333;
+      margin-top: 8px;
+      font-weight: 500;
+    }
+
     /* MESSAGE MODAL (replaces browser alerts) */
     .modal {
       position: absolute; /* inside kiosk-container */
@@ -276,19 +289,20 @@
     .keyboard-row button:hover {
       background: #bbb;
     }
+
+    /* LOGO IN THE RIGHT PANEL (bottom) */
+    .right-panel-logo {
+      margin-top: 20px;
+      text-align: center;
+    }
+    .right-panel-logo img {
+      width: 80px; /* adjust as needed */
+    }
   </style>
 </head>
 
 <body>
   <div class="kiosk-container" id="kioskContainer">
-    <!-- HEADER -->
-    <div class="header">
-      <div class="language-switcher">
-        <span class="lang-option" onclick="setLanguage('sk')">🇸🇰</span>
-        <span class="lang-option" onclick="setLanguage('en')">🇬🇧</span>
-      </div>
-    </div>
-
     <!-- LEFT PANEL (screens) -->
     <div class="left-panel">
       <div id="screensContainer">
@@ -304,6 +318,9 @@
               autoplay
             ></lottie-player>
           </div>
+          <!-- Here is the label for the rotating icons -->
+          <p id="homeAnimationTooltip" class="animation-description"></p>
+
           <p>
             Naša služba zabezpečí rýchle a spoľahlivé pranie, sušenie, žehlenie a
             zloženie vášho prádla. Odovzdajte prádlo do nášho lockerboxu a my sa
@@ -394,14 +411,25 @@
         <div id="serviceSelectionScreen" class="screen">
           <h1>Výber služby</h1>
           <p>Vyberte službu, ktorú si želáte:</p>
+
+          <!-- Pranie + Sušenie + Zloženie (2,99 €/kg) -->
           <button onclick="selectService('Pranie + Sušenie + Zloženie')">
             <i class="fa-solid fa-tshirt btn-icon"></i>
-            Pranie + Sušenie + Zloženie
+            <div>
+              Pranie + Sušenie + Zloženie
+              <span class="price-tag">2,99 €/kg</span>
+            </div>
           </button>
+
+          <!-- Pranie + Sušenie + Žehlenie + Zloženie (4,5 €/kg) -->
           <button onclick="selectService('Pranie + Sušenie + Žehlenie + Zloženie')">
             <i class="fa-solid fa-iron btn-icon"></i>
-            Pranie + Sušenie + Žehlenie + Zloženie
+            <div>
+              Pranie + Sušenie + Žehlenie + Zloženie
+              <span class="price-tag">4,5 €/kg</span>
+            </div>
           </button>
+
           <button onclick="navigateBack()">
             <i class="fa-solid fa-arrow-left btn-icon"></i>
             Späť
@@ -529,11 +557,10 @@
                 class="qr-code"
                 style="background: url('assets/qr-apple.png') center/cover no-repeat;"
               >
-                <!-- fallback text if no image -->
                 <span style="color:#777; font-size:12px;">Apple QR</span>
               </div>
               <p style="margin-top:8px;">
-                <img src="assets/logo.png" alt="EASY-WASH" style="width:24px;" /><br />
+                <img src="assets/logo.png" alt="EASY-WASH" style="width:60px;" /><br />
                 EASY-WASH (Apple)
               </p>
             </div>
@@ -547,7 +574,7 @@
                 <span style="color:#777; font-size:12px;">Android QR</span>
               </div>
               <p style="margin-top:8px;">
-                <img src="assets/logo.png" alt="EASY-WASH" style="width:24px;" /><br />
+                <img src="assets/logo.png" alt="EASY-WASH" style="width:60px;" /><br />
                 EASY-WASH (Android)
               </p>
             </div>
@@ -561,12 +588,13 @@
                 <span style="color:#777; font-size:12px;">Web QR</span>
               </div>
               <p style="margin-top:8px;">
-                <img src="assets/logo.png" alt="EASY-WASH" style="width:24px;" /><br />
+                <img src="assets/logo.png" alt="EASY-WASH" style="width:60px;" /><br />
                 www.easy-wash.sk
               </p>
             </div>
           </div>
 
+          <!-- Buttons -->
           <button onclick="navigateTo('appRegisteredScreen')">
             <i class="fa-solid fa-check btn-icon"></i>
             Už mám aplikáciu / som registrovaný
@@ -575,6 +603,17 @@
             <i class="fa-solid fa-arrow-left btn-icon"></i>
             Späť
           </button>
+
+          <!-- Additional animation below the two buttons -->
+          <div class="lottie-container lottie-sm">
+            <lottie-player
+              src="assets/lottie/registracia.json"
+              background="transparent"
+              speed="1"
+              loop
+              autoplay
+            ></lottie-player>
+          </div>
         </div>
 
         <!-- REGISTRÁCIA – POTVRDENIE -->
@@ -753,6 +792,12 @@
 
     <!-- RIGHT PANEL -->
     <div class="right-panel">
+      <!-- Language Switcher in top-right corner -->
+      <div class="language-switcher">
+        <span class="lang-option" onclick="setLanguage('sk')">🇸🇰</span>
+        <span class="lang-option" onclick="setLanguage('en')">🇬🇧</span>
+      </div>
+
       <!-- 1) VYZDVIHNUTIE (zobrazí sa len na Home Screen) -->
       <div id="pickupScreen" class="screen active">
         <h1>Vyzdvihnutie</h1>
@@ -764,7 +809,13 @@
           <i class="fa-solid fa-truck btn-icon"></i>
           Vyzdvihnúť objednávku
         </button>
+
+        <!-- Logo at the bottom -->
+        <div class="right-panel-logo">
+          <img src="assets/logo.png" alt="EASY-WASH" />
+        </div>
       </div>
+
       <!-- 2) TLAČIDLO DOMOV (všetky iné obrazovky) -->
       <div id="returnHomeScreen" class="screen">
         <h1 style="font-size: 20px; text-align: center;">Navigácia</h1>
@@ -776,13 +827,19 @@
           <i class="fa-solid fa-house btn-icon"></i>
           Domov
         </button>
+
+        <!-- Logo at the bottom -->
+        <div class="right-panel-logo">
+          <img src="assets/logo.png" alt="EASY-WASH" />
+        </div>
       </div>
     </div>
 
     <!-- FOOTER -->
     <div class="footer">
       <a href="#">Obchodné podmienky</a> |
-      <a href="#">GDPR</a>
+      <a href="#">GDPR</a> |
+      <a href="#">Cenník</a>
     </div>
 
     <!-- KIOSK MESSAGE MODAL -->
@@ -871,20 +928,38 @@
       "assets/lottie/platba.json",
       "assets/lottie/objednavka-kompletna.json"
     ];
+
+    // Corresponding text for each animation above
+    const homeAnimationLabels = [
+      "Zadanie objednávky",
+      "Vloženie do skrinky",
+      "Čakanie na prádlo",
+      "Vyzdvihnutie (Pickup)",
+      "Pracovňa – spracovanie prádla",
+      "Notifikácia pre vyzdvihnutie",
+      "Platba",
+      "Objednávka kompletná"
+    ];
+
     let currentHomeAnimIndex = 0;
 
     window.addEventListener("DOMContentLoaded", () => {
       const homeLottiePlayer = document.getElementById("homeLottiePlayer");
-      homeLottiePlayer.load(homeAnimations[currentHomeAnimIndex]);
+      const tooltipEl = document.getElementById("homeAnimationTooltip");
 
-      // Po dokončení animácie
+      // Load the first animation
+      homeLottiePlayer.load(homeAnimations[currentHomeAnimIndex]);
+      tooltipEl.innerText = homeAnimationLabels[currentHomeAnimIndex];
+
+      // On each animation complete, move to the next animation + update label
       homeLottiePlayer.addEventListener("complete", () => {
         currentHomeAnimIndex++;
         if (currentHomeAnimIndex >= homeAnimations.length) {
-          currentHomeAnimIndex = 0; // looping späť
+          currentHomeAnimIndex = 0; // loop back
         }
         homeLottiePlayer.load(homeAnimations[currentHomeAnimIndex]);
         homeLottiePlayer.play();
+        tooltipEl.innerText = homeAnimationLabels[currentHomeAnimIndex];
       });
 
       // Show the right-panel pickup screen on load
