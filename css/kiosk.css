@@ -284,3 +284,20 @@ img.btn-icon {
 .right-panel-logo img {
   width: 80px;
 }
+
+/* Nové štýly pre tlačidlá vo výbere služby */
+button.service-button {
+  flex-direction: column;   /* Zobrazenie obsahu vertikálne */
+  gap: 8px;                 /* Medzera medzi ikonami a textom */
+  text-align: center;
+}
+.service-icons {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
+}
+.service-text {
+  display: block;
+  text-align: center;
+}
