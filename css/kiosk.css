@@ -42,14 +42,14 @@ body {
   top: 0px;
   right: 15px;
   display: flex;
-  gap: 5px;
+  gap: 2px;
   z-index: 999;
 }
 .lang-option {
   font-size: 20px;
   cursor: pointer;
   user-select: none;
-  padding: 5px;
+  padding: 1px;
 }
 
 /* PANELS */
