@@ -135,7 +135,7 @@ function navigateTo(screenId) {
     target.classList.add("active");
   }
 
-  // If we go back to home-screen, show "pickup" in right panel
+  // Ak ideme späť na home-screen, zobrazíme pravý panel s "pickup"
   if (screenId === "home-screen") {
     showPickupRightPanel();
   } else {
@@ -177,7 +177,7 @@ function sendSMSCode() {
     return;
   }
   showMessage("SMS kód bol odoslaný na číslo " + phone, () => {
-    smsCode = "0000"; // example code
+    smsCode = "0000"; // príklad kódu
     navigateTo("smsVerificationScreen");
   });
 }
@@ -206,10 +206,10 @@ function startWeightMeasurement() {
     progressBar.style.width = "100%";
   }, 100);
   setTimeout(() => {
-    // Just an example
     const weight = (Math.random() * 5 + 1).toFixed(2);
     showMessage("Zmeraná hmotnosť: " + weight + " kg", () => {
-      navigateTo("orderLockScreen");
+      // Prechod na obrazovku pre vloženie do skrinky
+      navigateTo("lockerInsertionScreen");
     });
   }, 2100);
 }
@@ -217,15 +217,16 @@ function startWeightMeasurement() {
 function generateOrderCode() {
   generatedOrderCode = Math.floor(100000 + Math.random() * 900000).toString();
   generatedQRCode = "QR" + generatedOrderCode;
-  document.getElementById("generatingCode").classList.remove("blink");
+  // Aktualizácia zobrazenia objednávkového kódu a QR kódu
   document.getElementById("orderCodeDisplay").innerText = generatedOrderCode;
   document.getElementById("qrCodeDisplay").innerText = generatedQRCode;
-  navigateTo("orderReadyScreen");
+  navigateTo("orderCompletionScreen");
 }
 
 function scanQRCode() {
   showMessage("Naskenovanie prebieha...", () => {
-    navigateTo("orderLockScreen");
+    // Prechod na obrazovku pre vloženie prádla do skrinky
+    navigateTo("lockerInsertionScreen");
   });
 }
 
