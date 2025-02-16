@@ -1,373 +1,92 @@
 <!DOCTYPE html>
 <html lang="sk">
-<head>
-  <meta charset="UTF-8" />
-  <title>KIOSK UI Prototype</title>
+  <head>
+    <meta charset="UTF-8" />
+    <title>KIOSK UI Prototype</title>
 
-  <!-- Google Fonts -->
-  <link
-    href="https://fonts.googleapis.com/css?family=Roboto:400,500,700&display=swap"
-    rel="stylesheet"
-  />
-  
-  <!-- Font Awesome (CDN) -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" />
+    <!-- Google Fonts -->
+    <link
+      href="https://fonts.googleapis.com/css?family=Roboto:400,500,700&display=swap"
+      rel="stylesheet"
+    />
 
-  <!-- Lottie (for .json animations) -->
-  <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
+    <!-- Font Awesome (CDN) -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
+    />
 
-  <!-- Kiosk main CSS -->
-  <link rel="stylesheet" href="css/kiosk.css" />
-  
-  <!-- Dodatočné štýly pre service selection tlačidlá -->
-  <style>
-    /* Zarovnanie ikoniek a textu vo službách */
-    .service-icons {
-      display: inline-flex;
-      align-items: center;
-      gap: 5px;
-      margin-right: 10px;
-    }
-    .service-text {
-      display: inline-flex;
-      align-items: center;
-    }
-  </style>
-  
-</head>
+    <!-- Lottie (for .json animations) -->
+    <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
 
-<body>
-  <!-- Kiosk Container -->
-  <div class="kiosk-container" id="kioskContainer">
+    <!-- Kiosk main CSS -->
+    <link rel="stylesheet" href="css/kiosk.css" />
 
-    <!-- Language Switcher (top-right corner) -->
-    <div class="language-switcher">
-      <span class="lang-option" onclick="setLanguage('sk')">🇸🇰</span>
-      <span class="lang-option" onclick="setLanguage('en')">🇬🇧</span>
-    </div>
+    <!-- Dodatočné štýly pre service selection tlačidlá -->
+    <style>
+      /* Zarovnanie ikoniek a textu vo službách */
+      .service-icons {
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        margin-right: 10px;
+      }
+      .service-text {
+        display: inline-flex;
+        align-items: center;
+      }
+    </style>
+  </head>
 
-    <!-- LEFT PANEL -->
-    <div class="left-panel">
-      <!-- SCREENS CONTAINER -->
-      <div id="screensContainer">
-        
-        <!-- HOME SCREEN -->
-        <div id="home-screen" class="screen active">
-          <h1>Vitajte v KIOSK</h1>
-          <div class="lottie-container">
-            <!-- Rotating icons controlled by kiosk.js -->
-            <lottie-player
-              id="homeLottiePlayer"
-              background="transparent"
-              speed="1"
-              style="width: 100%; height: 100%;"
-              autoplay
-            ></lottie-player>
-          </div>
-          <p id="homeAnimationTooltip" class="animation-description"></p>
-          <p>
-            Naša služba zabezpečí rýchle a spoľahlivé pranie, sušenie, žehlenie a
-            zloženie vášho prádla. Odovzdajte prádlo do nášho lockerboxu a my sa
-            postaráme o zvyšok.
-          </p>
-          <button onclick="navigateTo('newOrderScreen')">
-            <i class="fa-solid fa-plus-circle btn-icon"></i>
-            Nová objednávka bez aplikácie
-          </button>
-          <button onclick="navigateTo('scanOrderScreen')">
-            <i class="fa-solid fa-qrcode btn-icon"></i>
-            Zadať/naskenovať objednávkový kód
-          </button>
-          <button onclick="navigateTo('registerScreen')">
-            <i class="fa-solid fa-user-plus btn-icon"></i>
-            Registrovať sa – 50% zľava na prvú objednávku
-          </button>
-        </div>
+  <body>
+    <!-- Kiosk Container -->
+    <div class="kiosk-container" id="kioskContainer">
+      <!-- Language Switcher (top-right corner) -->
+      <div class="language-switcher">
+        <span class="lang-option" onclick="setLanguage('sk')">🇸🇰</span>
+        <span class="lang-option" onclick="setLanguage('en')">🇬🇧</span>
+      </div>
 
-        <!-- NEW ORDER SCREEN -->
-        <div id="newOrderScreen" class="screen">
-          <h1>Nová objednávka</h1>
-          <div class="lottie-container lottie-sm">
-            <lottie-player
-              src="assets/lottie/zadavanie-kodu.json"
-              background="transparent"
-              speed="1"
-              loop
-              autoplay
-            ></lottie-player>
-          </div>
-          <p>Zadajte svoje telefónne číslo. SMS kód použijeme na notifikácie.</p>
-          <label>Telefónne číslo:</label>
-          <input
-            type="tel"
-            id="phoneInput"
-            placeholder="0900 000 000"
-            onclick="openKeyboardForInput('phoneInput')"
-          />
-          <button onclick="sendSMSCode()">
-            <i class="fa-solid fa-sms btn-icon"></i>
-            Odoslať SMS kód
-          </button>
-        </div>
-
-        <!-- SMS VERIFICATION SCREEN -->
-        <div id="smsVerificationScreen" class="screen">
-          <h1>Overenie telefónu</h1>
-          <div class="lottie-container lottie-sm">
-            <lottie-player
-              src="assets/lottie/overenie-telefonu.json"
-              background="transparent"
-              speed="1"
-              loop
-              autoplay
-            ></lottie-player>
-          </div>
-          <p>Zadajte 4-miestny kód z SMS. (Kód je 0000)</p>
-          <label>SMS kód:</label>
-          <input
-            type="text"
-            id="smsCodeInput"
-            placeholder="0000"
-            onclick="openKeyboardForInput('smsCodeInput')"
-          />
-          <button onclick="verifySMSCode()">
-            <i class="fa-solid fa-check-circle btn-icon"></i>
-            Overiť kód
-          </button>
-        </div>
-
-        <!-- SERVICE SELECTION SCREEN -->
-        <div id="serviceSelectionScreen" class="screen">
-          <h1>Výber služby</h1>
-          <p>Vyberte službu, ktorú si želáte:</p>
-          <!-- Prvá služba: Pranie + Sušenie + Žehlenie + Zloženie -->
-          <button onclick="selectService('Pranie + Sušenie + Žehlenie + Zloženie')">
-            <span class="service-icons">
-              <img src="assets/washing-icon.svg" alt="Pranie" class="btn-icon" style="width:24px; height:24px;">
-              <img src="assets/drying-icon.svg" alt="Sušenie" class="btn-icon" style="width:24px; height:24px;">
-              <img src="assets/ironing-icon.svg" alt="Žehlenie" class="btn-icon" style="width:24px; height:24px;">
-              <img src="assets/folding-icon.svg" alt="Zloženie" class="btn-icon" style="width:24px; height:24px;">
-            </span>
-            <span class="service-text">
-              Pranie + Sušenie + Žehlenie + Zloženie
-              <span class="price-tag">4,5 €/kg</span>
-            </span>
-          </button>
-          <!-- Druhá služba: Pranie + Sušenie + Zloženie -->
-          <button onclick="selectService('Pranie + Sušenie + Zloženie')">
-            <span class="service-icons">
-              <img src="assets/washing-icon.svg" alt="Pranie" class="btn-icon" style="width:24px; height:24px;">
-              <img src="assets/drying-icon.svg" alt="Sušenie" class="btn-icon" style="width:24px; height:24px;">
-              <img src="assets/folding-icon.svg" alt="Zloženie" class="btn-icon" style="width:24px; height:24px;">
-            </span>
-            <span class="service-text">
-              Pranie + Sušenie + Zloženie
-              <span class="price-tag">2,99 €/kg</span>
-            </span>
-          </button>
-        </div>
-
-        <!-- WEIGHT MEASUREMENT SCREEN -->
-        <div id="weightMeasurementScreen" class="screen">
-          <h1>Meranie hmotnosti</h1>
-          <div class="lottie-container lottie-sm">
-            <lottie-player
-              src="assets/lottie/vaha.json"
-              background="transparent"
-              speed="1"
-              loop
-              autoplay
-            ></lottie-player>
-          </div>
-          <p>Postup:</p>
-          <ul>
-            <li>Vysuňte zásuvku s tray váhou v locker boxe.</li>
-            <li>Umiestnite prádlo na váhu.</li>
-            <li>Systém automaticky zmeria hmotnosť a odošle údaje do admin systému.</li>
-          </ul>
-          <div id="scaleGraphic" style="font-size: 32px; text-align: center;">
-            ⚖️
-          </div>
-          <div
-            class="progress-container"
-            style="background: #ccc; border-radius: 4px; overflow: hidden; height: 10px; margin: 10px 0;"
-          >
-            <div
-              class="progress-bar"
-              id="weightProgress"
-              style="height: 100%; width: 0%; background: #007bff;"
-            ></div>
-          </div>
-          <button onclick="startWeightMeasurement()">
-            <i class="fa-solid fa-weight-scale btn-icon"></i>
-            Spustiť meranie
-          </button>
-        </div>
-
-        <!-- VLOŽENIE DO SKRINKY SCREEN -->
-        <div id="lockerInsertionScreen" class="screen">
-          <h1>Vloženie do skrinky</h1>
-          <div class="lottie-container lottie-sm">
-            <lottie-player
-              src="assets/lottie/vlozeniie-do-skrinky.json"
-              background="transparent"
-              speed="1"
-              loop
-              autoplay
-            ></lottie-player>
-          </div>
-          <p>
-            Vložte svoje prádlo do otvorenej skrinky. Po vložení a zatvorení skrinky
-            sa objednávka automaticky dokončí.
-          </p>
-        </div>
-
-        <!-- ORDER COMPLETION SCREEN -->
-        <div id="orderCompletionScreen" class="screen">
-          <h1>Vytlačenie QR lístka a potvrdenie Dokončenia objednávky</h1>
-          <div class="lottie-container lottie-sm">
-            <lottie-player
-              src="assets/lottie/objednavka-kompletna.json"
-              background="transparent"
-              speed="1"
-              loop
-              autoplay
-            ></lottie-player>
-          </div>
-          <p>
-            <strong>Váš objednávkový kód:</strong>
-            <span id="orderCodeDisplay"></span>
-          </p>
-          <p>
-            <strong>QR kód:</strong>
-            <span id="qrCodeDisplay"></span>
-          </p>
-          <p>
-            Objednávka bola úspešne dokončená. Použite tento kód alebo naskenujte QR kód pri vyzdvihnutí.
-          </p>
-          <button onclick="navigateHome()">
-            <i class="fa-solid fa-house btn-icon"></i>
-            Domov
-          </button>
-        </div>
-
-        <!-- REGISTER SCREEN -->
-        <div id="registerScreen" class="screen">
-          <h1>Registrácia a 50% zľava</h1>
-          <div style="display: flex; justify-content: space-evenly; flex-wrap: wrap; gap: 20px;">
-            <!-- Apple QR -->
-            <div style="text-align: center;">
-              <div
-                class="qr-code"
-                style="background: url('assets/qr-apple.png') center/cover no-repeat;"
-              >
-                <span style="color:#777; font-size:12px;">Apple QR</span>
-              </div>
-              <p style="margin-top:8px;">
-                <img src="assets/logo.png" alt="EASY-WASH" style="width:60px;" /><br />
-                EASY-WASH (Apple)
-              </p>
-            </div>
-
-            <!-- Android QR -->
-            <div style="text-align: center;">
-              <div
-                class="qr-code"
-                style="background: url('assets/qr-android.png') center/cover no-repeat;"
-              >
-                <span style="color:#777; font-size:12px;">Android QR</span>
-              </div>
-              <p style="margin-top:8px;">
-                <img src="assets/logo.png" alt="EASY-WASH" style="width:60px;" /><br />
-                EASY-WASH (Android)
-              </p>
-            </div>
-
-            <!-- Website QR -->
-            <div style="text-align: center;">
-              <div
-                class="qr-code"
-                style="background: url('assets/qr-web.png') center/cover no-repeat;"
-              >
-                <span style="color:#777; font-size:12px;">Web QR</span>
-              </div>
-              <p style="margin-top:8px;">
-                <img src="assets/logo.png" alt="EASY-WASH" style="width:60px;" /><br />
-                www.easy-wash.sk
-              </p>
-            </div>
-          </div>
-          <button onclick="navigateTo('scanOrderScreen')">
-            <i class="fa-solid fa-check btn-icon"></i>
-            Už mám aplikáciu / som registrovaný
-          </button>
-        </div>
-
-        <!-- APP REGISTERED SCREEN -->
-        <div id="appRegisteredScreen" class="screen">
-          <h1>Registrácia úspešná</h1>
-          <div class="lottie-container lottie-sm">
-            <lottie-player
-              src="assets/lottie/registrovany.json"
-              background="transparent"
-              speed="1"
-              loop
-              autoplay
-            ></lottie-player>
-          </div>
-          <p>
-            Vaše telefónne číslo bolo overené. Teraz si objednávku môžete zadať cez aplikáciu alebo web.
-          </p>
-          <button onclick="navigateHome()">
-            <i class="fa-solid fa-house btn-icon"></i>
-            Domov
-          </button>
-        </div>
-
-        <!-- SCAN ORDER SCREEN -->
-        <div id="scanOrderScreen" class="screen">
-          <h1>Zadať/naskenovať objednávkový kód</h1>
-          <div class="lottie-container lottie-sm">
-            <lottie-player
-              src="assets/lottie/zadavanie-kodu.json"
-              background="transparent"
-              speed="1"
-              loop
-              autoplay
-            ></lottie-player>
-          </div>
-          <p>
-            Zadajte kód, ktorý ste obdržali z aplikácie alebo webu.
-            Prípadne použite funkciu naskenovania QR kódu.
-          </p>
-          <label>Objednávkový kód:</label>
-          <input
-            type="text"
-            id="orderCodeInput"
-            placeholder="Zadajte kód"
-            onclick="openKeyboardForInput('orderCodeInput')"
-          />
-          <button onclick="scanQRCode()">
-            <i class="fa-solid fa-camera btn-icon"></i>
-            Naskenovať QR kód
-          </button>
-        </div>
-
-        <!-- ORDER PICKUP PAYMENT SCREEN -->
-        <div id="orderPickupPaymentScreen" class="screen">
-          <h1>Vyzdvihnutie objednávky</h1>
-          <div style="display: flex; gap: 20px; justify-content: center; margin-bottom: 20px;">
-            <!-- scan-qr.json -->
-            <div class="lottie-container lottie-sm">
+      <!-- LEFT PANEL -->
+      <div class="left-panel">
+        <!-- SCREENS CONTAINER -->
+        <div id="screensContainer">
+          <!-- HOME SCREEN -->
+          <div id="home-screen" class="screen active">
+            <h1>Vitajte v KIOSK</h1>
+            <div class="lottie-container">
+              <!-- Rotating icons controlled by kiosk.js -->
               <lottie-player
-                src="assets/lottie/scan-qr.json"
+                id="homeLottiePlayer"
                 background="transparent"
                 speed="1"
-                loop
+                style="width: 100%; height: 100%;"
                 autoplay
               ></lottie-player>
             </div>
-            <!-- zadavanie-kodu.json -->
+            <p id="homeAnimationTooltip" class="animation-description"></p>
+            <p>
+              Naša služba zabezpečí rýchle a spoľahlivé pranie, sušenie, žehlenie a
+              zloženie vášho prádla. Odovzdajte prádlo do nášho lockerboxu a my sa
+              postaráme o zvyšok.
+            </p>
+            <button onclick="navigateTo('newOrderScreen')">
+              <i class="fa-solid fa-plus-circle btn-icon"></i>
+              Nová objednávka bez aplikácie
+            </button>
+            <button onclick="navigateTo('scanOrderScreen')">
+              <i class="fa-solid fa-qrcode btn-icon"></i>
+              Zadať/naskenovať objednávkový kód
+            </button>
+            <button onclick="navigateTo('registerScreen')">
+              <i class="fa-solid fa-user-plus btn-icon"></i>
+              Registrovať sa – 50% zľava na prvú objednávku
+            </button>
+          </div>
+
+          <!-- NEW ORDER SCREEN -->
+          <div id="newOrderScreen" class="screen">
+            <h1>Nová objednávka</h1>
             <div class="lottie-container lottie-sm">
               <lottie-player
                 src="assets/lottie/zadavanie-kodu.json"
@@ -377,75 +96,531 @@
                 autoplay
               ></lottie-player>
             </div>
+            <p>Zadajte svoje telefónne číslo. SMS kód použijeme na notifikácie.</p>
+            <label>Telefónne číslo:</label>
+            <input
+              type="tel"
+              id="phoneInput"
+              placeholder="0900 000 000"
+              onclick="openKeyboardForInput('phoneInput')"
+            />
+            <button onclick="sendSMSCode()">
+              <i class="fa-solid fa-sms btn-icon"></i>
+              Odoslať SMS kód
+            </button>
           </div>
-          <p>Zadajte alebo naskenujte objednávkový kód pre vyzdvihnutie.</p>
-          <label>Zadajte kód:</label>
-          <input
-            type="text"
-            id="pickupCodeInput"
-            placeholder="Zadajte kód"
-            onclick="openKeyboardForInput('pickupCodeInput')"
-          />
-          <button onclick="goToPaymentScreen()">
-            <img src="assets/pick-up.svg" alt="Pick-up" class="btn-icon" style="width:24px; height:24px;">
-            Pokračovať
-          </button>
-        </div>
 
-        <!-- PAYMENT SCREEN -->
-        <div id="paymentScreen" class="screen">
-          <h1>Platba</h1>
-          <div class="lottie-container lottie-sm">
-            <lottie-player
-              src="assets/lottie/platba.json"
-              background="transparent"
-              speed="1"
-              loop
-              autoplay
-            ></lottie-player>
+          <!-- SMS VERIFICATION SCREEN -->
+          <div id="smsVerificationScreen" class="screen">
+            <h1>Overenie telefónu</h1>
+            <div class="lottie-container lottie-sm">
+              <lottie-player
+                src="assets/lottie/overenie-telefonu.json"
+                background="transparent"
+                speed="1"
+                loop
+                autoplay
+              ></lottie-player>
+            </div>
+            <p>Zadajte 4-miestny kód z SMS. (Kód je 0000)</p>
+            <label>SMS kód:</label>
+            <input
+              type="text"
+              id="smsCodeInput"
+              placeholder="0000"
+              onclick="openKeyboardForInput('smsCodeInput')"
+            />
+            <button onclick="verifySMSCode()">
+              <i class="fa-solid fa-check-circle btn-icon"></i>
+              Overiť kód
+            </button>
           </div>
-          <p>Táto objednávka ešte nie je uhradená.</p>
-          <p>Suma k úhrade: <strong>10,00€</strong></p>
-          <p>Vyberte spôsob platby:</p>
-          <button onclick="startCardPayment()">
-            <i class="fa-solid fa-credit-card btn-icon"></i>
-            Zaplatiť kartou
-          </button>
-          <button onclick="startContactlessPayment()">
-            <i class="fa-solid fa-mobile-screen btn-icon"></i>
-            Zaplatiť bezkontaktne
-          </button>
-        </div>
 
-        <!-- INVOICE SCREEN -->
-        <div id="invoiceScreen" class="screen">
-          <h1>Faktúra</h1>
-          <div class="lottie-container lottie-sm">
-            <lottie-player
-              src="assets/lottie/faktura.json"
-              background="transparent"
-              speed="1"
-              loop
-              autoplay
-            ></lottie-player>
+          <!-- SERVICE SELECTION SCREEN -->
+          <div id="serviceSelectionScreen" class="screen">
+            <h1>Výber služby</h1>
+            <p>Vyberte službu, ktorú si želáte:</p>
+            <!-- Prvá služba: Pranie + Sušenie + Žehlenie + Zloženie -->
+            <button onclick="selectService('Pranie + Sušenie + Žehlenie + Zloženie')">
+              <span class="service-icons">
+                <img
+                  src="assets/washing-icon.svg"
+                  alt="Pranie"
+                  class="btn-icon"
+                  style="width:24px; height:24px;"
+                />
+                <img
+                  src="assets/drying-icon.svg"
+                  alt="Sušenie"
+                  class="btn-icon"
+                  style="width:24px; height:24px;"
+                />
+                <img
+                  src="assets/ironing-icon.svg"
+                  alt="Žehlenie"
+                  class="btn-icon"
+                  style="width:24px; height:24px;"
+                />
+                <img
+                  src="assets/folding-icon.svg"
+                  alt="Zloženie"
+                  class="btn-icon"
+                  style="width:24px; height:24px;"
+                />
+              </span>
+              <span class="service-text">
+                Pranie + Sušenie + Žehlenie + Zloženie
+                <span class="price-tag">4,5 €/kg</span>
+              </span>
+            </button>
+            <!-- Druhá služba: Pranie + Sušenie + Zloženie -->
+            <button onclick="selectService('Pranie + Sušenie + Zloženie')">
+              <span class="service-icons">
+                <img
+                  src="assets/washing-icon.svg"
+                  alt="Pranie"
+                  class="btn-icon"
+                  style="width:24px; height:24px;"
+                />
+                <img
+                  src="assets/drying-icon.svg"
+                  alt="Sušenie"
+                  class="btn-icon"
+                  style="width:24px; height:24px;"
+                />
+                <img
+                  src="assets/folding-icon.svg"
+                  alt="Zloženie"
+                  class="btn-icon"
+                  style="width:24px; height:24px;"
+                />
+              </span>
+              <span class="service-text">
+                Pranie + Sušenie + Zloženie
+                <span class="price-tag">2,99 €/kg</span>
+              </span>
+            </button>
           </div>
-          <p>Zadajte Váš email, na ktorý Vám odošleme faktúru.</p>
-          <label>Email:</label>
-          <input
-            type="email"
-            id="invoiceEmailInput"
-            placeholder="vasemail@example.com"
-            onclick="openKeyboardForInput('invoiceEmailInput')"
-          />
-          <button onclick="sendInvoice()">
-            <i class="fa-solid fa-paper-plane btn-icon"></i>
-            Odoslať faktúru
-          </button>
-        </div>
 
-        <!-- LOCKER OPEN SCREEN -->
-        <div id="lockerOpenScreen" class="screen">
-          <h1>Skrinka otvorená</h1>
+          <!-- WEIGHT MEASUREMENT SCREEN -->
+          <div id="weightMeasurementScreen" class="screen">
+            <h1>Meranie hmotnosti</h1>
+            <div class="lottie-container lottie-sm">
+              <lottie-player
+                src="assets/lottie/vaha.json"
+                background="transparent"
+                speed="1"
+                loop
+                autoplay
+              ></lottie-player>
+            </div>
+            <p>Postup:</p>
+            <ul>
+              <li>Vysuňte zásuvku s tray váhou v locker boxe.</li>
+              <li>Umiestnite prádlo na váhu.</li>
+              <li>
+                Systém automaticky zmeria hmotnosť a odošle údaje do admin systému.
+              </li>
+            </ul>
+            <div id="scaleGraphic" style="font-size: 32px; text-align: center;">
+              ⚖️
+            </div>
+            <div
+              class="progress-container"
+              style="background: #ccc; border-radius: 4px; overflow: hidden; height: 10px; margin: 10px 0;"
+            >
+              <div
+                class="progress-bar"
+                id="weightProgress"
+                style="height: 100%; width: 0%; background: #007bff;"
+              ></div>
+            </div>
+            <button onclick="startWeightMeasurement()">
+              <i class="fa-solid fa-weight-scale btn-icon"></i>
+              Spustiť meranie
+            </button>
+          </div>
+
+          <!-- LOCKER INSERTION SCREEN -->
+          <div id="lockerInsertionScreen" class="screen">
+            <h1>Vloženie do skrinky</h1>
+            <div class="lottie-container lottie-sm">
+              <lottie-player
+                src="assets/lottie/vlozeniie-do-skrinky.json"
+                background="transparent"
+                speed="1"
+                loop
+                autoplay
+              ></lottie-player>
+            </div>
+            <p>
+              Vložte svoje prádlo do otvorenej skrinky. Po vložení a zatvorení skrinky
+              sa objednávka automaticky dokončí.
+            </p>
+          </div>
+
+          <!-- ORDER COMPLETION SCREEN -->
+          <div id="orderCompletionScreen" class="screen">
+            <h1>
+              Vytlačenie QR lístka a potvrdenie Dokončenia objednávky
+            </h1>
+            <div class="lottie-container lottie-sm">
+              <lottie-player
+                src="assets/lottie/objednavka-kompletna.json"
+                background="transparent"
+                speed="1"
+                loop
+                autoplay
+              ></lottie-player>
+            </div>
+            <p>
+              <strong>Váš objednávkový kód:</strong>
+              <span id="orderCodeDisplay"></span>
+            </p>
+            <p>
+              <strong>QR kód:</strong>
+              <span id="qrCodeDisplay"></span>
+            </p>
+            <p>
+              Objednávka bola úspešne dokončená. Použite tento kód alebo naskenujte QR
+              kód pri vyzdvihnutí.
+            </p>
+            <button onclick="navigateHome()">
+              <i class="fa-solid fa-house btn-icon"></i>
+              Domov
+            </button>
+          </div>
+
+          <!-- REGISTER SCREEN -->
+          <div id="registerScreen" class="screen">
+            <h1>Registrácia a 50% zľava</h1>
+            <div
+              style="display: flex; justify-content: space-evenly; flex-wrap: wrap; gap: 20px;"
+            >
+              <!-- Apple QR -->
+              <div style="text-align: center;">
+                <div
+                  class="qr-code"
+                  style="background: url('assets/qr-apple.png') center/cover no-repeat;"
+                >
+                  <span style="color:#777; font-size:12px;">Apple QR</span>
+                </div>
+                <p style="margin-top:8px;">
+                  <img src="assets/logo.png" alt="EASY-WASH" style="width:60px;" /><br />
+                  EASY-WASH (Apple)
+                </p>
+              </div>
+
+              <!-- Android QR -->
+              <div style="text-align: center;">
+                <div
+                  class="qr-code"
+                  style="background: url('assets/qr-android.png') center/cover no-repeat;"
+                >
+                  <span style="color:#777; font-size:12px;">Android QR</span>
+                </div>
+                <p style="margin-top:8px;">
+                  <img src="assets/logo.png" alt="EASY-WASH" style="width:60px;" /><br />
+                  EASY-WASH (Android)
+                </p>
+              </div>
+
+              <!-- Website QR -->
+              <div style="text-align: center;">
+                <div
+                  class="qr-code"
+                  style="background: url('assets/qr-web.png') center/cover no-repeat;"
+                >
+                  <span style="color:#777; font-size:12px;">Web QR</span>
+                </div>
+                <p style="margin-top:8px;">
+                  <img src="assets/logo.png" alt="EASY-WASH" style="width:60px;" /><br />
+                  www.easy-wash.sk
+                </p>
+              </div>
+            </div>
+            <button onclick="navigateTo('scanOrderScreen')">
+              <i class="fa-solid fa-check btn-icon"></i>
+              Už mám aplikáciu / som registrovaný
+            </button>
+          </div>
+
+          <!-- APP REGISTERED SCREEN -->
+          <div id="appRegisteredScreen" class="screen">
+            <h1>Registrácia úspešná</h1>
+            <div class="lottie-container lottie-sm">
+              <lottie-player
+                src="assets/lottie/registrovany.json"
+                background="transparent"
+                speed="1"
+                loop
+                autoplay
+              ></lottie-player>
+            </div>
+            <p>
+              Vaše telefónne číslo bolo overené. Teraz si objednávku môžete zadať cez
+              aplikáciu alebo web.
+            </p>
+            <button onclick="navigateHome()">
+              <i class="fa-solid fa-house btn-icon"></i>
+              Domov
+            </button>
+          </div>
+
+          <!-- SCAN ORDER SCREEN -->
+          <div id="scanOrderScreen" class="screen">
+            <h1>Zadať/naskenovať objednávkový kód</h1>
+            <div class="lottie-container lottie-sm">
+              <lottie-player
+                src="assets/lottie/zadavanie-kodu.json"
+                background="transparent"
+                speed="1"
+                loop
+                autoplay
+              ></lottie-player>
+            </div>
+            <p>
+              Zadajte kód, ktorý ste obdržali z aplikácie alebo webu. Prípadne použite
+              funkciu naskenovania QR kódu.
+            </p>
+            <label>Objednávkový kód:</label>
+            <input
+              type="text"
+              id="orderCodeInput"
+              placeholder="Zadajte kód"
+              onclick="openKeyboardForInput('orderCodeInput')"
+            />
+            <button onclick="scanQRCode()">
+              <i class="fa-solid fa-camera btn-icon"></i>
+              Naskenovať QR kód
+            </button>
+          </div>
+
+          <!-- ORDER PICKUP PAYMENT SCREEN -->
+          <div id="orderPickupPaymentScreen" class="screen">
+            <h1>Vyzdvihnutie objednávky</h1>
+            <div
+              style="display: flex; gap: 20px; justify-content: center; margin-bottom: 20px;"
+            >
+              <!-- scan-qr.json -->
+              <div class="lottie-container lottie-sm">
+                <lottie-player
+                  src="assets/lottie/scan-qr.json"
+                  background="transparent"
+                  speed="1"
+                  loop
+                  autoplay
+                ></lottie-player>
+              </div>
+              <!-- zadavanie-kodu.json -->
+              <div class="lottie-container lottie-sm">
+                <lottie-player
+                  src="assets/lottie/zadavanie-kodu.json"
+                  background="transparent"
+                  speed="1"
+                  loop
+                  autoplay
+                ></lottie-player>
+              </div>
+            </div>
+            <p>Zadajte alebo naskenujte objednávkový kód pre vyzdvihnutie.</p>
+            <label>Zadajte kód:</label>
+            <input
+              type="text"
+              id="pickupCodeInput"
+              placeholder="Zadajte kód"
+              onclick="openKeyboardForInput('pickupCodeInput')"
+            />
+            <button onclick="goToPaymentScreen()">
+              <img
+                src="assets/pick-up.svg"
+                alt="Pick-up"
+                class="btn-icon"
+                style="width:24px; height:24px;"
+              />
+              Pokračovať
+            </button>
+          </div>
+
+          <!-- PAYMENT SCREEN -->
+          <div id="paymentScreen" class="screen">
+            <h1>Platba</h1>
+            <div class="lottie-container lottie-sm">
+              <lottie-player
+                src="assets/lottie/platba.json"
+                background="transparent"
+                speed="1"
+                loop
+                autoplay
+              ></lottie-player>
+            </div>
+            <p>Táto objednávka ešte nie je uhradená.</p>
+            <p>Suma k úhrade: <strong>10,00€</strong></p>
+            <p>Vyberte spôsob platby:</p>
+            <button onclick="startCardPayment()">
+              <i class="fa-solid fa-credit-card btn-icon"></i>
+              Zaplatiť kartou
+            </button>
+            <button onclick="startContactlessPayment()">
+              <i class="fa-solid fa-mobile-screen btn-icon"></i>
+              Zaplatiť bezkontaktne
+            </button>
+          </div>
+
+          <!-- INVOICE SCREEN -->
+          <div id="invoiceScreen" class="screen">
+            <h1>Faktúra</h1>
+            <div class="lottie-container lottie-sm">
+              <lottie-player
+                src="assets/lottie/faktura.json"
+                background="transparent"
+                speed="1"
+                loop
+                autoplay
+              ></lottie-player>
+            </div>
+            <p>Zadajte Váš email, na ktorý Vám odošleme faktúru.</p>
+            <label>Email:</label>
+            <input
+              type="email"
+              id="invoiceEmailInput"
+              placeholder="vasemail@example.com"
+              onclick="openKeyboardForInput('invoiceEmailInput')"
+            />
+            <button onclick="sendInvoice()">
+              <i class="fa-solid fa-paper-plane btn-icon"></i>
+              Odoslať faktúru
+            </button>
+          </div>
+
+          <!-- LOCKER OPEN SCREEN -->
+          <div id="lockerOpenScreen" class="screen">
+            <h1>Skrinka otvorená</h1>
+            <div class="lottie-container lottie-sm">
+              <lottie-player
+                src="assets/lottie/objednavka-kompletna.json"
+                background="transparent"
+                speed="1"
+                loop
+                autoplay
+              ></lottie-player>
+            </div>
+            <p>
+              Vaša objednávka je pripravená. Prevziahnite prádlo a zatvorte skrinku.
+            </p>
+            <button onclick="navigateHome()">
+              <i class="fa-solid fa-house btn-icon"></i>
+              Domov
+            </button>
+          </div>
+
+          <!-- ADMIN LOGIN SCREEN -->
+          <div id="adminLoginScreen" class="screen">
+            <h1>Admin prihlásenie</h1>
+            <p>Zadajte admin kód a heslo:</p>
+            <label>Admin kód:</label>
+            <input type="text" id="adminCodeInput" placeholder="Admin kód" />
+            <label>Heslo:</label>
+            <input
+              type="password"
+              id="adminPasswordInput"
+              placeholder="Heslo"
+            />
+            <button onclick="adminLogin()">Prihlásiť sa</button>
+            <button onclick="navigateHome()">Späť</button>
+          </div>
+
+          <!-- ADMIN MENU SCREEN -->
+          <div id="adminMenuScreen" class="screen">
+            <h1>Admin menu</h1>
+            <button onclick="navigateTo('lockerSelectionScreen')">
+              <i class="fa-solid fa-lock btn-icon"></i>
+              Výber skriniek
+            </button>
+            <button onclick="navigateTo('lockerRestockingScreen')">
+              <i class="fa-solid fa-box-archive btn-icon"></i>
+              Doplnenie skriniek
+            </button>
+            <button onclick="navigateHome()">Späť</button>
+          </div>
+
+          <!-- LOCKER SELECTION SCREEN (výber plných skriniek) -->
+          <div id="lockerSelectionScreen" class="screen">
+            <h1>Výber skriniek</h1>
+            <p>
+              Počet skriniek na výber:
+              <span id="availableLockersCount">X</span>
+            </p>
+            <button onclick="selectFirstLocker()">Vybrať prvú skrinku</button>
+            <div id="selectedLockerInfo"></div>
+            <!-- Tieto tlačidlá sa zobrazia dynamicky -->
+            <button
+              id="nextLockerButton"
+              onclick="selectNextLocker()"
+              style="display:none;"
+            >
+              Vybrať ďalšiu skrinku
+            </button>
+            <button
+              id="finishLockersButton"
+              onclick="finishLockerSelection()"
+              style="display:none;"
+            >
+              Hotovo, všetky skrinky vybraté
+            </button>
+          </div>
+
+          <!-- LOCKER RESTOCKING SCREEN (doplnenie objednávok do skrinky) -->
+          <div id="lockerRestockingScreen" class="screen">
+            <h1>Doplnenie skriniek</h1>
+            <p>
+              Naskenujte alebo zadajte QR kód prvej objednávky:
+            </p>
+            <input
+              type="text"
+              id="restockQRCodeInput"
+              placeholder="QR kód"
+              onclick="openKeyboardForInput('restockQRCodeInput')"
+            />
+            <button onclick="openLockerForRestocking()">
+              Otvoriť skrinku
+            </button>
+            <div id="restockLockerInfo"></div>
+            <!-- Tlačidlá pre opakovanie alebo ukončenie procesu -->
+            <button
+              id="insertNextOrderButton"
+              onclick="insertNextOrder()"
+              style="display:none;"
+            >
+              Vložiť ďalšiu objednávku
+            </button>
+            <button
+              id="finishRestockingButton"
+              onclick="finishRestocking()"
+              style="display:none;"
+            >
+              Ukončiť vkladanie objednávok
+            </button>
+          </div>
+        </div>
+        <!-- FOOTER LINKS -->
+        <div class="footer-links">
+          <a href="#">Obchodné podmienky</a> |
+          <a href="#">GDPR</a> |
+          <a href="#">Cenník</a>
+        </div>
+      </div>
+
+      <!-- RIGHT PANEL -->
+      <div class="right-panel">
+        <!-- Pickup Home Screen -->
+        <div id="pickupScreen" class="screen active">
+          <h1>Vyzdvihnutie</h1>
+          <div
+            style="font-size: 48px; text-align: center; margin: 20px 0;"
+          >
+            <!-- Môžeš sem pridať ďalšie vizuály -->
+          </div>
           <div class="lottie-container lottie-sm">
             <lottie-player
               src="assets/lottie/objednavka-kompletna.json"
@@ -455,83 +630,60 @@
               autoplay
             ></lottie-player>
           </div>
-          <p>Vaša objednávka je pripravená. Prevziahnite prádlo a zatvorte skrinku.</p>
+          <p>
+            Ak chcete objednávku vyzdvihnúť okamžite, stlačte tlačidlo:
+          </p>
+          <button onclick="startPickupProcess()">
+            <img
+              src="assets/pick-up.svg"
+              alt="Pick-up"
+              class="btn-icon"
+              style="width:24px; height:24px;"
+            />
+            Vyzdvihnúť objednávku
+          </button>
+          <!-- Logo -->
+          <div class="right-panel-logo">
+            <img src="assets/logo.png" alt="EASY-WASH" />
+          </div>
+        </div>
+
+        <!-- Navigation Home Button -->
+        <div id="returnHomeScreen" class="screen">
+          <h1 style="font-size: 20px; text-align: center;">Navigácia</h1>
+          <div
+            style="font-size: 32px; text-align: center; margin: 20px 0;"
+          >
+            <!-- Môžeš sem pridať ďalšie vizuály -->
+          </div>
+          <p style="text-align: center;">
+            Pre návrat na hlavnú obrazovku:
+          </p>
           <button onclick="navigateHome()">
             <i class="fa-solid fa-house btn-icon"></i>
             Domov
           </button>
-        </div>
-
-      </div>
-      
-      <!-- FOOTER LINKS -->
-      <div class="footer-links">
-        <a href="#">Obchodné podmienky</a> |
-        <a href="#">GDPR</a> |
-        <a href="#">Cenník</a>
-      </div>
-    </div>
-
-    <!-- RIGHT PANEL -->
-    <div class="right-panel">
-      <!-- Pickup Home Screen -->
-      <div id="pickupScreen" class="screen active">
-        <h1>Vyzdvihnutie</h1>
-        <div style="font-size: 48px; text-align: center; margin: 20px 0;">
-          <!-- Môžeš sem pridať ďalšie vizuály -->
-        </div>
-        <div class="lottie-container lottie-sm">
-          <lottie-player
-            src="assets/lottie/objednavka-kompletna.json"
-            background="transparent"
-            speed="1"
-            loop
-            autoplay
-          ></lottie-player>
-        </div>
-        <p>Ak chcete objednávku vyzdvihnúť okamžite, stlačte tlačidlo:</p>
-        <button onclick="startPickupProcess()">
-          <img src="assets/pick-up.svg" alt="Pick-up" class="btn-icon" style="width:24px; height:24px;">
-          Vyzdvihnúť objednávku
-        </button>
-        <!-- Logo -->
-        <div class="right-panel-logo">
-          <img src="assets/logo.png" alt="EASY-WASH" />
-        </div>
-      </div>
-
-      <!-- Navigation Home Button -->
-      <div id="returnHomeScreen" class="screen">
-        <h1 style="font-size: 20px; text-align: center;">Navigácia</h1>
-        <div style="font-size: 32px; text-align: center; margin: 20px 0;">
-          <!-- Môžeš sem pridať ďalšie vizuály -->
-        </div>
-        <p style="text-align: center;">Pre návrat na hlavnú obrazovku:</p>
-        <button onclick="navigateHome()">
-          <i class="fa-solid fa-house btn-icon"></i>
-          Domov
-        </button>
-        <!-- Logo -->
-        <div class="right-panel-logo">
-          <img src="assets/logo.png" alt="EASY-WASH" />
+          <!-- Logo -->
+          <div class="right-panel-logo">
+            <img src="assets/logo.png" alt="EASY-WASH" />
+          </div>
         </div>
       </div>
     </div>
-  </div>
 
-  <!-- MESSAGE MODAL (kiosk pop-up messages) -->
-  <div id="messageModal" class="modal">
-    <div class="modal-content">
-      <p id="modalMessage"></p>
-      <button onclick="closeModalMessage()">OK</button>
+    <!-- MESSAGE MODAL (kiosk pop-up messages) -->
+    <div id="messageModal" class="modal">
+      <div class="modal-content">
+        <p id="modalMessage"></p>
+        <button onclick="closeModalMessage()">OK</button>
+      </div>
     </div>
-  </div>
 
-  <!-- KEYBOARD CONTAINER (loaded from partials/keyboard.html) -->
-  <div id="keyboardContainer"></div>
+    <!-- KEYBOARD CONTAINER (loaded from partials/keyboard.html) -->
+    <div id="keyboardContainer"></div>
 
-  <!-- JS SCRIPTS -->
-  <script src="js/kiosk-keyboard.js"></script>
-  <script src="js/kiosk.js"></script>
-</body>
+    <!-- JS SCRIPTS -->
+    <script src="js/kiosk-keyboard.js"></script>
+    <script src="js/kiosk.js"></script>
+  </body>
 </html>
