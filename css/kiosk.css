@@ -58,7 +58,7 @@ body {
   padding-left: 20px;
   padding-right: 20px;
   padding-bottom: 20px;
-  padding-top: 30px; /
+  padding-top: 30px; /* adjusted */
   overflow-y: auto;
   position: relative;
 }
@@ -143,6 +143,11 @@ button:hover {
 }
 .btn-icon {
   font-size: 18px;
+}
+
+/* Nové pravidlo: nastavenie ikoniek (obrázkových) na biele */
+img.btn-icon {
+  filter: brightness(0) saturate(100%) invert(100%);
 }
 
 /* PRICE TAG for services */
