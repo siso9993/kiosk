@@ -22,7 +22,7 @@
   <!-- Lottie (for .json animations) -->
   <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
 
-  <!-- Kiosk CSS (external) -->
+  <!-- Kiosk main CSS -->
   <link rel="stylesheet" href="css/kiosk.css" />
 </head>
 
@@ -515,6 +515,14 @@
 
     </div>
 
+    <!-- FOOTER LINKS (Restored) at the bottom of LEFT PANEL -->
+      <div class="footer-links">
+        <a href="#">Obchodné podmienky</a> |
+        <a href="#">GDPR</a> |
+        <a href="#">Cenník</a>
+      </div>
+    </div>
+
     <!-- RIGHT PANEL -->
     <div class="right-panel">
       <!-- 1) VYZDVIHNUTIE (Home Screen) -->
@@ -528,6 +536,8 @@
           <i class="fa-solid fa-truck btn-icon"></i>
           Vyzdvihnúť objednávku
         </button>
+
+        <!-- Logo at the bottom -->
         <div class="right-panel-logo">
           <img src="assets/logo.png" alt="EASY-WASH" />
         </div>
@@ -544,6 +554,8 @@
           <i class="fa-solid fa-house btn-icon"></i>
           Domov
         </button>
+
+        <!-- Logo at the bottom -->
         <div class="right-panel-logo">
           <img src="assets/logo.png" alt="EASY-WASH" />
         </div>
@@ -551,7 +563,7 @@
     </div>
   </div>
 
-  <!-- MESSAGE MODAL -->
+  <!-- MESSAGE MODAL (for kiosk pop-up messages) -->
   <div id="messageModal" class="modal">
     <div class="modal-content">
       <p id="modalMessage"></p>
@@ -562,10 +574,10 @@
   <!-- KEYBOARD CONTAINER (loaded from partials/keyboard.html) -->
   <div id="keyboardContainer"></div>
 
-  <!-- SCRIPTS -->
-  <!-- kiosk-keyboard.js -> loads partials/keyboard.html into #keyboardContainer -->
+  <!-- JS SCRIPTS -->
+  <!-- 1) kiosk-keyboard.js -> loads partials/keyboard.html into #keyboardContainer -->
   <script src="js/kiosk-keyboard.js"></script>
-  <!-- kiosk.js -> main kiosk logic (navigation, popups, rotating icons, etc.) -->
+  <!-- 2) kiosk.js -> main kiosk logic (navigation, popups, rotating icons, etc.) -->
   <script src="js/kiosk.js"></script>
 </body>
 </html>
