@@ -286,9 +286,11 @@ img.btn-icon {
 }
 
 /* Nové štýly pre tlačidlá vo výbere služby */
+/* Tieto pravidlá zabezpečia, že obsah tlačidla bude usporiadaný vertikálne –
+   ikonky budú nad textom a budú centrované. */
 button.service-button {
-  flex-direction: column;   /* Zobrazenie obsahu vertikálne */
-  gap: 8px;                 /* Medzera medzi ikonami a textom */
+  flex-direction: column;
+  gap: 8px;
   text-align: center;
 }
 .service-icons {
