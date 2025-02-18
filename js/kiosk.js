@@ -19,13 +19,15 @@ function updateTranslations() {
       el.innerText = translations[window.currentLanguage][key];
     }
   });
-  // Aktualizácia placeholderov
+  // Aktualizácia placeholder atribútov
   document.querySelectorAll("[data-i18n-placeholder]").forEach(el => {
     const key = el.getAttribute("data-i18n-placeholder");
     if (translations[window.currentLanguage] && translations[window.currentLanguage][key]) {
       el.placeholder = translations[window.currentLanguage][key];
     }
   });
+  // Aktualizácia rotujúcich animácií
+  homeAnimationLabels = translations[window.currentLanguage].homeAnimationLabels;
 }
 
 /***********************************************
@@ -47,6 +49,7 @@ let messageModalCallback = null;
 let activeInputId = null;
 
 // HOME SCREEN ANIMÁCIE (rotating icons)
+// Pôvodné pole animácií ostáva nezmenené
 const homeAnimations = [
   "assets/lottie/zadanie-objednavky.json",
   "assets/lottie/vlozeniie-do-skrinky.json",
@@ -57,20 +60,13 @@ const homeAnimations = [
   "assets/lottie/platba.json",
   "assets/lottie/objednavka-kompletna.json"
 ];
-const homeAnimationLabels = [
-  "Jednoducho zadáte objednávku priamo TU alebo cez WEB/APP ",
-  "Prádlo odvážite a vložíte do pridelenej skrinky",
-  "Teraz už neostáva nič len počkať",
-  "Prádlo vyzdvihneme a dodáme do našej práčovne",
-  "V práčovni ho operieme, vysušíme, ožehlíme a zložíme",
-  "O každom kroku budete informovaný SMS alebou APP notifikáciou",
-  "Pred vyzdvihnutím jednoducho zaplatíte cez APP alebo priamo TU",
-  "A už si len vyberiete svoje čisté prádlo z boxu "
-];
+// Načítame počiatočné rotujúce popisy z prekladov
+let homeAnimationLabels = translations[window.currentLanguage].homeAnimationLabels || [];
+
 let currentHomeAnimIndex = 0;
 
 window.addEventListener("DOMContentLoaded", () => {
-  // Predvolené nastavenie jazyka (ak ešte nie je nastavený)
+  // Predvolené nastavenie jazyka, ak nie je nastavený
   if (!window.currentLanguage) {
     window.currentLanguage = "sk";
   }
@@ -301,8 +297,7 @@ function startContactlessPayment() {
 function sendInvoice() {
   const email = document.getElementById("invoiceEmailInput").value.trim();
   if (!email) {
-    // Tu by sa dalo pridať preklad pre neplatný email
-    showMessage("Zadajte platný email!");
+    showMessage(t("invalidEmail") || "Zadajte platný email!"); // Ak pridáte kľúč invalidEmail do prekladov
     return;
   }
   showMessage(t("invoiceSent") + email, () => {
