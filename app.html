@@ -2,7 +2,7 @@
 <html lang="sk">
   <head>
     <meta charset="UTF-8" />
-    <title>App Prototype</title>
+    <title>EZ-WASH Aplikácia</title>
 
     <!-- Google Fonts -->
     <link
@@ -42,6 +42,29 @@
         font-size: 0.9em;
         color: #666;
       }
+      /* Základné štýly pre tlačidlá */
+      button {
+        margin: 10px 0;
+        padding: 10px 20px;
+        font-size: 1em;
+        cursor: pointer;
+      }
+      input {
+        padding: 10px;
+        font-size: 1em;
+        margin: 5px 0;
+        width: 100%;
+      }
+      .footer-links {
+        text-align: center;
+        margin-top: 20px;
+      }
+      .footer-links a {
+        margin: 0 5px;
+        text-decoration: none;
+        color: #007bff;
+        cursor: pointer;
+      }
     </style>
   </head>
 
@@ -58,98 +81,39 @@
       <div class="left-panel">
         <!-- Kontajner pre obrazovky -->
         <div id="screensContainer">
-          <!-- HOME SCREEN -->
+          <!-- Domovská obrazovka so všetkými animáciami -->
           <div id="home-screen" class="screen active">
-            <h1>Vitajte v Aplikácii</h1>
-            <button onclick="navigateTo('newOrderScreen')">
-              <i class="fa-solid fa-plus-circle btn-icon"></i>
-              <span>Nová objednávka</span>
-            </button>
-            <button onclick="navigateTo('registerScreen')">
-              <i class="fa-solid fa-user-plus btn-icon"></i>
-              <span>Registrácia</span>
-            </button>
-          </div>
-
-          <!-- NOVÁ OBJEDNÁVKA -->
-          <div id="newOrderScreen" class="screen">
-            <h1>Nová objednávka</h1>
-            <p>Zadajte vaše telefónne číslo:</p>
-            <input
-              type="tel"
-              id="phoneInput"
-              placeholder="0900 000 000"
-              onclick="openKeyboardForInput('phoneInput')"
-            />
-            <button onclick="sendSMSCode()">
-              <i class="fa-solid fa-sms btn-icon"></i>
-              <span>Odoslať SMS kód</span>
-            </button>
-          </div>
-
-          <!-- OVERENIE SMS KÓDU -->
-          <div id="smsVerificationScreen" class="screen">
-            <h1>Overenie čísla</h1>
-            <p>Zadajte overovací kód z SMS:</p>
-            <input
-              type="text"
-              id="smsCodeInput"
-              placeholder="0000"
-              onclick="openKeyboardForInput('smsCodeInput')"
-            />
-            <button onclick="verifySMSCode()">
-              <i class="fa-solid fa-check-circle btn-icon"></i>
-              <span>Overiť kód</span>
-            </button>
-          </div>
-
-          <!-- VÝBER SLUŽBY -->
-          <div id="serviceSelectionScreen" class="screen">
-            <h1>Výber služby</h1>
-            <p>Vyberte si jednu z ponúkaných služieb:</p>
-            <button onclick="selectService('Pranie + Sušenie + Zloženie')">
-              <span class="service-text">Pranie + Sušenie + Zloženie</span>
-            </button>
-            <button onclick="selectService('Pranie + Sušenie + Žehlenie + Zloženie')">
-              <span class="service-text">Pranie + Sušenie + Žehlenie + Zloženie</span>
-            </button>
-          </div>
-
-          <!-- OBJEDNÁVKA DOKONČENÁ -->
-          <div id="orderCompletionScreen" class="screen">
-            <h1>Objednávka dokončená!</h1>
-            <p>Váš jedinečný kód:</p>
-            <p id="orderCodeDisplay" class="important-text">123456</p>
-            <p>QR kód:</p>
-            <div id="qrCodeDisplay">
-              <!-- Miesto pre QR kód (placeholder) -->
+            <h1>Vitajte v EZ-WASH</h1>
+            <div class="lottie-container">
               <lottie-player
-                src="assets/lottie/qr-code-placeholder.json"
+                id="homeLottiePlayer"
+                src="assets/lottie/home-animation.json"
                 background="transparent"
-                speed="1"
-                style="width: 100px; height: 100px;"
+                speed="0.6"
+                style="width: 100%; height: 100%;"
                 autoplay
               ></lottie-player>
             </div>
-            <p>
-              Tento kód/QR kód zadajte alebo naskenujte na zvolenom lockerboxe/KIOSKu.
-              Príďte k lockerboxu a vyberte možnosť "Zadať alebo naskenovať číslo QR objednávky".
-            </p>
-            <!-- Tlačidlo pre výber lokality lockerboxu (iba v prípade registrácie) -->
-            <button onclick="navigateTo('collectionPointsScreen')">
-              <i class="fa-solid fa-map-marker-alt btn-icon"></i>
-              <span>Výber lokality lockerboxu</span>
+            <p>Pre kvalitnú starostlivosť o vaše prádlo využite naše služby.</p>
+          </div>
+
+          <!-- Obrazovka pre registráciu/prihlásenie (ak používateľ nie je prihlásený) -->
+          <div id="authScreen" class="screen">
+            <h1>Registrácia / Prihlásenie</h1>
+            <button onclick="navigateTo('registrationScreen')">
+              <i class="fa-solid fa-user-plus btn-icon"></i>
+              <span>Registrácia</span>
             </button>
-            <button onclick="navigateHome()">
-              <i class="fa-solid fa-house btn-icon"></i>
-              <span>Domov</span>
+            <button onclick="navigateTo('loginScreen')">
+              <i class="fa-solid fa-sign-in btn-icon"></i>
+              <span>Prihlásenie</span>
             </button>
           </div>
 
-          <!-- REGISTRÁCIA -->
-          <div id="registerScreen" class="screen">
+          <!-- Registrácia -->
+          <div id="registrationScreen" class="screen">
             <h1>Registrácia</h1>
-            <p>Zadajte vaše telefónne číslo pre registráciu:</p>
+            <p>Zadajte vaše telefónne číslo:</p>
             <input
               type="tel"
               id="registerPhoneInput"
@@ -162,45 +126,185 @@
             </button>
           </div>
 
-          <!-- NAŠE ODBERNÉ MISTA -->
-          <div id="collectionPointsScreen" class="screen">
-            <h1>Naše odberné miesta</h1>
-            <p>Vyhľadajte lockerbox podľa mesta alebo PSČ:</p>
+          <!-- Prihlásenie -->
+          <div id="loginScreen" class="screen">
+            <h1>Prihlásenie</h1>
+            <p>Zadajte svoje prihlasovacie údaje:</p>
             <input
               type="text"
-              id="cityInput"
-              placeholder="Mesto"
-              onclick="openKeyboardForInput('cityInput')"
+              id="loginUsername"
+              placeholder="Používateľské meno"
+              onclick="openKeyboardForInput('loginUsername')"
             />
             <input
-              type="text"
-              id="postalCodeInput"
-              placeholder="PSČ"
-              onclick="openKeyboardForInput('postalCodeInput')"
+              type="password"
+              id="loginPassword"
+              placeholder="Heslo"
+              onclick="openKeyboardForInput('loginPassword')"
             />
-            <button onclick="searchLockerBoxes()">
-              <i class="fa-solid fa-search btn-icon"></i>
-              <span>Hľadať</span>
+            <button onclick="loginUser()">
+              <i class="fa-solid fa-sign-in btn-icon"></i>
+              <span>Prihlásiť sa</span>
             </button>
-            <div id="mapPlaceholder" style="margin-top:20px; text-align:center;">
-              <p>Mapa s najbližšími lockerboxami</p>
+          </div>
+
+          <!-- Overenie SMS kódu (pre registráciu) -->
+          <div id="smsVerificationScreen" class="screen">
+            <h1>Overenie SMS</h1>
+            <p>Zadajte overovací kód, ktorý ste obdržali:</p>
+            <input
+              type="text"
+              id="smsCodeInput"
+              placeholder="0000"
+              onclick="openKeyboardForInput('smsCodeInput')"
+            />
+            <button onclick="verifySMSCode()">
+              <i class="fa-solid fa-check-circle btn-icon"></i>
+              <span>Overiť kód</span>
+            </button>
+          </div>
+
+          <!-- Hlavné menu (po úspešnej registrácii/prihlásení) -->
+          <div id="mainMenuScreen" class="screen">
+            <h1>Hlavné menu</h1>
+            <button onclick="navigateTo('newOrderScreen')">
+              <i class="fa-solid fa-plus-circle btn-icon"></i>
+              <span>Nová objednávka</span>
+            </button>
+            <button onclick="navigateTo('orderHistoryScreen')">
+              <i class="fa-solid fa-history btn-icon"></i>
+              <span>História objednávok</span>
+            </button>
+            <button onclick="navigateTo('ongoingOrdersScreen')">
+              <i class="fa-solid fa-spinner btn-icon"></i>
+              <span>Prebiehajúce objednávky</span>
+            </button>
+            <button onclick="navigateTo('mapScreen')">
+              <i class="fa-solid fa-map btn-icon"></i>
+              <span>Mapa</span>
+            </button>
+          </div>
+
+          <!-- Nová objednávka -->
+          <div id="newOrderScreen" class="screen">
+            <h1>Nová objednávka</h1>
+            <div class="lottie-container">
+              <lottie-player
+                src="assets/lottie/order-animation.json"
+                background="transparent"
+                speed="1"
+                style="width: 100%; height: 100%;"
+                autoplay
+              ></lottie-player>
+            </div>
+            <p>Vyberte si službu:</p>
+            <button onclick="selectService('Pranie + Sušenie + Zloženie')">
+              <span class="service-text">Pranie + Sušenie + Zloženie</span>
+            </button>
+            <button onclick="selectService('Pranie + Sušenie + Žehlenie + Zloženie')">
+              <span class="service-text">Pranie + Sušenie + Žehlenie + Zloženie</span>
+            </button>
+            <button onclick="generateOrderCode()">
+              <i class="fa-solid fa-check btn-icon"></i>
+              <span>Dokončiť objednávku</span>
+            </button>
+          </div>
+
+          <!-- História objednávok -->
+          <div id="orderHistoryScreen" class="screen">
+            <h1>História objednávok</h1>
+            <p>Zoznam vašich objednávok:</p>
+            <div id="orderHistoryList">
+              <!-- Dynamicky generovaný zoznam objednávok -->
             </div>
             <button onclick="navigateHome()">
               <i class="fa-solid fa-house btn-icon"></i>
               <span>Domov</span>
             </button>
           </div>
-        </div>
 
-        <!-- Pätička (voliteľná) -->
+          <!-- Prebiehajúce objednávky -->
+          <div id="ongoingOrdersScreen" class="screen">
+            <h1>Prebiehajúce objednávky</h1>
+            <p>Zoznam objednávok, ktoré sú momentálne spracovávané:</p>
+            <div id="ongoingOrdersList">
+              <!-- Dynamicky generovaný zoznam prebiehajúcich objednávok -->
+            </div>
+            <button onclick="navigateHome()">
+              <i class="fa-solid fa-house btn-icon"></i>
+              <span>Domov</span>
+            </button>
+          </div>
+
+          <!-- Mapa -->
+          <div id="mapScreen" class="screen">
+            <h1>Mapa</h1>
+            <p>Zobrazujú sa najbližšie lockerboxy:</p>
+            <div id="mapPlaceholder" style="text-align: center;">
+              <lottie-player
+                src="assets/lottie/map-animation.json"
+                background="transparent"
+                speed="1"
+                style="width: 300px; height: 300px;"
+                autoplay
+              ></lottie-player>
+            </div>
+            <button onclick="navigateHome()">
+              <i class="fa-solid fa-house btn-icon"></i>
+              <span>Domov</span>
+            </button>
+          </div>
+
+          <!-- Obchodné podmienky -->
+          <div id="termsScreen" class="screen">
+            <h1>Obchodné podmienky</h1>
+            <p>Tu budu Obchodné podmienky!</p>
+          </div>
+
+          <!-- GDPR -->
+          <div id="gdprScreen" class="screen">
+            <h1>GDPR</h1>
+            <p>Tu budu GDPR!</p>
+          </div>
+
+          <!-- Cenník -->
+          <div id="pricingScreen" class="screen">
+            <h1>Cenník</h1>
+            <p>Tu budu Cenník!</p>
+          </div>
+        </div>
+        <!-- Pätička s odkazmi -->
         <div class="footer-links">
-          <a href="#" onclick="navigateHome()">Domov</a>
+          <a href="#" onclick="navigateTo('termsScreen'); showRightPanel('returnHomeScreen')">Obchodné podmienky</a> |
+          <a href="#" onclick="navigateTo('gdprScreen'); showRightPanel('returnHomeScreen')">GDPR</a> |
+          <a href="#" onclick="navigateTo('pricingScreen'); showRightPanel('returnHomeScreen')">Cenník</a>
         </div>
       </div>
 
       <!-- PRAVÝ PANEL -->
       <div class="right-panel">
-        <!-- Jednoduchá navigácia s tlačidlom Domov -->
+        <!-- Ak používateľ nie je prihlásený, zobrazí sa tento panel -->
+        <div id="unauthenticatedScreen" class="screen active">
+          <h1>Prihlásenie / Registrácia</h1>
+          <button onclick="navigateTo('registrationScreen')">
+            <i class="fa-solid fa-user-plus btn-icon"></i>
+            <span>Registrácia</span>
+          </button>
+          <button onclick="navigateTo('loginScreen')">
+            <i class="fa-solid fa-sign-in btn-icon"></i>
+            <span>Prihlásenie</span>
+          </button>
+        </div>
+        <!-- Ak je používateľ prihlásený, zobrazí sa tento panel s telefónnym číslom -->
+        <div id="authenticatedScreen" class="screen">
+          <h1>Vitajte</h1>
+          <p id="userPhoneDisplay">Telefón: 0900 000 000</p>
+          <button onclick="navigateHome()">
+            <i class="fa-solid fa-house btn-icon"></i>
+            <span>Domov</span>
+          </button>
+        </div>
+        <!-- Prípadne môžete použiť aj spoločnú navigáciu -->
         <div id="returnHomeScreen" class="screen">
           <h1 style="font-size: 20px; text-align: center;">Navigácia</h1>
           <button onclick="navigateHome()">
@@ -219,7 +323,7 @@
       </div>
     </div>
 
-    <!-- KONTAINER KLÁVESNICE -->
+    <!-- KLÁVESNICA -->
     <div id="keyboardContainer">
       <div id="keyboard" style="display:none;"></div>
     </div>
