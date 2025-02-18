@@ -355,7 +355,7 @@ function finishLockerSelection() {
 function openLockerForRestocking() {
   const qrCodeInput = document.getElementById("restockQRCodeInput").value.trim();
   if (!qrCodeInput) {
-    showMessage("Zadajte QR kód objednávky!");
+    showMessage("Zadajte kód alebo naskenujte QR objednávky!");
     return;
   }
   document.getElementById("restockLockerInfo").innerText =
