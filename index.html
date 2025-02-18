@@ -629,12 +629,31 @@
               <span data-i18n="finishRestockingButton">Ukončiť dopĺňanie skriniek</span>
             </button>
           </div>
+
+          <!-- NEW LEGAL/INFO SCREENS -->
+          <!-- Obchodné podmienky -->
+          <div id="termsScreen" class="screen">
+            <h1>Obchodné podmienky</h1>
+            <p>Tu budu Obchodné podmienky!</p>
+          </div>
+
+          <!-- GDPR -->
+          <div id="gdprScreen" class="screen">
+            <h1>GDPR</h1>
+            <p>Tu budu GDPR!</p>
+          </div>
+
+          <!-- Cenník -->
+          <div id="pricingScreen" class="screen">
+            <h1>Cenník</h1>
+            <p>Tu budu Cenník!</p>
+          </div>
         </div>
         <!-- FOOTER LINKS -->
         <div class="footer-links">
-          <a href="#">Obchodné podmienky</a> |
-          <a href="#">GDPR</a> |
-          <a href="#">Cenník</a>
+          <a href="#" onclick="navigateTo('termsScreen'); showRightPanel('returnHomeScreen')">Obchodné podmienky</a> |
+          <a href="#" onclick="navigateTo('gdprScreen'); showRightPanel('returnHomeScreen')">GDPR</a> |
+          <a href="#" onclick="navigateTo('pricingScreen'); showRightPanel('returnHomeScreen')">Cenník</a>
         </div>
       </div>
 
@@ -643,9 +662,7 @@
         <!-- Pickup Home Screen -->
         <div id="pickupScreen" class="screen active">
           <h1 data-i18n="pickupHomeTitle">Okamžité vyzdvihnutie</h1>
-          <div
-            style="font-size: 48px; text-align: center; margin: 20px 0;"
-          >
+          <div style="font-size: 48px; text-align: center; margin: 20px 0;">
             <!-- Ďalšie vizuály podľa potreby -->
           </div>
           <div class="lottie-container lottie-sm">
@@ -676,12 +693,10 @@
           </div>
         </div>
 
-        <!-- Navigation Home Screen -->
+        <!-- Navigation Home Screen (pre navigáciu na Domov) -->
         <div id="returnHomeScreen" class="screen">
           <h1 data-i18n="navigationTitle" style="font-size: 20px; text-align: center;">Navigácia</h1>
-          <div
-            style="font-size: 32px; text-align: center; margin: 20px 0;"
-          >
+          <div style="font-size: 32px; text-align: center; margin: 20px 0;">
             <!-- Ďalšie vizuály podľa potreby -->
           </div>
           <p data-i18n="navigationDescription" style="text-align: center;">
