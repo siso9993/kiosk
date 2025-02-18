@@ -1,7 +1,6 @@
 /***********************************************
  * INITIALIZÁCIA JAZYKA
  ***********************************************/
-// Nastavíme predvolený jazyk, ak ešte nie je definovaný
 window.currentLanguage = window.currentLanguage || "sk";
 
 /***********************************************
@@ -70,7 +69,6 @@ let homeAnimationLabels = translations[window.currentLanguage].homeAnimationLabe
 let currentHomeAnimIndex = 0;
 
 window.addEventListener("DOMContentLoaded", () => {
-  // Ak by sa jazyk zmenil mimo, už máme predvolený jazyk "sk".
   updateTranslations();
 
   // Nastavenie rotujúcich ikon na Home Screen
@@ -157,7 +155,7 @@ function closeKeyboard() {
 function setLanguage(lang) {
   window.currentLanguage = lang;
   updateTranslations();
-  showMessage(t("switchingLanguage") + (lang === "sk" ? "Slovenčina" : "English"));
+  // Removed the language switching modal message.
 }
 
 function navigateTo(screenId) {
@@ -310,7 +308,6 @@ function sendInvoice() {
  * SIMULÁCIA VLOŽENIA DO SKRINKY
  ***********************************************/
 function simulateLockerInsertion() {
-  // Simulácia vloženia prádla a následné vygenerovanie objednávkového kódu.
   setTimeout(() => {
     generateOrderCode();
   }, 3000);
