@@ -46,7 +46,7 @@ body {
   z-index: 999;
 }
 .lang-option {
-  font-size: 20px;
+  font-size: 30px;
   cursor: pointer;
   user-select: none;
   padding: 1px;
