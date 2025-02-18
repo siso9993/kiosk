@@ -115,6 +115,7 @@
               type="tel"
               id="phoneInput"
               placeholder="0900 000 000"
+              data-i18n-placeholder="phonePlaceholder"
               onclick="openKeyboardForInput('phoneInput')"
             />
             <button onclick="sendSMSCode()">
@@ -385,6 +386,7 @@
               type="text"
               id="orderCodeInput"
               placeholder="Zadajte kód"
+              data-i18n-placeholder="orderCodePlaceholder"
               onclick="openKeyboardForInput('orderCodeInput')"
             />
             <button onclick="scanQRCode()">
@@ -428,6 +430,7 @@
               type="text"
               id="pickupCodeInput"
               placeholder="Zadajte kód"
+              data-i18n-placeholder="orderCodePlaceholder"
               onclick="openKeyboardForInput('pickupCodeInput')"
             />
             <button onclick="goToPaymentScreen()">
@@ -491,7 +494,7 @@
               type="email"
               id="invoiceEmailInput"
               placeholder="vasemail@example.com"
-              data-i18n-placeholder="emailLabel"
+              data-i18n-placeholder="emailPlaceholder"
               onclick="openKeyboardForInput('invoiceEmailInput')"
             />
             <button onclick="sendInvoice()">
@@ -705,7 +708,10 @@
     </div>
 
     <!-- KEYBOARD CONTAINER (loaded from partials/keyboard.html) -->
-    <div id="keyboardContainer"></div>
+    <div id="keyboardContainer">
+      <!-- Pridáme element klávesnice s id "keyboard", ktorý skript využíva -->
+      <div id="keyboard" style="display:none;"></div>
+    </div>
 
     <!-- JS SCRIPTS -->
     <!-- Načítajte prekladový súbor pred ostatnými skriptami -->
