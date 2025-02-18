@@ -3,6 +3,23 @@ const translations = {
   sk: {
     homeTitle: "Vitajte v EZ-WASH",
     homeDescription: "Chcete mať čisté a voňavé prádlo bez starostí? Naša služba EZ-WASH vám to zabezpečí rýchlo a spoľahlivo. Vložte prádlo do našich úložných boxov a o zvyšok sa postaráme my! O každom kroku budete informovaný SMSkou alebo notifikáciou v aplikácii.",
+    // Pole pre rotujúce popisy animácií
+    homeAnimationLabels: [
+      "Jednoducho zadáte objednávku priamo TU alebo cez WEB/APP",
+      "Prádlo odvážite a vložíte do pridelenej skrinky",
+      "Teraz už neostáva nič len počkať",
+      "Prádlo vyzdvihneme a dodáme do našej práčovne",
+      "V práčovni ho operieme, vysušíme, ožehlíme a zložíme",
+      "O každom kroku budete informovaný SMS alebo APP notifikáciou",
+      "Pred vyzdvihnutím jednoducho zaplatíte cez APP alebo priamo TU",
+      "A už si len vyberiete svoje čisté prádlo z boxu"
+    ],
+    // Placeholder pre vstupy
+    phonePlaceholder: "0900 000 000",
+    orderCodePlaceholder: "Zadajte kód",
+    emailPlaceholder: "vasemail@example.com",
+    restockQRCodePlaceholder: "QR kód objednávky",
+    
     newOrderButton: "Vytvoriť novú objednávku",
     scanOrderButton: "Zadať alebo naskenovať kód",
     registerButton: "Registrácia – získajte 50% zľavu",
@@ -150,13 +167,24 @@ const translations = {
   en: {
     homeTitle: "Welcome to EZ-WASH",
     homeDescription: "Do you want clean and fresh laundry without the hassle? Our EZ-WASH service ensures fast and reliable care. Simply drop your laundry in our storage boxes and we'll take care of the rest! You'll receive SMS or app notifications every step of the way.",
+    homeAnimationLabels: [
+      "Simply place your order right here or via the WEB/APP",
+      "Drop off your laundry and place it in the designated locker",
+      "Now all you have to do is wait",
+      "We pick up your laundry and deliver it to our laundromat",
+      "Your laundry is washed, dried, ironed, and folded at the laundromat",
+      "You'll be notified at every step via SMS or APP notifications",
+      "Simply pay via the APP or right here before pickup",
+      "Then just collect your clean laundry from the locker"
+    ],
+    phonePlaceholder: "Enter your phone number",
     newOrderButton: "Create new order",
     scanOrderButton: "Enter or scan code",
     registerButton: "Register – get 50% discount",
     
     // New Order Screen
     newOrderTitle: "New Order – Let's Start!",
-    newOrderDescription: "Just enter your phone number. We'll send you notifications about the laundry status so you're always informed.",
+    newOrderDescription: "Just enter your phone number. We'll send you notifications about your laundry status so you're always informed.",
     phoneLabel: "Your phone number:",
     sendSMSButton: "Send SMS code and continue",
     
@@ -181,7 +209,7 @@ const translations = {
     weightStep2: "You will see a container/bin under the display.",
     weightStep3: "Place all your laundry into it.",
     weightStep4: "The system will precisely measure the weight and send the data to our system.",
-    weightMeasurementNote: "The measurement is informational. Actual weighing occurs in the laundry after sorting.",
+    weightMeasurementNote: "The measurement is informational. Actual weighing occurs in the laundromat after sorting.",
     startWeightButton: "Start weighing",
     
     // Locker Insertion Screen
@@ -195,6 +223,7 @@ const translations = {
     qrCodeLabel: "QR code:",
     orderCompletionDescription: "Everything is set! Use this code or QR when picking up your laundry. Thank you for choosing EZ-WASH!",
     returnHomeButton: "Back to home screen",
+    orderCodePlaceholder: "Enter code",
     
     // Register Screen
     registerTitle: "Want to save 50%? Register now!",
@@ -228,6 +257,7 @@ const translations = {
     invoiceDescription: "Enter your email and we'll send the invoice immediately.",
     emailLabel: "Email:",
     sendInvoiceButton: "Send invoice",
+    emailPlaceholder: "yourmail@example.com",
     
     // Locker Open Screen
     lockerOpenTitle: "Cabinet Opened",
