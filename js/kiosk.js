@@ -1,9 +1,14 @@
 /***********************************************
+ * INITIALIZÁCIA JAZYKA
+ ***********************************************/
+// Nastavíme predvolený jazyk, ak ešte nie je definovaný
+window.currentLanguage = window.currentLanguage || "sk";
+
+/***********************************************
  * HELPER FUNCTIONS PRE TRANSLACIE
  ***********************************************/
 function t(key, extra) {
-  // Ak nie je nastavený aktuálny jazyk, použijeme "sk"
-  const lang = window.currentLanguage || "sk";
+  const lang = window.currentLanguage;
   let text = translations[lang] && translations[lang][key] ? translations[lang][key] : key;
   if (extra) {
     text = text.replace("%s", extra);
@@ -27,7 +32,7 @@ function updateTranslations() {
     }
   });
   // Aktualizácia rotujúcich animácií
-  homeAnimationLabels = translations[window.currentLanguage].homeAnimationLabels;
+  homeAnimationLabels = translations[window.currentLanguage].homeAnimationLabels || [];
 }
 
 /***********************************************
@@ -49,7 +54,6 @@ let messageModalCallback = null;
 let activeInputId = null;
 
 // HOME SCREEN ANIMÁCIE (rotating icons)
-// Pôvodné pole animácií ostáva nezmenené
 const homeAnimations = [
   "assets/lottie/zadanie-objednavky.json",
   "assets/lottie/vlozeniie-do-skrinky.json",
@@ -66,10 +70,7 @@ let homeAnimationLabels = translations[window.currentLanguage].homeAnimationLabe
 let currentHomeAnimIndex = 0;
 
 window.addEventListener("DOMContentLoaded", () => {
-  // Predvolené nastavenie jazyka, ak nie je nastavený
-  if (!window.currentLanguage) {
-    window.currentLanguage = "sk";
-  }
+  // Ak by sa jazyk zmenil mimo, už máme predvolený jazyk "sk".
   updateTranslations();
 
   // Nastavenie rotujúcich ikon na Home Screen
@@ -297,7 +298,7 @@ function startContactlessPayment() {
 function sendInvoice() {
   const email = document.getElementById("invoiceEmailInput").value.trim();
   if (!email) {
-    showMessage(t("invalidEmail") || "Zadajte platný email!"); // Ak pridáte kľúč invalidEmail do prekladov
+    showMessage(t("invalidEmail") || "Zadajte platný email!");
     return;
   }
   showMessage(t("invoiceSent") + email, () => {
@@ -318,11 +319,6 @@ function simulateLockerInsertion() {
 /***********************************************
  * ADMIN FUNKCIE
  ***********************************************/
-
-/* Admin prihlasovanie:
-   Overuje či zadaný admin kód a heslo sú správne.
-   Pre príklad používame: kód "admin1993" a heslo "adminpass".
-*/
 function adminLogin() {
   const code = document.getElementById("adminCodeInput").value.trim();
   const password = document.getElementById("adminPasswordInput").value.trim();
@@ -335,20 +331,14 @@ function adminLogin() {
   }
 }
 
-/* Režim výberu skriniek:
-   1. Po stlačení "Vybrať prvú skrinku" sa otvorí prvá skrinka a vytlačí sa QR kód.
-   2. Po stlačení "Vybrať ďalšiu skrinku" sa vyberie ďalšia skrinka.
-   3. Po vybratí všetkých skriniek sa zobrazí možnosť "Hotovo, všetky skrinky vybraté".
-*/
 function selectFirstLocker() {
-  adminLockerCount = 5; // alebo načítanie aktuálneho počtu skriniek
+  adminLockerCount = 5;
   adminCurrentLockerIndex = 1;
   adminSelectedLockers = [adminCurrentLockerIndex];
   document.getElementById("selectedLockerInfo").innerText =
     t("lockerSelected") + adminCurrentLockerIndex + t("lockerSelectedSuffix") +
     (generatedQRCode || "QR" + generatedOrderCode);
   document.getElementById("nextLockerButton").style.display = "inline-block";
-  // Ak už bol vybraný počet skriniek, zobrazíme tlačidlo Hotovo
   if (adminCurrentLockerIndex >= adminLockerCount) {
     document.getElementById("finishLockersButton").style.display = "inline-block";
     document.getElementById("nextLockerButton").style.display = "none";
@@ -375,11 +365,6 @@ function finishLockerSelection() {
   });
 }
 
-/* Režim doplnenia skriniek:
-   1. Zamestnanec naskenuje alebo zadá QR kód prvej objednávky.
-   2. Skrinka sa otvorí a zobrazí sa informácia o otvorení.
-   3. Zamestnanec môže vložiť ďalšiu objednávku alebo ukončiť vkladanie.
-*/
 function openLockerForRestocking() {
   const qrCodeInput = document.getElementById("restockQRCodeInput").value.trim();
   if (!qrCodeInput) {
@@ -393,7 +378,6 @@ function openLockerForRestocking() {
 }
 
 function insertNextOrder() {
-  // Reset pre vloženie ďalšej objednávky
   document.getElementById("restockQRCodeInput").value = "";
   document.getElementById("restockLockerInfo").innerText = "";
   document.getElementById("insertNextOrderButton").style.display = "none";
