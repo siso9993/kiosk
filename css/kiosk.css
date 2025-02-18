@@ -222,9 +222,10 @@ img.btn-icon {
 }
 .animation-description {
   text-align: center;
-  font-size: 14px;
-  color: #333;
-  margin-top: 8px;
+  font-size: 25px;
+  color: #481D24;
+  margin-top: 0px;
+  margin-bottom: 15px;
   font-weight: 500;
 }
 
