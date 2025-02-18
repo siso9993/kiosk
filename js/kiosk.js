@@ -30,14 +30,14 @@ const homeAnimations = [
   "assets/lottie/objednavka-kompletna.json"
 ];
 const homeAnimationLabels = [
-  "Zadanie objednávky",
-  "Vloženie do skrinky",
-  "Čakanie na prádlo",
-  "Vyzdvihnutie (Pickup)",
-  "Pracovňa – spracovanie prádla",
-  "Notifikácia pre vyzdvihnutie",
-  "Platba",
-  "Objednávka kompletná"
+  "Jednoducho zadáte objednávku priamo TU alebo cez WEB/APP ",
+  "Prádlo odvážite a vložíte do pridelenej skrinky",
+  "Teraz už neostáva nič len počkať",
+  "Prádlo vyzdvihneme a dodáme do našej práčovne",
+  "V práčovni ho operieme, vysušíme, ožehlíme a zložíme",
+  "O každom kroku budete informovaný SMS alebou APP notifikáciou",
+  "Pred vyzdvihnutím jednoducho zaplatíte cez APP alebo priamo TU",
+  "A už si len vyberiete svoje čisté prádlo z boxu "
 ];
 let currentHomeAnimIndex = 0;
 
