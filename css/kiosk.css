@@ -301,6 +301,7 @@ button.service-button {
   gap: 5px;
 }
 .service-text {
+  font-size: 12px;
   display: block;
   text-align: center;
 }
