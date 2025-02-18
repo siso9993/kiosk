@@ -1,4 +1,32 @@
-// kiosk.js
+/***********************************************
+ * HELPER FUNCTIONS PRE TRANSLACIE
+ ***********************************************/
+function t(key, extra) {
+  // Ak nie je nastavený aktuálny jazyk, použijeme "sk"
+  const lang = window.currentLanguage || "sk";
+  let text = translations[lang] && translations[lang][key] ? translations[lang][key] : key;
+  if (extra) {
+    text = text.replace("%s", extra);
+  }
+  return text;
+}
+
+function updateTranslations() {
+  // Aktualizácia vnútorného textu pre elementy s data-i18n
+  document.querySelectorAll("[data-i18n]").forEach(el => {
+    const key = el.getAttribute("data-i18n");
+    if (translations[window.currentLanguage] && translations[window.currentLanguage][key]) {
+      el.innerText = translations[window.currentLanguage][key];
+    }
+  });
+  // Aktualizácia placeholderov
+  document.querySelectorAll("[data-i18n-placeholder]").forEach(el => {
+    const key = el.getAttribute("data-i18n-placeholder");
+    if (translations[window.currentLanguage] && translations[window.currentLanguage][key]) {
+      el.placeholder = translations[window.currentLanguage][key];
+    }
+  });
+}
 
 /***********************************************
  * GLOBAL & INITIAL ANIMATION SETUP
@@ -42,6 +70,12 @@ const homeAnimationLabels = [
 let currentHomeAnimIndex = 0;
 
 window.addEventListener("DOMContentLoaded", () => {
+  // Predvolené nastavenie jazyka (ak ešte nie je nastavený)
+  if (!window.currentLanguage) {
+    window.currentLanguage = "sk";
+  }
+  updateTranslations();
+
   // Nastavenie rotujúcich ikon na Home Screen
   const homeLottiePlayer = document.getElementById("homeLottiePlayer");
   const tooltipEl = document.getElementById("homeAnimationTooltip");
@@ -124,7 +158,9 @@ function closeKeyboard() {
  * NAVIGÁCIA & PANELY
  ***********************************************/
 function setLanguage(lang) {
-  showMessage("Prepínam jazyk na: " + (lang === "sk" ? "Slovenčina" : "English"));
+  window.currentLanguage = lang;
+  updateTranslations();
+  showMessage(t("switchingLanguage") + (lang === "sk" ? "Slovenčina" : "English"));
 }
 
 function navigateTo(screenId) {
@@ -174,10 +210,10 @@ function startPickupProcess() {
 function sendSMSCode() {
   const phone = document.getElementById("phoneInput").value.trim();
   if (!phone) {
-    showMessage("Zadajte telefónne číslo!");
+    showMessage(t("invalidPhone"));
     return;
   }
-  showMessage("SMS kód bol odoslaný na číslo " + phone, () => {
+  showMessage(t("smsSent") + phone, () => {
     smsCode = "0000"; // príklad kódu
     navigateTo("smsVerificationScreen");
   });
@@ -186,16 +222,16 @@ function sendSMSCode() {
 function verifySMSCode() {
   const inputCode = document.getElementById("smsCodeInput").value.trim();
   if (inputCode === smsCode) {
-    showMessage("Telefónne číslo bolo úspešne overené.", () => {
+    showMessage(t("phoneVerified"), () => {
       navigateTo("serviceSelectionScreen");
     });
   } else {
-    showMessage("Nesprávny kód. Skúste to znova.");
+    showMessage(t("invalidCode"));
   }
 }
 
 function selectService(service) {
-  showMessage("Vybrali ste službu: " + service, () => {
+  showMessage(t("serviceSelected") + service, () => {
     navigateTo("weightMeasurementScreen");
   });
 }
@@ -208,7 +244,7 @@ function startWeightMeasurement() {
   }, 100);
   setTimeout(() => {
     const weight = (Math.random() * 5 + 1).toFixed(2);
-    showMessage("Zmeraná hmotnosť: " + weight + " kg", () => {
+    showMessage(t("measuredWeight") + weight + " kg", () => {
       navigateTo("lockerInsertionScreen");
       simulateLockerInsertion();
     });
@@ -224,7 +260,7 @@ function generateOrderCode() {
 }
 
 function scanQRCode() {
-  showMessage("Naskenovanie prebieha...", () => {
+  showMessage(t("scanning"), () => {
     navigateTo("lockerInsertionScreen");
     simulateLockerInsertion();
   });
@@ -247,7 +283,7 @@ function goToPaymentScreen() {
    zobrazí a po krátkom oneskorení sa automaticky prejde na ďalší krok (Invoice Screen).
 */
 function startCardPayment() {
-  showMessage("Platba kartou prebieha...", () => {
+  showMessage(t("cardPayment"), () => {
     setTimeout(() => {
       navigateTo("invoiceScreen");
     }, 2000);
@@ -255,7 +291,7 @@ function startCardPayment() {
 }
 
 function startContactlessPayment() {
-  showMessage("Bezkontaktná platba prebieha...", () => {
+  showMessage(t("contactlessPayment"), () => {
     setTimeout(() => {
       navigateTo("invoiceScreen");
     }, 2000);
@@ -265,10 +301,11 @@ function startContactlessPayment() {
 function sendInvoice() {
   const email = document.getElementById("invoiceEmailInput").value.trim();
   if (!email) {
+    // Tu by sa dalo pridať preklad pre neplatný email
     showMessage("Zadajte platný email!");
     return;
   }
-  showMessage("Faktúra bola odoslaná na " + email, () => {
+  showMessage(t("invoiceSent") + email, () => {
     navigateTo("lockerOpenScreen");
   });
 }
@@ -295,11 +332,11 @@ function adminLogin() {
   const code = document.getElementById("adminCodeInput").value.trim();
   const password = document.getElementById("adminPasswordInput").value.trim();
   if (code === "admin1993" && password === "adminpass") {
-    showMessage("Admin prihlásenie úspešné.", () => {
+    showMessage(t("adminLoginSuccess"), () => {
       navigateTo("adminMenuScreen");
     });
   } else {
-    showMessage("Nesprávne admin údaje. Skúste to znova.");
+    showMessage(t("adminLoginFail"));
   }
 }
 
@@ -313,9 +350,7 @@ function selectFirstLocker() {
   adminCurrentLockerIndex = 1;
   adminSelectedLockers = [adminCurrentLockerIndex];
   document.getElementById("selectedLockerInfo").innerText =
-    "Skrinka č. " +
-    adminCurrentLockerIndex +
-    " vybratá a otvorená. Vytlačený QR kód: " +
+    t("lockerSelected") + adminCurrentLockerIndex + t("lockerSelectedSuffix") +
     (generatedQRCode || "QR" + generatedOrderCode);
   document.getElementById("nextLockerButton").style.display = "inline-block";
   // Ak už bol vybraný počet skriniek, zobrazíme tlačidlo Hotovo
@@ -330,9 +365,7 @@ function selectNextLocker() {
     adminCurrentLockerIndex++;
     adminSelectedLockers.push(adminCurrentLockerIndex);
     let infoElem = document.getElementById("selectedLockerInfo");
-    infoElem.innerText += "\nSkrinka č. " +
-      adminCurrentLockerIndex +
-      " vybratá a otvorená. Vytlačený QR kód: " +
+    infoElem.innerText += "\n" + t("lockerSelected") + adminCurrentLockerIndex + t("lockerSelectedSuffix") +
       (generatedQRCode || "QR" + generatedOrderCode);
     if (adminCurrentLockerIndex >= adminLockerCount) {
       document.getElementById("finishLockersButton").style.display = "inline-block";
@@ -342,7 +375,7 @@ function selectNextLocker() {
 }
 
 function finishLockerSelection() {
-  showMessage("Všetky skrinky boli vybraté. SMS a notifikácia boli odoslané zákazníkovi.", () => {
+  showMessage(t("lockersCompleted"), () => {
     navigateHome();
   });
 }
@@ -355,7 +388,7 @@ function finishLockerSelection() {
 function openLockerForRestocking() {
   const qrCodeInput = document.getElementById("restockQRCodeInput").value.trim();
   if (!qrCodeInput) {
-    showMessage("Zadajte kód alebo naskenujte QR objednávky!");
+    showMessage(t("enterQRCode"));
     return;
   }
   document.getElementById("restockLockerInfo").innerText =
@@ -370,11 +403,11 @@ function insertNextOrder() {
   document.getElementById("restockLockerInfo").innerText = "";
   document.getElementById("insertNextOrderButton").style.display = "none";
   document.getElementById("finishRestockingButton").style.display = "none";
-  showMessage("Pripravený pre ďalšiu objednávku.");
+  showMessage(t("readyForNextOrder"));
 }
 
 function finishRestocking() {
-  showMessage("Vkladanie objednávok bolo ukončené. SMS a notifikácia boli odoslané zákazníkovi.", () => {
+  showMessage(t("restockingCompleted"), () => {
     navigateHome();
   });
 }
