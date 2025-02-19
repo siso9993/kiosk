@@ -105,7 +105,7 @@ function setLanguage(lang) {
 const protectedScreens = ['newOrderScreen', 'mapScreen', 'profileScreen', 'mainMenuScreen', 'lockerLocationScreen', 'orderConfirmationScreen'];
 
 function navigateTo(screenId) {
-  // If the target screen is protected and the user is not logged in, show message and redirect to login
+  // Use window.isLoggedIn to check login status
   if (protectedScreens.includes(screenId) && !window.isLoggedIn) {
     showMessage("Pre túto funkciu sa musíte prihlásiť.", () => {
       navigateTo('loginScreen');
@@ -128,7 +128,7 @@ function navigateTo(screenId) {
   // Update bottom navigation highlight
   updateBottomNav(screenId);
   
-  // If the user is logged in and the homeScreen is loaded, update its content
+  // If user is logged in and homeScreen is loaded, update its content
   if (screenId === 'homeScreen' && window.isLoggedIn) {
     const homeScreen = document.getElementById('homeScreen');
     if (homeScreen) {
@@ -154,7 +154,7 @@ function navigateHome() {
 
 /** 
  * Highlight the correct nav item based on screenId 
- * Mapping: 0 - Home, 1 - Order, 2 - Map, 3 - Profile
+ * Mapping: 0 - Domov, 1 - Objednávka, 2 - Mapa, 3 - Profil
  */
 function updateBottomNav(screenId) {
   const navItems = document.querySelectorAll('.bottom-nav .nav-item');
