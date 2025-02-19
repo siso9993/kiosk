@@ -1,58 +1,124 @@
 /*************************************************************
- * kiosk.css
+ * kiosk-app.css
  * 
- * Combines your original kiosk styling with additional rules
- * for bottom navigation, mobile-friendly layout, etc.
+ * Upravené štýly pre EZ-WASH mobilnú aplikáciu (Kiosk Prototype)
  *************************************************************/
 
-/* BODY */
+/**********************/
+/* GLOBAL A BASIC STYLES */
+/**********************/
 body {
   margin: 0;
-  background-color: #222;
+  background-color: #f8f9fa;
   font-family: 'Roboto', sans-serif;
+  /* Precentruje aplikáciu na obrazovke a umožní mobilný režim */
   display: flex;
   justify-content: center;
-  align-items: flex-start; /* align kiosk/app to top */
-  padding-top: 40px;       /* space from top of browser window */
+  align-items: flex-start;
+  padding-top: 20px;
 }
 
-/*************************************************************
- * WRAPPER / MAIN CONTAINER
- *************************************************************/
-/* 
-  If you want a fixed kiosk style (720x900), you can keep it. 
-  For a fluid/mobile layout, you might remove or adjust width/height
-  to use full screen:
-*/
-.kiosk-container {
-  position: relative;      /* so .keyboard or modals can absolutely position inside */
-  width: 720px;
-  height: 900px;
-  background: linear-gradient(135deg, #f7f9fc, #e3e7f0);
-  box-shadow: 0 0 15px rgba(0,0,0,0.6);
-  border-radius: 12px;
-  display: flex;
-  flex-direction: row;
-  overflow: hidden;        /* hide overflow beyond 720x900 */
-}
-
-/* Alternatively, for a more flexible mobile approach, 
-   you could do something like:
 .app-wrapper {
   width: 100%;
-  max-width: 720px; 
+  max-width: 720px;
   height: 100vh;
   background: #f8f9fa;
-  ...
-} 
-(Adjust as you prefer)
-*/
+  overflow-y: auto;
+  position: relative;
+  padding-bottom: 70px; /* Miesto pre dolnú navigáciu */
+}
 
-/*************************************************************
- * BOTTOM NAVIGATION
- *************************************************************/
+/**********************/
+/* SCREENS & TRANSITIONS */
+/**********************/
+.screen {
+  display: none;
+  opacity: 0;
+  transform: translateY(20px);
+  padding: 20px;
+}
+.screen.active {
+  display: block;
+  animation: fadeInUp 0.5s forwards;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/**********************/
+/* TYPOGRAPHY */
+/**********************/
+h1 {
+  font-size: 24px;
+  margin: 15px 0;
+  color: #333;
+}
+p,
+label,
+li {
+  font-size: 16px;
+  line-height: 1.5;
+  margin: 10px 0;
+  color: #555;
+}
+
+/**********************/
+/* INPUT FIELDS */
+/**********************/
+input[type='text'],
+input[type='tel'],
+input[type='email'],
+input[type='password'] {
+  width: 100%;
+  padding: 12px;
+  margin: 8px 0 20px 0;
+  font-size: 16px;
+  box-sizing: border-box;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+/**********************/
+/* BUTTONS */
+/**********************/
+button {
+  width: 100%;
+  padding: 12px 16px;
+  margin: 8px 0;
+  font-size: 16px;
+  background: linear-gradient(135deg, #007bff, #0056b3);
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.3s, transform 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+button:hover {
+  background: linear-gradient(135deg, #0056b3, #003f7f);
+  transform: translateY(-2px);
+}
+.btn-icon {
+  font-size: 18px;
+}
+
+/**********************/
+/* BOTTOM NAVIGATION */
+/**********************/
 .bottom-nav {
-  position: fixed; /* pinned at bottom */
+  position: fixed;
   bottom: 0;
   left: 0;
   width: 100%;
@@ -81,16 +147,23 @@ body {
   color: #007bff;
 }
 
-/*************************************************************
- * LANGUAGE SWITCHER (top-right corner)
- *************************************************************/
+/**********************/
+/* HIDDEN ELEMENTS */
+/**********************/
+.hidden {
+  display: none !important;
+}
+
+/**********************/
+/* LANGUAGE SWITCHER */
+/**********************/
 .language-switcher {
   position: absolute;
-  top: 0px;
+  top: 8px;
   right: 15px;
   display: flex;
   gap: 2px;
-  z-index: 999; /* above other elements */
+  z-index: 999;
 }
 .lang-option {
   font-size: 35px;
@@ -99,183 +172,40 @@ body {
   padding: 1px;
 }
 
-/*************************************************************
- * LEFT PANEL / RIGHT PANEL (from original kiosk structure)
- *************************************************************/
-.left-panel,
-.right-panel {
-  position: relative;
-  padding: 30px 20px 20px 20px; /* top/right/bot/left */
-  overflow-y: auto;
-}
-.left-panel {
-  width: 70%;
-  background-color: #fff;
-  border-right: 1px solid #ccc;
-  display: flex;
-  flex-direction: column;
-}
-.right-panel {
-  width: 30%;
-  background-color: #f5f7fa;
+/**********************/
+/* USER PHONE DISPLAY */
+/**********************/
+.user-phone-display {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  font-size: 16px;
+  font-weight: bold;
+  color: #333;
 }
 
-/*************************************************************
- * FOOTER LINKS (bottom of left panel)
- *************************************************************/
-.footer-links {
-  margin-top: auto; /* push it to the bottom */
-  padding: 20px;
+/**********************/
+/* FOOTER */
+/**********************/
+footer {
   text-align: center;
+  background: #f1f1f1;
+  padding: 10px;
   font-size: 14px;
   color: #555;
 }
-.footer-links a {
+footer a {
   color: #007bff;
   text-decoration: none;
   margin: 0 5px;
 }
-.footer-links a:hover {
+footer a:hover {
   text-decoration: underline;
 }
 
-/*************************************************************
- * BASIC TEXT
- *************************************************************/
-h1 {
-  font-size: 24px;
-  margin: 15px 0;
-  color: #333;
-}
-p,
-label,
-li {
-  font-size: 16px;
-  line-height: 1.5;
-  margin: 10px 0;
-  color: #555;
-}
-
-/*************************************************************
- * INPUT FIELDS
- *************************************************************/
-input[type='text'],
-input[type='tel'],
-input[type='email'],
-input[type='password'] {
-  width: 100%;
-  padding: 12px;
-  margin: 8px 0 20px 0;
-  font-size: 16px;
-  box-sizing: border-box;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  cursor: pointer; /* kiosk style */
-}
-
-/*************************************************************
- * BUTTONS
- *************************************************************/
-button {
-  width: 100%;
-  padding: 12px 16px;
-  margin: 8px 0;
-  font-size: 16px;
-  background: linear-gradient(135deg, #007bff, #0056b3);
-  color: #fff;
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
-  transition: background 0.3s, transform 0.2s;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-}
-button:hover {
-  background: linear-gradient(135deg, #0056b3, #003f7f);
-  transform: translateY(-2px);
-}
-.btn-icon {
-  font-size: 18px;
-}
-
-/* If using image icons inside buttons, invert them to white: */
-img.btn-icon {
-  filter: brightness(0) saturate(100%) invert(100%);
-}
-
-/*************************************************************
- * PRICE TAG (services)
- *************************************************************/
-.price-tag {
-  color: #d9534f;
-  font-weight: bold;
-  margin-left: 10px;
-  font-size: 1.1em;
-}
-
-/*************************************************************
- * QR CODE BOX
- *************************************************************/
-.qr-code {
-  width: 140px;
-  height: 140px;
-  background-color: #ddd;
-  margin: 0 auto;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 14px;
-  color: #555;
-  border: 1px solid #ccc;
-  border-radius: 8px;
-}
-
-/*************************************************************
- * SCREENS
- *************************************************************/
-.screen {
-  display: none;
-  opacity: 0;
-  transform: translateY(20px);
-}
-.screen.active {
-  display: block;
-  animation: fadeInUp 0.5s forwards;
-}
-@keyframes fadeInUp {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-/*************************************************************
- * BLINK (optional utility class)
- *************************************************************/
-.blink {
-  animation: blinkAnimation 1s infinite;
-}
-@keyframes blinkAnimation {
-  0% {
-    opacity: 1;
-  }
-  50% {
-    opacity: 0.2;
-  }
-  100% {
-    opacity: 1;
-  }
-}
-
-/*************************************************************
- * LOTTIE CONTAINERS
- *************************************************************/
+/**********************/
+/* LOTTIE CONTAINERS */
+/**********************/
 .lottie-container {
   width: 250px;
   height: 250px;
@@ -286,20 +216,12 @@ img.btn-icon {
   width: 150px;
   height: 150px;
 }
-.animation-description {
-  text-align: center;
-  font-size: 18px;
-  color: #481D24;
-  margin-top: 0px;
-  margin-bottom: 15px;
-  font-weight: 500;
-}
 
-/*************************************************************
- * MODAL (replaces alerts)
- *************************************************************/
+/**********************/
+/* MODAL */
+/**********************/
 .modal {
-  position: absolute; /* or fixed if you prefer covering the entire screen */
+  position: fixed;
   top: 0;
   left: 0;
   width: 100%;
@@ -325,22 +247,21 @@ img.btn-icon {
   color: #333;
 }
 
-/*************************************************************
- * KEYBOARD
- *************************************************************/
-/* On-Screen Keyboard Container */
-.keyboard {
-  position: absolute; /* absolute within kiosk-container */
-  bottom: 0;
+/**********************/
+/* ON-SCREEN KEYBOARD */
+/**********************/
+#keyboardContainer {
+  position: fixed;
+  bottom: 60px; /* nad dolnou navigáciou */
   left: 0;
-  width: 100%; /* span entire kiosk width (720px if fixed) */
-  background: #e0e0e0;
+  width: 100%;
   z-index: 9999;
-  padding: 10px;
-  display: none; /* hidden by default */
+  display: none;
 }
-
-/* Keyboard rows and buttons */
+#keyboard {
+  background: #e0e0e0;
+  padding: 10px;
+}
 .keyboard-row {
   display: flex;
   justify-content: center;
@@ -360,20 +281,21 @@ img.btn-icon {
   background: #bbb;
 }
 
-/*************************************************************
- * RIGHT PANEL LOGO
- *************************************************************/
-.right-panel-logo {
-  margin-top: 20px;
-  text-align: center;
+/**********************/
+/* ADDITIONAL UTILITIES */
+/**********************/
+.blink {
+  animation: blinkAnimation 1s infinite;
 }
-.right-panel-logo img {
-  width: 80px;
+@keyframes blinkAnimation {
+  0% { opacity: 1; }
+  50% { opacity: 0.2; }
+  100% { opacity: 1; }
 }
 
-/*************************************************************
- * SERVICE BUTTONS (Optional: column layout for icons + text)
- *************************************************************/
+/**********************/
+/* SERVICE BUTTONS (ak je potrebné) */
+/**********************/
 button.service-button {
   flex-direction: column;
   gap: 8px;
