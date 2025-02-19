@@ -1,6 +1,8 @@
 <?php
 // ---------------------------------------
 // Mock login logic (for demo):
+// (This server–side check is only used by PHP to set an initial state.
+// The actual login/registration is simulated client-side.)
 session_start();
 $isLoggedIn = false;
 if (isset($_GET['logged']) && $_GET['logged'] === '1') {
@@ -38,12 +40,7 @@ if (isset($_GET['logout']) && $_GET['logout'] === '1') {
   <link rel="stylesheet" href="css/kiosk-app.css" />
 
   <style>
-    /* Basic layout & screens from prior snippet. 
-       Using only animations from: cakanie-na-pradlo.json, faktura.json, notofikacia-pre-vyzdvihnutie.json,
-       objednavka-kompletna.json, overenie-telefonu.json, pickup.json, platba.json, pracovna.json,
-       registracia.json, scan-qr.json, vaha.json, vlozeniie-do-skrinky.json, zadanie-objednavky.json, 
-       zadavanie-kodu.json (plus any you want from that list).
-    */
+    /* Basic layout & screens using only specified animations */
 
     body {
       margin: 0;
@@ -149,11 +146,24 @@ if (isset($_GET['logout']) && $_GET['logout'] === '1') {
       border-radius: 6px;
       text-align: center;
     }
+    /* Display user's phone number in top-left (hidden until login/registration) */
+    .user-phone-display {
+      position: absolute;
+      top: 8px;
+      left: 8px;
+      font-size: 16px;
+      font-weight: bold;
+      color: #333;
+      display: none;
+    }
   </style>
 </head>
 <body>
 
-  <!-- Language Switcher -->
+  <!-- Display user's phone number in top-left -->
+  <div id="userPhoneDisplay" class="user-phone-display"></div>
+
+  <!-- Language Switcher (top-right) -->
   <div class="language-switcher">
     <span class="lang-option" onclick="setLanguage('sk')">🇸🇰</span>
     <span class="lang-option" onclick="setLanguage('en')">🇬🇧</span>
@@ -164,7 +174,7 @@ if (isset($_GET['logout']) && $_GET['logout'] === '1') {
     <div id="homeScreen" class="screen active">
       <h1 data-i18n="homeTitle">Vitajte v EZ-WASH</h1>
       <div class="lottie-container">
-        <!-- You can use one from your set, e.g. 'zadanie-objednavky.json' or 'registracia.json' -->
+        <!-- Using zadanie-objednavky.json for home animation -->
         <lottie-player
           id="homeLottie"
           src="assets/lottie/zadanie-objednavky.json"
@@ -177,8 +187,7 @@ if (isset($_GET['logout']) && $_GET['logout'] === '1') {
       <p data-i18n="homeDescription">
         Chcete mať čisté a voňavé prádlo bez starostí? ...
       </p>
-
-      <!-- Regardless of login, show just 2 buttons (as requested) -->
+      <!-- Always show 2 big buttons -->
       <button onclick="navigateTo('registrationScreen')">
         <i class="fa-solid fa-user-plus"></i>
         <span data-i18n="registerButton">Registrácia – získajte 50% zľavu</span>
@@ -201,21 +210,20 @@ if (isset($_GET['logout']) && $_GET['logout'] === '1') {
           autoplay
         ></lottie-player>
       </div>
-      <p>Zadajte prihlasovacie údaje alebo kód objednávky:</p>
+      <p>Zadajte prihlasovacie údaje (test/test) alebo kód objednávky:</p>
       <input
         type="text"
-        placeholder="Používateľské meno / Kód"
+        placeholder="Používateľské meno"
         onclick="openKeyboardForInput('loginUsername')"
         id="loginUsername"
       />
       <input
         type="password"
-        placeholder="Heslo (len pri prihlásení)"
+        placeholder="Heslo"
         onclick="openKeyboardForInput('loginPassword')"
         id="loginPassword"
       />
-      <!-- Demo: clicking logs you in or moves to order code flow -->
-      <button onclick="window.location.href='?logged=1'">
+      <button onclick="loginUser()">
         <i class="fa-solid fa-sign-in"></i>
         Prihlásiť sa
       </button>
@@ -271,7 +279,7 @@ if (isset($_GET['logout']) && $_GET['logout'] === '1') {
       </button>
     </div>
 
-    <!-- MAIN MENU SCREEN (Only if logged in) -->
+    <!-- MAIN MENU SCREEN (Only after login or registration) -->
     <div id="mainMenuScreen" class="screen">
       <h1>Hlavné menu</h1>
       <button onclick="navigateTo('newOrderScreen')">
@@ -283,7 +291,7 @@ if (isset($_GET['logout']) && $_GET['logout'] === '1') {
       <button onclick="navigateTo('profileScreen')">
         <i class="fa-solid fa-user"></i> Profil
       </button>
-      <button onclick="window.location.href='?logout=1'">
+      <button onclick="logoutUser()">
         <i class="fa-solid fa-sign-out"></i> Odhlásiť
       </button>
     </div>
@@ -307,8 +315,7 @@ if (isset($_GET['logout']) && $_GET['logout'] === '1') {
       <button onclick="selectService('Pranie + Sušenie + Žehlenie + Zloženie')">
         <i class="fa-solid fa-shirt"></i> Pranie + Sušenie + Žehlenie + Zloženie
       </button>
-      <!-- As requested, remove the "Dokončiť" button here; 
-           we automatically go to the next screen once a service is selected. -->
+      <!-- "Dokončiť" button removed as requested. -->
     </div>
 
     <!-- LOCKER LOCATION SCREEN (enter ZIP code) -->
@@ -355,7 +362,7 @@ if (isset($_GET['logout']) && $_GET['logout'] === '1') {
       <p>QR kód: <strong id="qrCodeDisplay"></strong></p>
       <p>
         Teraz prosím prejdite k najbližšiemu boxu a stlačte 
-        <em>“Zadať alebo naskenovať kód”</em>. 
+        <em>“Zadať alebo naskenovať kód”</em>.
       </p>
       <img
         src="assets/zadana-obj.png"
@@ -398,17 +405,19 @@ if (isset($_GET['logout']) && $_GET['logout'] === '1') {
       <p>Tu môžu byť detaily používateľa...</p>
     </div>
 
-    <!-- TERMS SCREEN (and other info screens) -->
+    <!-- TERMS SCREEN -->
     <div id="termsScreen" class="screen">
       <h1>Obchodné podmienky</h1>
       <p>Sem vložte obsah...</p>
       <button onclick="navigateHome()">Naspäť</button>
     </div>
+    <!-- GDPR SCREEN -->
     <div id="gdprScreen" class="screen">
       <h1>GDPR</h1>
       <p>Sem vložte obsah...</p>
       <button onclick="navigateHome()">Naspäť</button>
     </div>
+    <!-- PRICING SCREEN -->
     <div id="pricingScreen" class="screen">
       <h1>Cenník</h1>
       <p>Sem vložte obsah...</p>
@@ -423,34 +432,22 @@ if (isset($_GET['logout']) && $_GET['logout'] === '1') {
       <i class="fa-solid fa-house"></i>
       <span>Domov</span>
     </div>
-    <!-- These three items are hidden if not logged in -->
-    <div
-      class="nav-item <?php if(!$isLoggedIn) echo 'hidden'; ?>"
-      id="navOrder"
-      onclick="navigateTo('newOrderScreen')"
-    >
+    <!-- The following nav items will be shown/hidden via client–side logic -->
+    <div class="nav-item" id="navOrder" onclick="navigateTo('newOrderScreen')">
       <i class="fa-solid fa-plus-circle"></i>
       <span>Objednávka</span>
     </div>
-    <div
-      class="nav-item <?php if(!$isLoggedIn) echo 'hidden'; ?>"
-      id="navMap"
-      onclick="navigateTo('mapScreen')"
-    >
+    <div class="nav-item" id="navMap" onclick="navigateTo('mapScreen')">
       <i class="fa-solid fa-map"></i>
       <span>Mapa</span>
     </div>
-    <div
-      class="nav-item <?php if(!$isLoggedIn) echo 'hidden'; ?>"
-      id="navProfile"
-      onclick="navigateTo('profileScreen')"
-    >
+    <div class="nav-item" id="navProfile" onclick="navigateTo('profileScreen')">
       <i class="fa-solid fa-user"></i>
       <span>Profil</span>
     </div>
   </div>
 
-  <!-- FOOTER (links to Terms, GDPR, Pricing, etc.) -->
+  <!-- FOOTER -->
   <footer>
     <a href="#" onclick="navigateTo('termsScreen')">Obchodné podmienky</a> |
     <a href="#" onclick="navigateTo('gdprScreen')">GDPR</a> |
