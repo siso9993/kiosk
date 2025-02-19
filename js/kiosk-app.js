@@ -110,6 +110,17 @@ function setLanguage(lang) {
  * SCREEN NAVIGATION
  *************************************************************/
 function navigateTo(screenId) {
+  // Zoznam obrazoviek, ktoré vyžadujú prihlásenie
+  const protectedScreens = ['newOrderScreen', 'mapScreen', 'profileScreen', 'mainMenuScreen'];
+
+  // Ak používateľ nie je prihlásený a obrazovka patrí medzi chránené, presmeruj ho na loginScreen
+  if (protectedScreens.includes(screenId) && !isLoggedIn) {
+    showMessage("Pre túto funkciu sa musíte prihlásiť.", () => {
+      navigateTo('loginScreen');
+    });
+    return;
+  }
+
   // Skryje všetky obrazovky
   const screens = document.querySelectorAll('.screen');
   screens.forEach(screen => {
