@@ -34,7 +34,7 @@ const homeAnimations = [
   "assets/lottie/objednavka-kompletna.json"
 ];
 
-// Optional: If you want different text for each animation, you can store them here or in translations
+// Optional: Ak chcete pre každú animáciu iný text, môžete ho uložiť sem alebo do prekladov
 let homeAnimationLabels = [
   "Jednoducho zadáte objednávku priamo TU alebo cez WEB/APP",
   "Prádlo vložíte do pridelenej skrinky",
@@ -54,18 +54,18 @@ let currentHomeAnimIndex = 0;
  */
 function startRotatingHomeAnimations() {
   const homeLottieEl = document.getElementById("homeLottie");
-  if (!homeLottieEl) return; // If the element doesn't exist, skip
+  if (!homeLottieEl) return; // Ak element neexistuje, skonči
 
-  // Load the first animation
+  // Načíta prvú animáciu
   homeLottieEl.load(homeAnimations[currentHomeAnimIndex]);
 
-  // If there's a text element for tooltips, set it
+  // Ak existuje element pre tooltip, nastaví text
   const tooltipEl = document.getElementById("homeAnimationTooltip");
   if (tooltipEl) {
     tooltipEl.textContent = homeAnimationLabels[currentHomeAnimIndex] || "";
   }
 
-  // When the animation completes, load the next
+  // Po dokončení animácie načíta ďalšiu
   homeLottieEl.addEventListener("complete", () => {
     currentHomeAnimIndex++;
     if (currentHomeAnimIndex >= homeAnimations.length) {
@@ -84,14 +84,13 @@ function startRotatingHomeAnimations() {
  * DOMContentLoaded
  *************************************************************/
 document.addEventListener('DOMContentLoaded', () => {
-  // 1) Initialize language
+  // 1) Inicializácia jazyka
   setLanguage(window.currentLanguage);
 
-  // 2) Start rotating home animations (if desired)
-  //    If you only want a single animation, remove the array logic above
+  // 2) Spustenie rotujúcich home animácií (ak je to požadované)
   startRotatingHomeAnimations();
 
-  // 3) Highlight default screen in bottom nav (homeScreen, etc.)
+  // 3) Zvýraznenie defaultnej obrazovky v dolnej navigácii (homeScreen, atď.)
   updateBottomNav('homeScreen');
 });
 
@@ -100,7 +99,7 @@ document.addEventListener('DOMContentLoaded', () => {
  *************************************************************/
 function setLanguage(lang) {
   window.currentLanguage = lang;
-  // Calls updateTranslations() from translations-app.js
+  // Volá updateTranslations() z translations-app.js, ak je definovaná
   if (typeof updateTranslations === 'function') {
     updateTranslations();
   }
@@ -111,19 +110,19 @@ function setLanguage(lang) {
  * SCREEN NAVIGATION
  *************************************************************/
 function navigateTo(screenId) {
-  // Hide all .screen
+  // Skryje všetky obrazovky
   const screens = document.querySelectorAll('.screen');
   screens.forEach(screen => {
     screen.classList.remove('active');
   });
 
-  // Show target screen
+  // Zobrazí cieľovú obrazovku
   const target = document.getElementById(screenId);
   if (target) {
     target.classList.add('active');
   }
 
-  // Update bottom nav highlight
+  // Aktualizuje zvýraznenie v dolnej navigácii
   updateBottomNav(screenId);
 }
 
@@ -132,28 +131,27 @@ function navigateHome() {
 }
 
 /** 
- * Highlights correct icon in bottom nav based on screenId 
- * Adjust this logic if your ID->Nav mapping differs
+ * Zvýrazní správnu položku v dolnej navigácii na základe screenId 
+ * (Mapovanie: 0 - Domov, 1 - Objednávka, 2 - Mapa, 3 - Profil)
  */
 function updateBottomNav(screenId) {
   const navItems = document.querySelectorAll('.bottom-nav .nav-item');
   navItems.forEach(item => item.classList.remove('active'));
 
   let navToHighlight = null;
-  // Example mapping
   switch (screenId) {
     case 'homeScreen':
-      navToHighlight = navItems[0]; // the "home" nav
+      navToHighlight = navItems[0]; // Domov
       break;
     case 'newOrderScreen':
-      navToHighlight = navItems[1]; // the "order" nav
+      navToHighlight = navItems[1]; // Objednávka
       break;
     case 'mapScreen':
-      navToHighlight = navItems[2]; // the "map" nav
+      navToHighlight = navItems[2]; // Mapa
       break;
     case 'profileScreen':
     case 'mainMenuScreen':
-      navToHighlight = navItems[3]; // the "profile" nav
+      navToHighlight = navItems[3]; // Profil
       break;
     default:
       break;
@@ -174,7 +172,7 @@ function showMessage(msg, callback) {
   msgElem.textContent = msg;
   modal.style.display = 'flex';
 
-  // If we want something to happen after user clicks OK
+  // Ak chceme po kliknutí na OK vykonať callback
   messageModalCallback = callback || null;
 }
 
@@ -233,9 +231,9 @@ function sendSMSCodeForRegistration() {
     return;
   }
 
-  // Simulate sending an SMS
+  // Simulácia odoslania SMS
   showMessage("SMS kód bol odoslaný na " + phone, () => {
-    // Move to the next screen
+    // Prechod na ďalšiu obrazovku
     navigateTo('smsVerificationScreen');
   });
 }
@@ -245,11 +243,10 @@ function verifySMSCode() {
   if (!codeInput) return;
 
   const enteredCode = codeInput.value.trim();
-  // In a real app, verify code via server
+  // V reálnom prostredí by sa kód overoval na serveri
   if (enteredCode === "0000") {
     showMessage("Telefónne číslo bolo úspešne overené.", () => {
-      // After verifying, you might set user as "logged in" on the server side
-      // For this kiosk prototype, just go to main menu
+      // Po úspešnom overení presuňte používateľa do hlavného menu
       navigateTo('mainMenuScreen');
     });
   } else {
@@ -263,7 +260,7 @@ function verifySMSCode() {
 let selectedService = null;
 
 /** 
- * Called from service selection buttons:
+ * Volané z tlačidiel výberu služby:
  *   <button onclick="selectService('Pranie + Sušenie + Zloženie')">...</button>
  */
 function selectService(service) {
@@ -271,18 +268,18 @@ function selectService(service) {
   showMessage("Vybrali ste si službu: " + service);
 }
 
-// For demonstration, generate a random 6-digit code
+// Pre demo – vygeneruje náhodný 6-miestny kód
 let generatedOrderCode = "";
 function generateOrderCode() {
   generatedOrderCode = (Math.floor(100000 + Math.random() * 900000)).toString();
   showMessage("Objednávka dokončená! Kód: " + generatedOrderCode, () => {
-    // Return to home or show the "order completed" screen
-    navigateTo('orderCompletionScreen');
-    // Display the code in that screen's placeholders if needed
+    // Prechod na obrazovku potvrdenia objednávky
+    navigateTo('orderConfirmationScreen');
+    // Zobrazenie kódu a QR v obrazovke potvrdenia
     const codeEl = document.getElementById("orderCodeDisplay");
     const qrEl = document.getElementById("qrCodeDisplay");
     if (codeEl) codeEl.textContent = generatedOrderCode;
-    if (qrEl) qrEl.textContent = "QR" + generatedOrderCode; // placeholder
+    if (qrEl) qrEl.textContent = "QR" + generatedOrderCode; // placeholder pre QR kód
   });
 }
 
