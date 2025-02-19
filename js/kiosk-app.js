@@ -51,7 +51,7 @@ function startRotatingHomeAnimations() {
   const homeLottieEl = document.getElementById("homeLottie");
   if (!homeLottieEl) return;
   
-  // Načíta prvú animáciu
+  // Load the first animation
   homeLottieEl.load(homeAnimations[currentHomeAnimIndex]);
   
   const tooltipEl = document.getElementById("homeAnimationTooltip");
@@ -77,13 +77,13 @@ function startRotatingHomeAnimations() {
  * DOMContentLoaded
  *************************************************************/
 document.addEventListener('DOMContentLoaded', () => {
-  // Inicializácia jazyka
+  // Initialize language
   setLanguage(window.currentLanguage);
   
-  // Spustenie rotujúcich home animácií (ak je to požadované)
+  // Start rotating home animations (if desired)
   startRotatingHomeAnimations();
   
-  // Zvýraznenie defaultnej obrazovky v dolnej navigácii (homeScreen)
+  // Highlight default screen in bottom nav (homeScreen)
   updateBottomNav('homeScreen');
 });
 
@@ -101,39 +101,35 @@ function setLanguage(lang) {
 /*************************************************************
  * SCREEN NAVIGATION
  *************************************************************/
-// Definícia obrazoviek, ktoré vyžadujú prihlásenie
+// Define screens that require login
 const protectedScreens = ['newOrderScreen', 'mapScreen', 'profileScreen', 'mainMenuScreen', 'lockerLocationScreen', 'orderConfirmationScreen'];
 
 function navigateTo(screenId) {
-  // Ak je cieľová obrazovka chránená a používateľ nie je prihlásený,
-  // zobrazí sa hlásenie a používateľ bude presmerovaný na prihlasovaciu obrazovku.
-  if (protectedScreens.includes(screenId) && !isLoggedIn) {
+  // If the target screen is protected and the user is not logged in, show message and redirect to login
+  if (protectedScreens.includes(screenId) && !window.isLoggedIn) {
     showMessage("Pre túto funkciu sa musíte prihlásiť.", () => {
       navigateTo('loginScreen');
     });
     return;
   }
   
-  // Skrytie všetkých obrazoviek
+  // Hide all screens
   const screens = document.querySelectorAll('.screen');
   screens.forEach(screen => {
     screen.classList.remove('active');
   });
   
-  // Zobrazenie cieľovej obrazovky
+  // Show target screen
   const target = document.getElementById(screenId);
   if (target) {
     target.classList.add('active');
   }
   
-  // Aktualizácia dolnej navigácie
+  // Update bottom navigation highlight
   updateBottomNav(screenId);
   
-  // Ak prebehlo prihlásenie, môžeme prepnúť obsah domovskej obrazovky.
-  // Napríklad, ak používateľ prešiel na mainMenuScreen, zobrazíme len tlačidlá:
-  // "Nová objednávka", "Moje objednávky", "Mapa" (podľa požiadavky).
-  if (screenId === 'homeScreen' && isLoggedIn) {
-    // Nahradíme obsah homeScreen po prihlásení – len tlačidlá prístupné registrovanému používateľovi.
+  // If the user is logged in and the homeScreen is loaded, update its content
+  if (screenId === 'homeScreen' && window.isLoggedIn) {
     const homeScreen = document.getElementById('homeScreen');
     if (homeScreen) {
       homeScreen.innerHTML = `
@@ -157,8 +153,8 @@ function navigateHome() {
 }
 
 /** 
- * Zvýrazní správnu položku v dolnej navigácii podľa screenId 
- * Mapovanie: 0 - Domov, 1 - Objednávka, 2 - Mapa, 3 - Profil
+ * Highlight the correct nav item based on screenId 
+ * Mapping: 0 - Home, 1 - Order, 2 - Map, 3 - Profile
  */
 function updateBottomNav(screenId) {
   const navItems = document.querySelectorAll('.bottom-nav .nav-item');
@@ -256,7 +252,7 @@ function sendSMSCodeForRegistration() {
     return;
   }
   
-  // Simulácia odoslania SMS kódu
+  // Simulate sending SMS code
   showMessage("SMS kód bol odoslaný na " + phone, () => {
     navigateTo('smsVerificationScreen');
   });
@@ -267,10 +263,10 @@ function verifySMSCode() {
   if (!codeInput) return;
   
   const enteredCode = codeInput.value.trim();
-  // Pre demo: kód je "0000"
+  // For demo: the code is "0000"
   if (enteredCode === "0000") {
     showMessage("Telefónne číslo bolo úspešne overené.", () => {
-      // Simulácia prihlásenia po úspešnej registrácii
+      // Simulate login after successful verification
       simulateLogin();
     });
   } else {
@@ -279,9 +275,9 @@ function verifySMSCode() {
 }
 
 /*************************************************************
- * SIMULÁCIA PRIHLAŠOVANIA
+ * SIMULATED LOGIN
  *************************************************************/
-// Prihlasovacie údaje: používateľské meno: test, heslo: test
+// Login credentials: username: test, password: test
 function loginUser() {
   const usernameInput = document.getElementById('loginUsername');
   const passwordInput = document.getElementById('loginPassword');
@@ -292,14 +288,14 @@ function loginUser() {
   const password = passwordInput.value.trim();
   
   if (username === "test" && password === "test") {
-    // Simulácia prihlásenia – presmerovanie so zmenou URL, čo nastaví isLoggedIn na true (prostredníctvom PHP)
+    // Simulate login by redirecting (PHP will set window.isLoggedIn to true)
     window.location.href = "?logged=1";
   } else {
     showMessage("Neplatné prihlasovacie údaje. Zadajte prosím 'test' / 'test'.");
   }
 }
 
-// Volaná po úspešnej SMS verifikácii, simuluje prihlásenie
+// Called after successful SMS verification to simulate login
 function simulateLogin() {
   window.location.href = "?logged=1";
 }
@@ -314,7 +310,7 @@ function selectService(service) {
   showMessage("Vybrali ste si službu: " + service);
 }
 
-// Pre demo – vygeneruje náhodný 6-miestny objednávkový kód
+// For demo – generate a random 6-digit order code
 let generatedOrderCode = "";
 function generateOrderCode() {
   generatedOrderCode = (Math.floor(100000 + Math.random() * 900000)).toString();
