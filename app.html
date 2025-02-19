@@ -1,16 +1,16 @@
 <?php
-  // ---------------------------------------
-  // Mock login logic (for demo):
-  session_start();
+// ---------------------------------------
+// Mock login logic (for demo):
+session_start();
+$isLoggedIn = false;
+if (isset($_GET['logged']) && $_GET['logged'] === '1') {
+  $isLoggedIn = true;
+  $_SESSION['user'] = 'demo-user';
+}
+if (isset($_GET['logout']) && $_GET['logout'] === '1') {
   $isLoggedIn = false;
-  if (isset($_GET['logged']) && $_GET['logged'] === '1') {
-    $isLoggedIn = true;
-    $_SESSION['user'] = 'demo-user';
-  }
-  if (isset($_GET['logout']) && $_GET['logout'] === '1') {
-    $isLoggedIn = false;
-    unset($_SESSION['user']);
-  }
+  unset($_SESSION['user']);
+}
 ?>
 <!DOCTYPE html>
 <html lang="sk">
@@ -38,9 +38,13 @@
   <link rel="stylesheet" href="css/kiosk-app.css" />
 
   <style>
-    /**********************************************
-     * BASIC MOBILE-FRIENDLY STYLES
-     **********************************************/
+    /* Basic layout & screens from prior snippet. 
+       Using only animations from: cakanie-na-pradlo.json, faktura.json, notofikacia-pre-vyzdvihnutie.json,
+       objednavka-kompletna.json, overenie-telefonu.json, pickup.json, platba.json, pracovna.json,
+       registracia.json, scan-qr.json, vaha.json, vlozeniie-do-skrinky.json, zadanie-objednavky.json, 
+       zadavanie-kodu.json (plus any you want from that list).
+    */
+
     body {
       margin: 0;
       padding: 0;
@@ -57,8 +61,6 @@
       flex-direction: column;
       position: relative;
     }
-
-    /* Each "screen" in our single-page approach */
     .screen {
       display: none;
       padding: 20px;
@@ -66,15 +68,11 @@
     .screen.active {
       display: block;
     }
-
-    /* Example Lottie container */
     .lottie-container {
       margin: 20px auto;
       width: 240px;
       height: 240px;
     }
-
-    /* Buttons */
     button {
       display: inline-flex;
       align-items: center;
@@ -90,8 +88,6 @@
     button i {
       font-size: 1rem;
     }
-
-    /* Bottom navigation bar */
     .bottom-nav {
       width: 100%;
       height: 60px;
@@ -120,13 +116,9 @@
     .bottom-nav .nav-item.active {
       color: #007bff;
     }
-
-    /* Hide elements easily with .hidden */
     .hidden {
       display: none !important;
     }
-
-    /* Language switch (top-right corner) */
     .language-switcher {
       position: absolute;
       top: 8px;
@@ -136,17 +128,13 @@
       cursor: pointer;
       margin-left: 5px;
     }
-
-    /* Footer area for terms, gdpr, etc. */
     footer {
       text-align: center;
       background: #f1f1f1;
       padding: 10px;
     }
-
-    /* Simple modal style */
     .modal {
-      display: none; /* hidden by default */
+      display: none;
       position: fixed;
       z-index: 9999;
       left: 0; top: 0;
@@ -172,14 +160,14 @@
   </div>
 
   <div class="app-wrapper" id="appWrapper">
-    <!-- HOME SCREEN -->
+    <!-- HOME SCREEN (Only 2 big buttons) -->
     <div id="homeScreen" class="screen active">
       <h1 data-i18n="homeTitle">Vitajte v EZ-WASH</h1>
-      <!-- If you want a rotating animation or a single animation, you can do so here. -->
       <div class="lottie-container">
+        <!-- You can use one from your set, e.g. 'zadanie-objednavky.json' or 'registracia.json' -->
         <lottie-player
           id="homeLottie"
-          src="assets/lottie/home-animation.json"
+          src="assets/lottie/zadanie-objednavky.json"
           background="transparent"
           speed="0.6"
           loop
@@ -190,23 +178,15 @@
         Chcete mať čisté a voňavé prádlo bez starostí? ...
       </p>
 
-      <?php if (!$isLoggedIn): ?>
-        <!-- Only TWO big buttons for non-logged user -->
-        <button onclick="navigateTo('registrationScreen')">
-          <i class="fa-solid fa-user-plus"></i>
-          <span data-i18n="registerButton">Registrácia – získajte 50% zľavu</span>
-        </button>
-        <button onclick="navigateTo('loginScreen')">
-          <i class="fa-solid fa-sign-in"></i>
-          <span data-i18n="scanOrderButton">Prihlásenie / Zadať objednávku</span>
-        </button>
-      <?php else: ?>
-        <!-- If logged in, we can show the main menu or something else. -->
-        <button onclick="navigateTo('mainMenuScreen')">
-          <i class="fa-solid fa-bars"></i>
-          Menu
-        </button>
-      <?php endif; ?>
+      <!-- Regardless of login, show just 2 buttons (as requested) -->
+      <button onclick="navigateTo('registrationScreen')">
+        <i class="fa-solid fa-user-plus"></i>
+        <span data-i18n="registerButton">Registrácia – získajte 50% zľavu</span>
+      </button>
+      <button onclick="navigateTo('loginScreen')">
+        <i class="fa-solid fa-sign-in"></i>
+        <span data-i18n="scanOrderButton">Prihlásenie / Zadať objednávku</span>
+      </button>
     </div>
 
     <!-- LOGIN SCREEN -->
@@ -246,7 +226,7 @@
       <h1 data-i18n="registerTitle">Chcete ušetriť 50%? Zaregistrujte sa!</h1>
       <div class="lottie-container">
         <lottie-player
-          src="assets/lottie/overenie-telefonu.json"
+          src="assets/lottie/registracia.json"
           background="transparent"
           speed="1"
           loop
@@ -294,7 +274,6 @@
     <!-- MAIN MENU SCREEN (Only if logged in) -->
     <div id="mainMenuScreen" class="screen">
       <h1>Hlavné menu</h1>
-      <!-- Example sub-menu icons -->
       <button onclick="navigateTo('newOrderScreen')">
         <i class="fa-solid fa-plus-circle"></i> Nová objednávka
       </button>
@@ -314,22 +293,78 @@
       <h1 data-i18n="newOrderTitle">Nová objednávka – začnime!</h1>
       <div class="lottie-container">
         <lottie-player
-          src="assets/lottie/zadavanie-kodu.json"
+          src="assets/lottie/zadanie-objednavky.json"
           background="transparent"
           speed="1"
           loop
           autoplay
         ></lottie-player>
       </div>
-      <p>Vyberte typ služby ... (pranie, sušenie, atď.)</p>
+      <p>Vyberte typ služby:</p>
       <button onclick="selectService('Pranie + Sušenie + Zloženie')">
         <i class="fa-solid fa-shirt"></i> Pranie + Sušenie + Zloženie
       </button>
       <button onclick="selectService('Pranie + Sušenie + Žehlenie + Zloženie')">
         <i class="fa-solid fa-shirt"></i> Pranie + Sušenie + Žehlenie + Zloženie
       </button>
-      <button onclick="generateOrderCode()">
-        Dokončiť
+      <!-- As requested, remove the "Dokončiť" button here; 
+           we automatically go to the next screen once a service is selected. -->
+    </div>
+
+    <!-- LOCKER LOCATION SCREEN (enter ZIP code) -->
+    <div id="lockerLocationScreen" class="screen">
+      <h1>Vyhľadanie najbližšieho boxu</h1>
+      <div class="lottie-container">
+        <lottie-player
+          src="assets/lottie/map-animation.json"
+          background="transparent"
+          speed="1"
+          loop
+          autoplay
+        ></lottie-player>
+      </div>
+      <p>Zadajte PSČ, aby sme vám našli najbližšie lockerboxy:</p>
+      <input
+        type="text"
+        id="zipCodeInput"
+        placeholder="PSČ (napr. 01001)"
+        onclick="openKeyboardForInput('zipCodeInput')"
+      />
+      <button onclick="findNearestLockers()">
+        <i class="fa-solid fa-search"></i> Vyhľadať
+      </button>
+      <div id="lockerResult" style="margin-top:20px; color:#444;"></div>
+      <button id="lockerNextBtn" style="display:none;" onclick="goToOrderConfirmation()">
+        <i class="fa-solid fa-chevron-right"></i> Pokračovať
+      </button>
+    </div>
+
+    <!-- ORDER CONFIRMATION SCREEN -->
+    <div id="orderConfirmationScreen" class="screen">
+      <h1>Objednávka prijatá!</h1>
+      <div class="lottie-container">
+        <lottie-player
+          src="assets/lottie/objednavka-kompletna.json"
+          background="transparent"
+          speed="1"
+          loop
+          autoplay
+        ></lottie-player>
+      </div>
+      <p>Váš objednávkový kód: <strong id="orderCodeDisplay"></strong></p>
+      <p>QR kód: <strong id="qrCodeDisplay"></strong></p>
+      <p>
+        Teraz prosím prejdite k najbližšiemu boxu a stlačte 
+        <em>“Zadať alebo naskenovať kód”</em>. 
+      </p>
+      <img
+        src="assets/zadana-obj.png"
+        alt="Zadana Objednavka"
+        style="max-width: 100%; margin: 10px 0;"
+      />
+      <p>Ďakujeme, že využívate EZ-WASH!</p>
+      <button onclick="navigateTo('homeScreen')">
+        Späť na úvod
       </button>
     </div>
 
@@ -353,7 +388,7 @@
       <h1>Váš profil</h1>
       <div class="lottie-container">
         <lottie-player
-          src="assets/lottie/objednavka-kompletna.json"
+          src="assets/lottie/pracovna.json"
           background="transparent"
           speed="1"
           loop
@@ -363,38 +398,31 @@
       <p>Tu môžu byť detaily používateľa...</p>
     </div>
 
-    <!-- ORDER COMPLETION SCREEN -->
-    <div id="orderCompletionScreen" class="screen">
-      <h1>Objednávka dokončená!</h1>
-      <div class="lottie-container">
-        <lottie-player
-          src="assets/lottie/objednavka-kompletna.json"
-          background="transparent"
-          speed="1"
-          loop
-          autoplay
-        ></lottie-player>
-      </div>
-      <p>Kód objednávky: <strong id="orderCodeDisplay"></strong></p>
-      <p>QR kód: <strong id="qrCodeDisplay"></strong></p>
-      <button onclick="navigateTo('homeScreen')">
-        Späť na úvod
-      </button>
+    <!-- TERMS SCREEN (and other info screens) -->
+    <div id="termsScreen" class="screen">
+      <h1>Obchodné podmienky</h1>
+      <p>Sem vložte obsah...</p>
+      <button onclick="navigateHome()">Naspäť</button>
+    </div>
+    <div id="gdprScreen" class="screen">
+      <h1>GDPR</h1>
+      <p>Sem vložte obsah...</p>
+      <button onclick="navigateHome()">Naspäť</button>
+    </div>
+    <div id="pricingScreen" class="screen">
+      <h1>Cenník</h1>
+      <p>Sem vložte obsah...</p>
+      <button onclick="navigateHome()">Naspäť</button>
     </div>
   </div><!-- end .app-wrapper -->
 
   <!-- BOTTOM NAVIGATION -->
   <div class="bottom-nav">
     <!-- Always visible: Home icon -->
-    <div
-      class="nav-item"
-      id="navHome"
-      onclick="navigateTo('homeScreen')"
-    >
+    <div class="nav-item" id="navHome" onclick="navigateTo('homeScreen')">
       <i class="fa-solid fa-house"></i>
       <span>Domov</span>
     </div>
-
     <!-- These three items are hidden if not logged in -->
     <div
       class="nav-item <?php if(!$isLoggedIn) echo 'hidden'; ?>"
@@ -428,23 +456,6 @@
     <a href="#" onclick="navigateTo('gdprScreen')">GDPR</a> |
     <a href="#" onclick="navigateTo('pricingScreen')">Cenník</a>
   </footer>
-
-  <!-- TERMS SCREEN (and other info screens) -->
-  <div id="termsScreen" class="screen">
-    <h1>Obchodné podmienky</h1>
-    <p>Sem vložte obsah...</p>
-    <button onclick="navigateHome()">Naspäť</button>
-  </div>
-  <div id="gdprScreen" class="screen">
-    <h1>GDPR</h1>
-    <p>Sem vložte obsah...</p>
-    <button onclick="navigateHome()">Naspäť</button>
-  </div>
-  <div id="pricingScreen" class="screen">
-    <h1>Cenník</h1>
-    <p>Sem vložte obsah...</p>
-    <button onclick="navigateHome()">Naspäť</button>
-  </div>
 
   <!-- MODAL for messages -->
   <div id="messageModal" class="modal">
