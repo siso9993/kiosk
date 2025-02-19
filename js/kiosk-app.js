@@ -1,13 +1,14 @@
 /*************************************************************
  * kiosk-app.js
- * 
- * Example script to handle:
+ *
+ * Handles:
  * - Screen navigation
  * - Bottom nav highlighting
  * - Modal messages
  * - On-screen keyboard (optional)
  * - Registration / SMS verification
  * - New order flow
+ * - Rotating home animations (optional)
  *************************************************************/
 
 // Current language is set globally (e.g. default to 'sk')
@@ -19,16 +20,78 @@ let messageModalCallback = null;
 // On-screen keyboard active input
 let activeInputId = null;
 
-/** 
- * On DOM ready:
- *  1. Set language
- *  2. Possibly highlight default screen in bottom nav
+/*************************************************************
+ * HOME SCREEN ANIMATION ROTATION (Optional)
+ *************************************************************/
+const homeAnimations = [
+  "assets/lottie/zadanie-objednavky.json",
+  "assets/lottie/vlozeniie-do-skrinky.json",
+  "assets/lottie/cakanie-na-pradlo.json",
+  "assets/lottie/pickup.json",
+  "assets/lottie/pracovna.json",
+  "assets/lottie/notofikacia-pre-vyzdvihnutie.json",
+  "assets/lottie/platba.json",
+  "assets/lottie/objednavka-kompletna.json"
+];
+
+// Optional: If you want different text for each animation, you can store them here or in translations
+let homeAnimationLabels = [
+  "Jednoducho zadáte objednávku priamo TU alebo cez WEB/APP",
+  "Prádlo vložíte do pridelenej skrinky",
+  "Teraz už neostáva nič len počkať",
+  "Prádlo vyzdvihneme a dodáme do práčovne",
+  "V práčovni ho operieme, vysušíme, ožehlíme a zložíme",
+  "Budete informovaný SMS alebo notifikáciou",
+  "Pred vyzdvihnutím zaplatíte tu alebo v aplikácii",
+  "Vyzdvihnete čisté prádlo z boxu"
+];
+
+let currentHomeAnimIndex = 0;
+
+/**
+ * Initiates the rotating animations on the home screen.
+ * Called once in DOMContentLoaded if you want the rotation.
  */
+function startRotatingHomeAnimations() {
+  const homeLottieEl = document.getElementById("homeLottie");
+  if (!homeLottieEl) return; // If the element doesn't exist, skip
+
+  // Load the first animation
+  homeLottieEl.load(homeAnimations[currentHomeAnimIndex]);
+
+  // If there's a text element for tooltips, set it
+  const tooltipEl = document.getElementById("homeAnimationTooltip");
+  if (tooltipEl) {
+    tooltipEl.textContent = homeAnimationLabels[currentHomeAnimIndex] || "";
+  }
+
+  // When the animation completes, load the next
+  homeLottieEl.addEventListener("complete", () => {
+    currentHomeAnimIndex++;
+    if (currentHomeAnimIndex >= homeAnimations.length) {
+      currentHomeAnimIndex = 0;
+    }
+    homeLottieEl.load(homeAnimations[currentHomeAnimIndex]);
+    homeLottieEl.play();
+
+    if (tooltipEl) {
+      tooltipEl.textContent = homeAnimationLabels[currentHomeAnimIndex] || "";
+    }
+  });
+}
+
+/*************************************************************
+ * DOMContentLoaded
+ *************************************************************/
 document.addEventListener('DOMContentLoaded', () => {
-  // Initialize with the default language
+  // 1) Initialize language
   setLanguage(window.currentLanguage);
 
-  // If your default screen is "homeScreen", highlight it if user is logged in
+  // 2) Start rotating home animations (if desired)
+  //    If you only want a single animation, remove the array logic above
+  startRotatingHomeAnimations();
+
+  // 3) Highlight default screen in bottom nav (homeScreen, etc.)
   updateBottomNav('homeScreen');
 });
 
@@ -48,7 +111,7 @@ function setLanguage(lang) {
  * SCREEN NAVIGATION
  *************************************************************/
 function navigateTo(screenId) {
-  // Hide all screens
+  // Hide all .screen
   const screens = document.querySelectorAll('.screen');
   screens.forEach(screen => {
     screen.classList.remove('active');
@@ -60,8 +123,7 @@ function navigateTo(screenId) {
     target.classList.add('active');
   }
 
-  // Update bottom nav highlight if user is logged in
-  // (If not logged in, the bottom nav might be hidden anyway)
+  // Update bottom nav highlight
   updateBottomNav(screenId);
 }
 
@@ -69,36 +131,31 @@ function navigateHome() {
   navigateTo('homeScreen');
 }
 
-/**
- * Highlights the correct icon/text in the bottom nav based on screenId.
- * Adjust the screen IDs and nav item order as you prefer.
+/** 
+ * Highlights correct icon in bottom nav based on screenId 
+ * Adjust this logic if your ID->Nav mapping differs
  */
 function updateBottomNav(screenId) {
   const navItems = document.querySelectorAll('.bottom-nav .nav-item');
   navItems.forEach(item => item.classList.remove('active'));
 
-  // Example logic: match screen IDs to nav indexes
   let navToHighlight = null;
-
+  // Example mapping
   switch (screenId) {
     case 'homeScreen':
-      // 1st nav item is "Home"
-      navToHighlight = navItems[0];
+      navToHighlight = navItems[0]; // the "home" nav
       break;
     case 'newOrderScreen':
-      // 2nd nav item is "New Order"
-      navToHighlight = navItems[1];
+      navToHighlight = navItems[1]; // the "order" nav
       break;
     case 'mapScreen':
-      // 3rd nav item is "Map"
-      navToHighlight = navItems[2];
+      navToHighlight = navItems[2]; // the "map" nav
       break;
+    case 'profileScreen':
     case 'mainMenuScreen':
-      // 4th nav item is "Profile" (or main menu)
-      navToHighlight = navItems[3];
+      navToHighlight = navItems[3]; // the "profile" nav
       break;
     default:
-      // No highlight or do fallback
       break;
   }
   if (navToHighlight) {
@@ -143,10 +200,6 @@ function openKeyboardForInput(inputId) {
   }
 }
 
-/** 
- * Example function for typed keys:
- * You might have a custom UI with buttons that call typeKey('A'), etc.
- */
 function typeKey(key) {
   if (!activeInputId) return;
   const inputEl = document.getElementById(activeInputId);
@@ -192,9 +245,11 @@ function verifySMSCode() {
   if (!codeInput) return;
 
   const enteredCode = codeInput.value.trim();
-  // In a real app, we’d verify code via server
+  // In a real app, verify code via server
   if (enteredCode === "0000") {
     showMessage("Telefónne číslo bolo úspešne overené.", () => {
+      // After verifying, you might set user as "logged in" on the server side
+      // For this kiosk prototype, just go to main menu
       navigateTo('mainMenuScreen');
     });
   } else {
@@ -216,25 +271,28 @@ function selectService(service) {
   showMessage("Vybrali ste si službu: " + service);
 }
 
-// For demonstration, we generate a random 6-digit code
+// For demonstration, generate a random 6-digit code
 let generatedOrderCode = "";
 function generateOrderCode() {
   generatedOrderCode = (Math.floor(100000 + Math.random() * 900000)).toString();
   showMessage("Objednávka dokončená! Kód: " + generatedOrderCode, () => {
-    // Return to home or show an "order completed" screen
-    navigateTo('homeScreen');
+    // Return to home or show the "order completed" screen
+    navigateTo('orderCompletionScreen');
+    // Display the code in that screen's placeholders if needed
+    const codeEl = document.getElementById("orderCodeDisplay");
+    const qrEl = document.getElementById("qrCodeDisplay");
+    if (codeEl) codeEl.textContent = generatedOrderCode;
+    if (qrEl) qrEl.textContent = "QR" + generatedOrderCode; // placeholder
   });
 }
 
 /*************************************************************
  * OTHER EXAMPLE HANDLERS
  *************************************************************/
-/** Example placeholders for order history, ongoing orders, etc. */
 function loadOrderHistory() {
-  // If you have an API or local list, fetch them and populate #orderHistoryList
   const listElem = document.getElementById('orderHistoryList');
   if (listElem) {
-    listElem.innerHTML = "<p>Žiadne objednávky.</p>"; 
+    listElem.innerHTML = "<p>Žiadne objednávky.</p>";
   }
 }
 
